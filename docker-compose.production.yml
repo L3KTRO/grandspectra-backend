@@ -22,7 +22,7 @@ services:
     depends_on:
       - app
     ports:
-      - "8900:8900"
+      - "9000:9000"
     volumes:
       - .:/var/www:ro  # El código de la aplicación se monta de solo lectura
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
