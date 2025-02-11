@@ -26,8 +26,7 @@ RUN composer run-script post-autoload-dump
 
 # Generar caches de configuración, rutas y vistas (opcional)
 RUN php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan view:cache
+    php artisan route:cache
 
 # Etapa final: imagen optimizada y ligera
 FROM php:8.3-fpm-alpine
