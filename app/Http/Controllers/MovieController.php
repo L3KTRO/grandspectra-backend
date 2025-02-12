@@ -58,6 +58,8 @@ class MovieController extends Controller
             'video' => 'sometimes|boolean',
         ]);
 
+        $data['original_title'] = Str::limit($data['original_title'], 255);
+
         $movie->update($data);
 
         return response()->json($movie);
