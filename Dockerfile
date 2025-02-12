@@ -31,7 +31,7 @@ RUN docker-php-ext-install pdo_pgsql mbstring
 # Definir el directorio de la aplicación
 WORKDIR /var/www
 
-# Copiar todo el código de la aplicación desde el contexto al contenedor
+# Copiar el código de la aplicación desde el contexto al contenedor
 COPY . .
 
 # Copiar el directorio vendor generado en la etapa anterior
