@@ -53,7 +53,7 @@ class MovieController extends Controller
         $movie = Movie::findOrFail($id);
         $data = $request->validate([
             'adult' => 'sometimes|boolean',
-            'original_title' => 'sometimes|string',
+            'original_title' => 'sometimes|string|max:255',
             'popularity' => 'sometimes|numeric',
             'video' => 'sometimes|boolean',
         ]);

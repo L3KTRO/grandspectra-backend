@@ -103,7 +103,7 @@ class TmdbImport extends Command
                         $record = json_decode($line, true);
                         $this->info("{$record['id']} to {$data['model']}");
                         if ($record) {
-                            $record["original_title"] = Str::limit($record['original_title'], 255);
+                            $record["original_title"] = Str::limit($record['original_title'], 250);
                             // Inserta o actualiza el registro según el id
                             $data['model']::updateOrCreate(
                                 ['id' => $record['id']],
