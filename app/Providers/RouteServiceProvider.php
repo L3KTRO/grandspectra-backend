@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Console\Commands\ImportTmdbExports;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\RateLimiter;
@@ -44,12 +43,5 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
-    }
-
-    protected function registerCommands(): void
-    {
-        $this->commands([
-            ImportTmdbExports::class,
-        ]);
     }
 }

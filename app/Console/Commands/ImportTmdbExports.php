@@ -1,21 +1,25 @@
 <?php
 
-namespace App\Tasks;
+namespace App\Console\Commands;
 
-use App\Models\Keyword;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Movie;
 use App\Models\Person;
-use App\Models\ProductionCompany;
 use App\Models\TmdbCollection;
-use App\Models\TvNetwork;
 use App\Models\TvSeries;
-use Illuminate\Support\Facades\Http;
+use App\Models\Keyword;
+use App\Models\ProductionCompany;
+use App\Models\TvNetwork;
 
-class ImportTmdbExports
+class ImportTmdbExports extends Command
 {
-    public function __invoke(): int
+    protected $signature = 'tmdb:import-exports';
+    protected $description = 'Descarga y procesa las exportaciones de TMDB para cada entidad';
+
+    public function handle(): int
     {
-        info('Importing TMDB exports');
         // Obtén la fecha de hoy en el formato "m_d_Y", por ejemplo "02_11_2025"
         $date = now()->format('m_d_Y');
 
@@ -59,7 +63,7 @@ class ImportTmdbExports
             $fileName = str_replace('MM_DD_YYYY', $date, $data['file']);
             // Construir la URL completa
             $url = "https://files.tmdb.org{$basePath}/{$fileName}";
-            info("Procesando {$entityName}: descargando {$url}");
+            $this->info("Procesando {$entityName}: descargando {$url}");
 
             $response = Http::get($url);
 
@@ -68,7 +72,7 @@ class ImportTmdbExports
                 $rawContent = $response->body();
                 $content = gzdecode($rawContent);
                 if (!$content) {
-                    info("Error descomprimiendo el archivo para {$entityName}");
+                    $this->error("Error descomprimiendo el archivo para {$entityName}");
                     continue;
                 }
                 // Dividir por líneas (cada línea es un objeto JSON)
@@ -101,4 +105,5 @@ class ImportTmdbExports
 
         return 0;
     }
+
 }
