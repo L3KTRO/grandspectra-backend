@@ -11,6 +11,7 @@ use App\Models\TvNetwork;
 use App\Models\TvSeries;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class TmdbImport extends Command
 {
@@ -102,6 +103,7 @@ class TmdbImport extends Command
                         $record = json_decode($line, true);
                         $this->info("{$record['id']} to {$data['model']}");
                         if ($record) {
+                            $record["original_title"] = Str::limit($record['original_title'], 255);
                             // Inserta o actualiza el registro según el id
                             $data['model']::updateOrCreate(
                                 ['id' => $record['id']],
