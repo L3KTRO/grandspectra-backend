@@ -4,21 +4,27 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
-use App\Models\Movie;
-use App\Models\Person;
-use App\Models\TmdbCollection;
-use App\Models\TvSeries;
-use App\Models\Keyword;
-use App\Models\ProductionCompany;
-use App\Models\TvNetwork;
 
-class ImportTmdbExports extends Command
+class TmdbImport extends Command
 {
-    protected $signature = 'tmdb:import-exports';
-    protected $description = 'Descarga y procesa las exportaciones de TMDB para cada entidad';
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'tmdb:import';
 
-    public function handle(): int
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Command description';
+
+    /**
+     * Execute the console command.
+     */
+    public function handle()
     {
         // Obtén la fecha de hoy en el formato "m_d_Y", por ejemplo "02_11_2025"
         $date = now()->format('m_d_Y');
@@ -105,5 +111,4 @@ class ImportTmdbExports extends Command
 
         return 0;
     }
-
 }
