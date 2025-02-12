@@ -8,7 +8,7 @@ WORKDIR /app
 COPY composer.json composer.lock ./
 
 # Instalar dependencias sin incluir paquetes de desarrollo y optimizando la instalación
-RUN composer install --no-dev --prefer-dist --no-scripts --ignore-platform-reqs
+RUN composer install --prefer-dist --no-scripts --ignore-platform-reqs
 
 # Etapa 2: Construcción de la imagen final
 FROM php:8.3-fpm-alpine
@@ -40,8 +40,14 @@ COPY --from=composer /app/vendor /var/www/vendor
 # Ajustar permisos para el usuario de PHP
 RUN chown -R www-data:www-data /var/www
 
+# Crear un archivo crontab para ejecutar el scheduler cada minuto
+RUN echo '* * * * * www-data php /var/www/artisan schedule:run >> /var/log/cron.log 2>&1' > /etc/crontabs/www-data
+
+# Crear un archivo de log para cron
+RUN touch /var/log/cron.log
+
 # Exponer el puerto en el que PHP-FPM atenderá las peticiones
 EXPOSE 9000
 
-# Comando para iniciar PHP-FPM
-CMD ["php-fpm"]
+# Comando para iniciar cron en segundo plano y PHP-FPM
+CMD ["sh", "-c", "crond & php-fpm"]

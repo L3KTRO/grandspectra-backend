@@ -2,6 +2,13 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Keyword;
+use App\Models\Movie;
+use App\Models\Person;
+use App\Models\ProductionCompany;
+use App\Models\TmdbCollection;
+use App\Models\TvNetwork;
+use App\Models\TvSeries;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 
@@ -26,6 +33,10 @@ class TmdbImport extends Command
      */
     public function handle()
     {
+        ini_set('memory_limit', '1024M');
+
+        $this->info("Iniciando la importación de datos de TMDB");
+
         // Obtén la fecha de hoy en el formato "m_d_Y", por ejemplo "02_11_2025"
         $date = now()->format('m_d_Y');
 
@@ -97,9 +108,6 @@ class TmdbImport extends Command
                                 $record
                             );
                             $count++;
-                            if ($count >= 1000) {
-                                break;
-                            }
                         }
                     }
                 }
