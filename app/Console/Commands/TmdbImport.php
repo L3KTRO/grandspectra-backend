@@ -109,7 +109,8 @@ class TmdbImport extends Command
                     if (!empty($line)) {
                         $record = json_decode($line, true);
                         $this->info("{$record['id']} to {$data['model']}");
-                        if ($record) {
+
+                        if ($record && strlen($record['original_title']) < 255) {
                             // Inserta o actualiza el registro según el id
 
                             $data['model']::updateOrCreate(
