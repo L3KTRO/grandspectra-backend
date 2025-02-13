@@ -11,10 +11,8 @@ class CreateMoviesTable extends Migration
         Schema::create('movies', function (Blueprint $table) {
             // Usamos el id de TMDB como clave primaria
             $table->unsignedBigInteger('id')->primary();
-            $table->boolean('adult');
             $table->string('original_title');
             $table->float('popularity');
-            $table->boolean('video');
             $table->timestamps();
         });
     }

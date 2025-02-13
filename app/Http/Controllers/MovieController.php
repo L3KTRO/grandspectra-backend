@@ -34,10 +34,8 @@ class MovieController extends Controller
     {
         $data = $request->validate([
             'id' => 'required|numeric',
-            'adult' => 'required|boolean',
             'original_title' => 'required|string',
             'popularity' => 'required|numeric',
-            'video' => 'required|boolean',
         ]);
 
         $data['original_title'] = Str::limit($data['original_title'], 255);
@@ -52,10 +50,8 @@ class MovieController extends Controller
     {
         $movie = Movie::findOrFail($id);
         $data = $request->validate([
-            'adult' => 'sometimes|boolean',
             'original_title' => 'sometimes|string|max:255',
             'popularity' => 'sometimes|numeric',
-            'video' => 'sometimes|boolean',
         ]);
 
         $data['original_title'] = Str::limit($data['original_title'], 255);

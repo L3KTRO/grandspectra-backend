@@ -105,9 +105,13 @@ class TmdbImport extends Command
                         if ($record) {
                             $record["original_title"] = Str::limit($record['original_title'], 250);
                             // Inserta o actualiza el registro según el id
+
                             $data['model']::updateOrCreate(
                                 ['id' => $record['id']],
-                                $record
+                                [
+                                    'original_title' => Str::limit($record['original_title'], 250),
+                                    'popularity' => $record['popularity']
+                                ]
                             );
                             $count++;
                         }
