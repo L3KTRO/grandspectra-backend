@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ProductionCompany;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use App\Http\Requests\ProductionCompanyRequest;
 
 class ProductionCompanyController extends Controller
 {
@@ -13,13 +13,9 @@ class ProductionCompanyController extends Controller
         return response()->json(ProductionCompany::all());
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(ProductionCompanyRequest $request): JsonResponse
     {
-        $data = $request->validate([
-            'id' => 'required|numeric',
-            'name' => 'required|string',
-        ]);
-
+        $data = $request->validated();
         $company = ProductionCompany::create($data);
         return response()->json($company, 201);
     }
@@ -29,13 +25,10 @@ class ProductionCompanyController extends Controller
         return response()->json(ProductionCompany::findOrFail($id));
     }
 
-    public function update(Request $request, $id): JsonResponse
+    public function update(ProductionCompanyRequest $request, $id): JsonResponse
     {
         $company = ProductionCompany::findOrFail($id);
-        $data = $request->validate([
-            'name' => 'sometimes|string',
-        ]);
-
+        $data = $request->validated();
         $company->update($data);
         return response()->json($company);
     }

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Person;
+use App\Http\Requests\PersonRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class PersonController extends Controller
 {
@@ -13,15 +13,9 @@ class PersonController extends Controller
         return response()->json(Person::all());
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(PersonRequest $request): JsonResponse
     {
-        $data = $request->validate([
-            'id'         => 'required|numeric',
-            'adult'      => 'required|boolean',
-            'name'       => 'required|string',
-            'popularity' => 'required|numeric',
-        ]);
-
+        $data = $request->validated();
         $person = Person::create($data);
         return response()->json($person, 201);
     }
@@ -31,15 +25,10 @@ class PersonController extends Controller
         return response()->json(Person::findOrFail($id));
     }
 
-    public function update(Request $request, $id): JsonResponse
+    public function update(PersonRequest $request, $id): JsonResponse
     {
         $person = Person::findOrFail($id);
-        $data = $request->validate([
-            'adult'      => 'sometimes|boolean',
-            'name'       => 'sometimes|string',
-            'popularity' => 'sometimes|numeric',
-        ]);
-
+        $data = $request->validated();
         $person->update($data);
         return response()->json($person);
     }

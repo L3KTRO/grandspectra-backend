@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TvNetwork;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use App\Http\Requests\TvNetworkRequest;
 
 class TvNetworkController extends Controller
 {
@@ -13,13 +13,9 @@ class TvNetworkController extends Controller
         return response()->json(TvNetwork::all());
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(TvNetworkRequest $request): JsonResponse
     {
-        $data = $request->validate([
-            'id' => 'required|numeric',
-            'name' => 'required|string',
-        ]);
-
+        $data = $request->validated();
         $network = TvNetwork::create($data);
         return response()->json($network, 201);
     }
@@ -29,13 +25,10 @@ class TvNetworkController extends Controller
         return response()->json(TvNetwork::findOrFail($id));
     }
 
-    public function update(Request $request, $id): JsonResponse
+    public function update(TvNetworkRequest $request, $id): JsonResponse
     {
         $network = TvNetwork::findOrFail($id);
-        $data = $request->validate([
-            'name' => 'sometimes|string',
-        ]);
-
+        $data = $request->validated();
         $network->update($data);
         return response()->json($network);
     }

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TvSeries;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use App\Http\Requests\TvSeriesRequest;
 
 class TvSeriesController extends Controller
 {
@@ -13,14 +13,9 @@ class TvSeriesController extends Controller
         return response()->json(TvSeries::all());
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(TvSeriesRequest $request): JsonResponse
     {
-        $data = $request->validate([
-            'id' => 'required|numeric',
-            'original_name' => 'required|string',
-            'popularity' => 'required|numeric',
-        ]);
-
+        $data = $request->validated();
         $tvSeries = TvSeries::create($data);
         return response()->json($tvSeries, 201);
     }
@@ -30,14 +25,10 @@ class TvSeriesController extends Controller
         return response()->json(TvSeries::findOrFail($id));
     }
 
-    public function update(Request $request, $id): JsonResponse
+    public function update(TvSeriesRequest $request, $id): JsonResponse
     {
         $tvSeries = TvSeries::findOrFail($id);
-        $data = $request->validate([
-            'original_name' => 'sometimes|string',
-            'popularity' => 'sometimes|numeric',
-        ]);
-
+        $data = $request->validated();
         $tvSeries->update($data);
         return response()->json($tvSeries);
     }
@@ -47,4 +38,5 @@ class TvSeriesController extends Controller
         TvSeries::findOrFail($id)->delete();
         return response()->json(null, 204);
     }
+
 }

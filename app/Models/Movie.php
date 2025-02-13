@@ -3,11 +3,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\TmdbImportable;
 
 class Movie extends Model
 {
-    // Indica que la clave primaria proviene de TMDB
+    use TmdbImportable;
+
     protected $primaryKey = 'id';
     public $incrementing = false;
-    protected $fillable = ['id', 'adult', 'original_title', 'popularity', 'video'];
+
+    // Define los campos que se pueden asignar en masa
+    protected $fillable = ['id', 'original_title', 'popularity'];
+
+    // Define los tipos de dato esperados para cada campo
+    protected $casts = [
+        'id' => 'integer',
+        'original_title' => 'string',
+        'popularity' => 'double',
+    ];
 }

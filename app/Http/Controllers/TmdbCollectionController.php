@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TmdbCollection;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use App\Http\Requests\TmdbCollectionRequest;
 
 class TmdbCollectionController extends Controller
 {
@@ -13,13 +13,9 @@ class TmdbCollectionController extends Controller
         return response()->json(TmdbCollection::all());
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(TmdbCollectionRequest $request): JsonResponse
     {
-        $data = $request->validate([
-            'id' => 'required|numeric',
-            'name' => 'required|string',
-        ]);
-
+        $data = $request->validated();
         $collection = TmdbCollection::create($data);
         return response()->json($collection, 201);
     }
@@ -29,13 +25,10 @@ class TmdbCollectionController extends Controller
         return response()->json(TmdbCollection::findOrFail($id));
     }
 
-    public function update(Request $request, $id): JsonResponse
+    public function update(TmdbCollectionRequest $request, $id): JsonResponse
     {
         $collection = TmdbCollection::findOrFail($id);
-        $data = $request->validate([
-            'name' => 'sometimes|string',
-        ]);
-
+        $data = $request->validated();
         $collection->update($data);
         return response()->json($collection);
     }

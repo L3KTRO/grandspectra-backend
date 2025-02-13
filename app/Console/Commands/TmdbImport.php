@@ -62,7 +62,7 @@ class TmdbImport extends Command
                 'file' => 'person_ids_MM_DD_YYYY.json.gz',
                 'model' => Person::class,
             ],
-            'Collections' => [
+            'TmdbCollections' => [
                 'file' => 'collection_ids_MM_DD_YYYY.json.gz',
                 'model' => TmdbCollection::class,
             ],
@@ -110,15 +110,10 @@ class TmdbImport extends Command
                         $record = json_decode($line, true);
                         $this->info("{$record['id']} to {$data['model']}");
 
-                        if ($record && strlen($record['original_title']) < 255) {
+                        if ($record) {
                             // Inserta o actualiza el registro según el id
-
-                            $data['model']::updateOrCreate(
-                                ['id' => $record['id']],
-                                [
-                                    'original_title' => Str::limit($record['original_title'], 250),
-                                    'popularity' => $record['popularity']
-                                ]
+                            $data['model']::import(
+                                $record
                             );
                             $count++;
                         }
@@ -129,7 +124,6 @@ class TmdbImport extends Command
                 $this->error("Error al descargar el archivo para {$entityName}");
             }
         }
-
         return 0;
     }
 }

@@ -8,7 +8,7 @@ class CreateCollectionsTable extends Migration
 {
     public function up(): void
     {
-        Schema::create('collections', function (Blueprint $table) {
+        Schema::create('tmdb_collections', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
             $table->string('name');
             $table->timestamps();
@@ -17,6 +17,6 @@ class CreateCollectionsTable extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('collections');
+        Schema::dropIfExists('tmdb_collections');
     }
 }
