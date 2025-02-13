@@ -25,7 +25,7 @@ trait TmdbImportable
         foreach ($fillable as $field) {
             if (isset($casts[$field])) {
                 $rules[$field] = match ($casts[$field]) {
-                    'string' => 'string',
+                    'string' => 'string|max:255',
                     'integer', 'int' => 'integer',
                     'double', 'float', 'real' => 'numeric',
                     'boolean', 'bool' => 'boolean',
@@ -56,10 +56,6 @@ trait TmdbImportable
             return null; // Omitir el registro si la validación falla.
         }
         $validated = $validator->validated();
-
-        error_log(implode(', ', $rules));
-        error_log(implode(', ', $record));
-        error_log(implode(', ', $validated));
 
         // Obtener la lista de campos permitidos (definidos en $fillable)
         $modelInstance = new static;
