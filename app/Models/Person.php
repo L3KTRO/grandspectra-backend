@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\TmdbImportable;
 
 class Person extends Model
 {
     use TmdbImportable;
+    use HasFactory;
+
 
     protected $primaryKey = 'id';
     public $incrementing = false;
