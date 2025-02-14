@@ -5,7 +5,6 @@ namespace App\Traits;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use function Laravel\Prompts\error;
 
 trait TmdbImportable
 {
@@ -25,7 +24,7 @@ trait TmdbImportable
         foreach ($fillable as $field) {
             if (isset($casts[$field])) {
                 $rules[$field] = match ($casts[$field]) {
-                    'string' => 'string|max:255',
+                    'string' => 'string',
                     'integer', 'int' => 'integer',
                     'double', 'float', 'real' => 'numeric',
                     'boolean', 'bool' => 'boolean',
@@ -68,16 +67,22 @@ trait TmdbImportable
         $casts = $modelInstance->getCasts();
         foreach ($filtered as $field => &$value) {
             if (isset($casts[$field]) && $casts[$field] === 'string' && is_string($value)) {
-                $value = Str::limit($value, 250, '...');
+                $value = Str::limit($value, 250);
             }
         }
         unset($value);
 
 
         // Usa updateOrCreate: si se especifica un id y no es nulo se usa ese valor para buscar coincidencia.
-        return static::updateOrCreate(
-            ['id' => $record['id']],
-            $filtered
-        );
+        try {
+            return static::updateOrCreate(
+                ['id' => $record['id']],
+                $filtered
+            );
+        } catch (\Exception $e) {
+            error_log('Error en updateOrCreate on record id ' . ($record['id'] ?? 'unknown') . ': ' . $e->getMessage());
+            return null;
+        }
+
     }
 }

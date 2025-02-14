@@ -32,13 +32,11 @@ class TmdbImport extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): int
     {
         ini_set('memory_limit', '1024M');
 
         $this->info("Iniciando la importación de datos de TMDB");
-
-        // Obtén la fecha de hoy en el formato "m_d_Y", por ejemplo "02_11_2025"
 
         $date = now();
 
