@@ -11,14 +11,18 @@ class ProductionCompany extends Model
     use TmdbImportable;
     use HasFactory;
 
-
     protected $primaryKey = 'id';
     public $incrementing = false;
 
-    protected $fillable = ['id', 'name'];
+    protected $fillable = ['id', 'name', 'logo_path', 'origin_country', "homepage"];
 
     protected $casts = [
         'id' => 'integer',
         'name' => 'string',
+        'logo_path' => 'string',
+        'origin_country' => 'string',
+        "homepage" => "string",
     ];
+
+
 }

@@ -73,6 +73,8 @@ trait TmdbImportable
         unset($value);
 
 
+        error_log(implode(', ', $filtered));
+
         // Usa updateOrCreate: si se especifica un id y no es nulo se usa ese valor para buscar coincidencia.
         try {
             return static::updateOrCreate(
@@ -85,4 +87,6 @@ trait TmdbImportable
         }
 
     }
+
+
 }

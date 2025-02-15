@@ -2,21 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Movie;
 use App\Http\Requests\MovieRequest;
-use App\Services\TmdbClient;
+use App\Models\Movie;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 
-class MovieController extends Controller
+class MovieController extends TmdbController
 {
-
-    protected TmdbClient $tmdbClient;
-
-    public function __construct(TmdbClient $tmdbClient)
-    {
-        $this->tmdbClient = $tmdbClient;
-    }
 
     public function index(): JsonResponse
     {
@@ -26,15 +18,54 @@ class MovieController extends Controller
 
     public function indexByPopularity(): JsonResponse
     {
-        $movies = Movie::orderBy('popularity', 'desc')->paginate(100);
+        $movies = Movie::orderBy('popularity', 'desc')->paginate(10);
+        $data = [];
+        foreach ($movies as $movie) {
+            $tmdb = $this->show($movie->id);
+            $data[] = $tmdb->original;
+        }
+        $movies->data = $data;
         return response()->json($movies);
     }
 
     public function show($id): JsonResponse
     {
-        return response()->json([
-            'local' => Movie::findOrFail($id),
-        ]);
+        $local = Movie::find($id);
+
+        if (is_null($local) || is_null($local["runtime"]) || $local["updated_at"]->diffInHours() > 24) {
+            try {
+                $tmdb = $this->tmdbClient->getMovie($id);
+            } catch (\Exception $e) {
+                return response()->json(status: 404);
+            }
+
+            $toUpdate = [
+                "original_title" => $tmdb["original_title"],
+                "overview" => $tmdb["overview"],
+                "popularity" => $tmdb["popularity"],
+                "poster_path" => $tmdb["poster_path"],
+                "backdrop_path" => $tmdb["backdrop_path"],
+                "release_date" => $tmdb["release_date"],
+                "runtime" => $tmdb["runtime"],
+                "vote_average" => $tmdb["vote_average"],
+                "vote_count" => $tmdb["vote_count"],
+                "budget" => $tmdb["budget"],
+                "revenue" => $tmdb["revenue"],
+                "status" => $tmdb["status"],
+                "tagline" => $tmdb["tagline"],
+                "adult" => $tmdb["adult"],
+                "original_language" => $tmdb["original_language"],
+                "homepage" => $tmdb["homepage"],
+                "production_companies" => $this->toColumnArray($tmdb["production_companies"], "id"),
+                "production_countries" => $this->toColumnArray($tmdb["production_countries"], "iso_3166_1"),
+                "spoken_languages" => $this->toColumnArray($tmdb["spoken_languages"], "name"),
+                "genres" => $this->toColumnArray($tmdb["genres"], "id"),
+            ];
+
+            $local = Movie::updateOrCreate(['id' => $id], $toUpdate);
+
+        }
+        return response()->json($local);
     }
 
     public function store(MovieRequest $request): JsonResponse

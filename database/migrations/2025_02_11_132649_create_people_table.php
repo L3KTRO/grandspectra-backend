@@ -13,6 +13,15 @@ class CreatePeopleTable extends Migration
             $table->boolean('adult');
             $table->string('name');
             $table->float('popularity');
+            $table->string('profile_path')->nullable();
+            $table->json('also_known_as')->nullable();
+            $table->text('biography')->nullable();
+            $table->date('birthday')->nullable();
+            $table->date('deathday')->nullable();
+            $table->string('known_for_department')->nullable();
+            $table->string('place_of_birth')->nullable();
+            $table->string('homepage')->nullable();
+
             $table->timestamps();
         });
     }

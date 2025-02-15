@@ -69,5 +69,17 @@ class TmdbClient
         ]);
     }
 
-    // Puedes agregar más métodos que integren otros endpoints de la API.
+    public function getCompany(int $id, array $query = []): array
+    {
+        return $this->request('GET', "/3/company/{$id}", [
+            'query' => $query,
+        ]);
+    }
+
+    public function getPerson(int $id, array $query = []): array
+    {
+        return $this->request('GET', "/3/person/{$id}", [
+            'query' => $query,
+        ]);
+    }
 }

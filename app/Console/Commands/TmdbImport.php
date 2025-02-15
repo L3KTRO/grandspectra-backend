@@ -81,6 +81,17 @@ class TmdbImport extends Command
         // Ruta base de TMDB
         $basePath = '/p/exports';
 
+        //TODO: Filtro de entidades a importar
+        $entities = array_filter($entities, function ($entityName) {
+            $allowed = [
+                'Movies',
+                'People',
+                'Production_Companies',
+            ];
+            return in_array($entityName, $allowed);
+        });
+
+
         foreach ($entities as $entityName => $data) {
             // Reemplaza la fecha en el nombre del archivo
             $fileName = str_replace('MM_DD_YYYY', $requiredFormatDate, $data['file']);
