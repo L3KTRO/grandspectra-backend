@@ -4,11 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Movie;
 use App\Http\Requests\MovieRequest;
+use App\Services\TmdbClient;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 
 class MovieController extends Controller
 {
+
+    protected TmdbClient $tmdbClient;
+
+    public function __construct(TmdbClient $tmdbClient)
+    {
+        $this->tmdbClient = $tmdbClient;
+    }
+
     public function index(): JsonResponse
     {
         $movies = Movie::paginate(100);
@@ -23,7 +32,9 @@ class MovieController extends Controller
 
     public function show($id): JsonResponse
     {
-        return response()->json(Movie::findOrFail($id));
+        return response()->json([
+            'local' => Movie::findOrFail($id),
+        ]);
     }
 
     public function store(MovieRequest $request): JsonResponse
