@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TitleAka;
 
-class TitleAkaController extends BaseController
+class TitleAkaController extends BaseControllerReadOnly
 {
     public function __construct()
     {

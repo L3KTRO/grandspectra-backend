@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TitleRating;
 
-class TitleRatingController extends BaseController
+class TitleRatingController extends BaseControllerReadOnly
 {
     public function __construct()
     {

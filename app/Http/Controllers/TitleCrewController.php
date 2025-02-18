@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TitleCrew;
 
-class TitleCrewController extends BaseController
+class TitleCrewController extends BaseControllerReadOnly
 {
     public function __construct()
     {

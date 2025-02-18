@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TitleBasic;
 
-class TitleBasicController extends BaseController
+class TitleBasicController extends BaseControllerReadOnly
 {
     public function __construct()
     {

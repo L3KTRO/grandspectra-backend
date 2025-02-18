@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 
-abstract class BaseController extends Controller
+abstract class BaseControllerReadOnly extends Controller
 {
     protected Model $modelClass; // Clase del modelo asociada al controlador
     protected array $validationRules = []; // Reglas de validación específicas para cada entidad

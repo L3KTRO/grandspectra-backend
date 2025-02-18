@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\NameBasic;
 
-class NameBasicController extends BaseController
+class NameBasicController extends BaseControllerReadOnly
 {
     public function __construct()
     {
