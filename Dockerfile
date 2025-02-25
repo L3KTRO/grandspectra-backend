@@ -25,7 +25,7 @@ RUN apk add --no-cache \
 
 
 # Instalar extensiones PHP requeridas por Laravel
-RUN docker-php-ext-install pdo_pgsql mbstring
+RUN docker-php-ext-install pdo_pgsql pdo pdo_mysql mysqli mbstring
 
 
 # Definir el directorio de la aplicación
