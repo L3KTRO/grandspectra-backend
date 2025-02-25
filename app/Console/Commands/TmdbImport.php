@@ -101,7 +101,7 @@ class TmdbImport extends Command
                     $this->error("Error descomprimiendo el archivo para {$entityName}");
                     continue;
                 }
-                // Dividir por líneas (cada línea es un objeto JSON)
+
                 $lines = preg_split('/\r\n|\r|\n/', $content);
                 $count = 0;
                 foreach ($lines as $line) {
@@ -110,11 +110,18 @@ class TmdbImport extends Command
                     if (!empty($line)) {
                         if ($entityName === 'Movies') {
                             $data = json_decode($line, true);
+                            if ($data['adult'] === true) {
+                                $this->info("Adulto: {$data['id']}");
+                                continue;
+                            }
                             $this->info("Procesando {$entityName}: {$data['id']}");
                             $tmdbScraper->movie($data['id']);
                             $count++;
                         } elseif ($entityName === 'TV_Series') {
                             $data = json_decode($line, true);
+                            if ($data['adult'] === false) {
+                                continue;
+                            }
                             $tmdbScraper->tv($data['id']);
                             $count++;
                         }

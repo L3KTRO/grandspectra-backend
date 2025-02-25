@@ -19,6 +19,7 @@ namespace App\Services\Tmdb\Client;
 use App\Enums\Occupation;
 use App\Services\Tmdb\TMDB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use DateTime;
 use Exception;
@@ -249,7 +250,7 @@ class Movie
                 'append_to_response' => 'videos,images,credits,external_ids,keywords,recommendations,alternative_titles',
             ])
             ->json();
-
+        sleep(1);
         $this->tmdb = new TMDB();
     }
 
@@ -363,7 +364,7 @@ class Movie
                 'movie_id' => $this->data['id'] ?? null,
                 'person_id' => $person['id'] ?? null,
                 'occupation_id' => Occupation::ACTOR->value,
-                'character' => $person['character'] ?? '',
+                'character' => substr($person['character'] ?? '', 0, 255),
                 'order' => $person['order'] ?? null
             ];
         }
