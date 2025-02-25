@@ -250,6 +250,8 @@ class Movie
                 'append_to_response' => 'videos,images,credits,external_ids,keywords,recommendations,alternative_titles',
             ])
             ->json();
+
+        var_dump($this->data);
         sleep(1);
         $this->tmdb = new TMDB();
     }
