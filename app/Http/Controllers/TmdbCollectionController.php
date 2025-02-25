@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TmdbCollection;
+use App\Models\Collection;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\TmdbCollectionRequest;
 
@@ -10,24 +10,24 @@ class TmdbCollectionController extends Controller
 {
     public function index(): JsonResponse
     {
-        return response()->json(TmdbCollection::all());
+        return response()->json(Collection::all());
     }
 
     public function store(TmdbCollectionRequest $request): JsonResponse
     {
         $data = $request->validated();
-        $collection = TmdbCollection::create($data);
+        $collection = Collection::create($data);
         return response()->json($collection, 201);
     }
 
     public function show($id): JsonResponse
     {
-        return response()->json(TmdbCollection::findOrFail($id));
+        return response()->json(Collection::findOrFail($id));
     }
 
     public function update(TmdbCollectionRequest $request, $id): JsonResponse
     {
-        $collection = TmdbCollection::findOrFail($id);
+        $collection = Collection::findOrFail($id);
         $data = $request->validated();
         $collection->update($data);
         return response()->json($collection);
@@ -35,7 +35,7 @@ class TmdbCollectionController extends Controller
 
     public function destroy($id): JsonResponse
     {
-        TmdbCollection::findOrFail($id)->delete();
+        Collection::findOrFail($id)->delete();
         return response()->json(null, 204);
     }
 }

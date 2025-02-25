@@ -1,0 +1,39 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('episodes', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->text('overview')->nullable();
+            $table->string('production_code')->nullable();
+            $table->integer('season_number');
+            $table->foreignId('season_id')->constrained()->cascadeOnDelete();
+            $table->string('still')->nullable();
+            $table->foreignId('tv_id')->constrained("tv")->cascadeOnDelete();
+            $table->string('type')->nullable();
+            $table->decimal('vote_average', 3, 1)->nullable();
+            $table->integer('vote_count')->nullable();
+            $table->date('air_date')->nullable();
+            $table->integer('episode_number')->nullable();
+            $table->timestamps();
+        });
+    }
+
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('episodes');
+    }
+};

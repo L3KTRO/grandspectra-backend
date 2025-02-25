@@ -10,7 +10,6 @@ class Rating extends Model
 {
     use HasFactory;
 
-
     protected $fillable = ['user_id', 'tmdb_id', 'qualification'];
 
     public function user(): BelongsTo

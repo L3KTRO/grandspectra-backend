@@ -5,13 +5,13 @@ namespace App\Console\Commands;
 use App\Models\Keyword;
 use App\Models\Movie;
 use App\Models\Person;
-use App\Models\ProductionCompany;
-use App\Models\TmdbCollection;
-use App\Models\TvNetwork;
-use App\Models\TvSeries;
+use App\Models\Company;
+use App\Models\Collection;
+use App\Models\Network;
+use App\Models\Tv;
+use App\Services\Tmdb\TMDBScraper;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
 
 class TmdbImport extends Command
 {
@@ -38,6 +38,8 @@ class TmdbImport extends Command
 
         $this->info("Iniciando la importación de datos de TMDB");
 
+        $tmdbScraper = new TMDBScraper();
+
         $date = now();
 
         if ($date->hour < 11) {
@@ -54,43 +56,33 @@ class TmdbImport extends Command
             ],
             'TV_Series' => [
                 'file' => 'tv_series_ids_MM_DD_YYYY.json.gz',
-                'model' => TvSeries::class,
+                'model' => Tv::class,
             ],
-            'People' => [
-                'file' => 'person_ids_MM_DD_YYYY.json.gz',
-                'model' => Person::class,
-            ],
-            'TmdbCollections' => [
-                'file' => 'collection_ids_MM_DD_YYYY.json.gz',
-                'model' => TmdbCollection::class,
-            ],
-            'Keywords' => [
-                'file' => 'keyword_ids_MM_DD_YYYY.json.gz',
-                'model' => Keyword::class,
-            ],
-            'Production_Companies' => [
-                'file' => 'production_company_ids_MM_DD_YYYY.json.gz',
-                'model' => ProductionCompany::class,
-            ],
-            'TV_Networks' => [
-                'file' => 'tv_network_ids_MM_DD_YYYY.json.gz',
-                'model' => TvNetwork::class,
-            ],
+            /*            'People' => [
+                            'file' => 'person_ids_MM_DD_YYYY.json.gz',
+                            'model' => Person::class,
+                        ],
+                        'TmdbCollections' => [
+                            'file' => 'collection_ids_MM_DD_YYYY.json.gz',
+                            'model' => Collection::class,
+                        ],
+                        'Keywords' => [
+                            'file' => 'keyword_ids_MM_DD_YYYY.json.gz',
+                            'model' => Keyword::class,
+                        ],
+                        'Production_Companies' => [
+                            'file' => 'production_company_ids_MM_DD_YYYY.json.gz',
+                            'model' => Company::class,
+                        ],
+                        'TV_Networks' => [
+                            'file' => 'tv_network_ids_MM_DD_YYYY.json.gz',
+                            'model' => Network::class,
+                        ],
+            */
         ];
 
         // Ruta base de TMDB
         $basePath = '/p/exports';
-
-        //TODO: Filtro de entidades a importar
-        $entities = array_filter($entities, function ($entityName) {
-            $allowed = [
-                'Movies',
-                'People',
-                'Production_Companies',
-            ];
-            return in_array($entityName, $allowed);
-        });
-
 
         foreach ($entities as $entityName => $data) {
             // Reemplaza la fecha en el nombre del archivo
@@ -116,14 +108,14 @@ class TmdbImport extends Command
 
                     $line = trim($line);
                     if (!empty($line)) {
-                        $record = json_decode($line, true);
-                        $this->info("{$record['id']} to {$data['model']}");
-
-                        if ($record) {
-                            // Inserta o actualiza el registro según el id
-                            $data['model']::import(
-                                $record
-                            );
+                        if ($entityName === 'Movies') {
+                            $data = json_decode($line, true);
+                            $this->info("Procesando {$entityName}: {$data['id']}");
+                            $tmdbScraper->movie($data['id']);
+                            $count++;
+                        } elseif ($entityName === 'TV_Series') {
+                            $data = json_decode($line, true);
+                            $tmdbScraper->tv($data['id']);
                             $count++;
                         }
                     }
