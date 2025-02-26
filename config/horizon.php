@@ -199,15 +199,15 @@ return [
         'production' => [
             'supervisor-1' => [
                 'connection' => 'redis',
-                'queue' => ['tmdb-import'],
+                'queue' => ['tmdb-scrap'],
                 'processes' => 4,  # Workers en paralelo
                 'balance' => 'auto', # auto/simple
                 'maxProcesses' => 6,
                 'minProcesses' => 2,
             ],
-            'tmdb-import' => [
+            'tmdb-scrap' => [
                 'connection' => 'redis',
-                'queue' => ['tmdb-import'],
+                'queue' => ['tmdb-scrap'],
                 'processes' => 4, // Número de workers
                 'tries' => 3,
                 'timeout' => 300,
