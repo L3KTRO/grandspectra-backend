@@ -1,47 +1,78 @@
-# Etapa 1: Instalación de dependencias con Composer
-FROM composer:2 AS composer
+# Etapa 1: Instalación optimizada de dependencias con Composer
+FROM composer:2.6 AS builder
 
-# Definir el directorio de trabajo para Composer
 WORKDIR /app
 
-# Copiar archivos de Composer para aprovechar el cache en reconstrucciones
-COPY composer.json composer.lock ./
+# Copiar solo archivos esenciales para cachear dependencias
+COPY composer.json composer.lock artisan ./
+COPY database/ database/
 
-# Instalar dependencias sin incluir paquetes de desarrollo y optimizando la instalación
-RUN composer install --prefer-dist --no-scripts --ignore-platform-reqs
+# Instalación optimizada para producción (sin dev dependencies)
+RUN composer install \
+    --prefer-dist \
+    --no-scripts \
+    --no-dev \
+    --ignore-platform-reqs \
+    --optimize-autoloader \
+    --ansi
 
 # Etapa 2: Construcción de la imagen final
 FROM php:8.3-fpm-alpine
 
-# Instalar dependencias del sistema necesarias para compilar extensiones y otras utilidades
+# Dependencias del sistema y extensiones PHP
 RUN apk add --no-cache \
     libpng-dev \
     libxml2-dev \
     oniguruma-dev \
-    zip \
-    unzip \
-    curl \
-    postgresql-dev
+    postgresql-dev \
+    supervisor \
+    shadow \
+    tzdata \
+    && docker-php-ext-install \
+        pdo \
+        pdo_mysql \
+        pdo_pgsql \
+        mbstring \
+        exif \
+        pcntl \
+        bcmath \
+        gd \
+    && docker-php-ext-enable opcache
 
+# Configuración de PHP y OPcache (mejora rendimiento)
+COPY docker/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
-# Instalar extensiones PHP requeridas por Laravel
-RUN docker-php-ext-install pdo_pgsql pdo pdo_mysql mysqli mbstring
+# Configuración de Supervisor para queues y cron
+COPY docker/supervisor.conf /etc/supervisor/supervisord.conf
 
+COPY docker/www.conf /usr/local/etc/php/pool.d/www.conf
 
-# Definir el directorio de la aplicación
+# Variables de entorno
+ENV APP_ENV=production
+ENV APP_DEBUG=false
+
 WORKDIR /var/www
 
-# Copiar el código de la aplicación desde el contexto al contenedor
+# Copiar aplicación y dependencias
+COPY --from=builder /app/vendor vendor/
 COPY . .
 
-# Copiar el directorio vendor generado en la etapa anterior
-COPY --from=composer /app/vendor /var/www/vendor
+# Ajustar permisos y usuario
+RUN chown -R www-data:www-data /var/www \
+    && usermod -u 1000 www-data \
+    && chmod -R 775 storage bootstrap/cache
 
-# Ajustar permisos para el usuario de PHP
-RUN chown -R www-data:www-data /var/www
+RUN mkdir -p /var/log/supervisor && \
+    chown -R www-data:www-data /var/log/supervisor && \
+    chmod -R 755 /var/log/supervisor
 
-# Exponer el puerto en el que PHP-FPM atenderá las peticiones
+# Entrypoint para configuraciones dinámicas
+COPY docker/docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+ENTRYPOINT ["docker-entrypoint.sh"]
+
 EXPOSE 9000
 
-# Comando para iniciar cron en segundo plano y PHP-FPM
-CMD ["sh", "-c", "php-fpm"]
+# Añadir esta línea al final del Dockerfile
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+

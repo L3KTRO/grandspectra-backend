@@ -198,9 +198,12 @@ return [
     'environments' => [
         'production' => [
             'supervisor-1' => [
-                'maxProcesses' => 10,
-                'balanceMaxShift' => 1,
-                'balanceCooldown' => 3,
+                'connection' => 'redis',
+                'queue' => ['tmdb-import'],
+                'processes' => 4,  # Workers en paralelo
+                'balance' => 'auto', # auto/simple
+                'maxProcesses' => 6,
+                'minProcesses' => 2,
             ],
             'tmdb-import' => [
                 'connection' => 'redis',
