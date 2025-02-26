@@ -38,11 +38,14 @@ class ProcessMovieJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
+    public $tries = 3;
+
     /**
      * ProcessMovieJob constructor.
      */
     public function __construct(public int $id)
     {
+        $this->onConnection('redis');
     }
 
     public function handle(): void
@@ -94,5 +97,10 @@ class ProcessMovieJob implements ShouldQueue
         // Recommendations
 
         Recommendation::upsert($movieScraper->getRecommendations(), ['recommendation_movie_id', 'movie_id']);
+    }
+
+    public function failed(\Throwable $exception): void
+    {
+        Log::error("Error procesando TMDB ID {$this->id}: " . $exception->getMessage());
     }
 }

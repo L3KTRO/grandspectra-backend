@@ -31,11 +31,11 @@ class TMDBScraper implements ShouldQueue
 
     public function tv(int $id): void
     {
-        ProcessTvJob::dispatch($id);
+        ProcessTvJob::dispatch($id)->onQueue("tmdb-scrap");
     }
 
     public function movie(int $id): void
     {
-        ProcessMovieJob::dispatch($id);
+        ProcessMovieJob::dispatch($id)->onQueue("tmdb-scrap");
     }
 }

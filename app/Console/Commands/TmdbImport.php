@@ -117,8 +117,6 @@ class TmdbImport extends Command
                             }
                             $this->info("Procesando {$entityName}: {$data['id']}");
                             $tmdbScraper->movie($data['id']);
-                            $this->info("Durmiendo..");
-                            Sleep::for(2)->seconds();
                             $count++;
                         } elseif ($entityName === 'TV_Series') {
                             $data = json_decode($line, true);
@@ -127,8 +125,6 @@ class TmdbImport extends Command
                             }
                             $this->info("Procesando {$entityName}: {$data['id']}");
                             $tmdbScraper->tv($data['id']);
-                            $this->info("Durmiendo..");
-                            Sleep::for(2)->seconds();
                             $count++;
                         }
                     }

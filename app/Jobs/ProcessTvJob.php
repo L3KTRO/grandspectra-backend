@@ -24,7 +24,6 @@ use App\Models\Network;
 use App\Models\Person;
 use App\Models\Recommendation;
 use App\Models\Season;
-use App\Models\Torrent;
 use App\Models\Tv;
 use App\Services\Tmdb\Client;
 use Illuminate\Bus\Queueable;
@@ -32,6 +31,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class ProcessTvJob implements ShouldQueue
 {
@@ -40,11 +40,14 @@ class ProcessTvJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
+    public $tries = 3;
+
     /**
      * ProcessTvJob Constructor.
      */
     public function __construct(public int $id)
     {
+        $this->onConnection('redis');
     }
 
     public function handle(): void
@@ -113,5 +116,10 @@ class ProcessTvJob implements ShouldQueue
         // Recommendations
 
         Recommendation::upsert($tvScraper->getRecommendations(), ['recommendation_tv_id', 'tv_id']);
+    }
+
+    public function failed(\Throwable $exception): void
+    {
+        Log::error("Error procesando TMDB ID {$this->id}: " . $exception->getMessage());
     }
 }
