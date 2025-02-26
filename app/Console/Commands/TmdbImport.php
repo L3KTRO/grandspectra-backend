@@ -51,13 +51,13 @@ class TmdbImport extends Command
 
         // Definir la configuración de cada entidad con el "template" del nombre
         $entities = [
-            'Movies' => [
-                'file' => 'movie_ids_MM_DD_YYYY.json.gz',
-                'model' => Movie::class,
-            ],
             'TV_Series' => [
                 'file' => 'tv_series_ids_MM_DD_YYYY.json.gz',
                 'model' => Tv::class,
+            ],
+            'Movies' => [
+                'file' => 'movie_ids_MM_DD_YYYY.json.gz',
+                'model' => Movie::class,
             ],
             /*            'People' => [
                             'file' => 'person_ids_MM_DD_YYYY.json.gz',
@@ -120,9 +120,6 @@ class TmdbImport extends Command
                             $count++;
                         } elseif ($entityName === 'TV_Series') {
                             $data = json_decode($line, true);
-                            if ($data['adult'] === false) {
-                                continue;
-                            }
                             $this->info("Procesando {$entityName}: {$data['id']}");
                             $tmdbScraper->tv($data['id']);
                             $count++;
