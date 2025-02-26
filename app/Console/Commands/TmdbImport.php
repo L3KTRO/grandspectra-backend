@@ -12,6 +12,7 @@ use App\Models\Tv;
 use App\Services\Tmdb\TMDBScraper;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Sleep;
 
 class TmdbImport extends Command
 {
@@ -116,13 +117,18 @@ class TmdbImport extends Command
                             }
                             $this->info("Procesando {$entityName}: {$data['id']}");
                             $tmdbScraper->movie($data['id']);
+                            $this->info("Durmiendo..");
+                            Sleep::for(2)->seconds();
                             $count++;
                         } elseif ($entityName === 'TV_Series') {
                             $data = json_decode($line, true);
                             if ($data['adult'] === false) {
                                 continue;
                             }
+                            $this->info("Procesando {$entityName}: {$data['id']}");
                             $tmdbScraper->tv($data['id']);
+                            $this->info("Durmiendo..");
+                            Sleep::for(2)->seconds();
                             $count++;
                         }
                     }

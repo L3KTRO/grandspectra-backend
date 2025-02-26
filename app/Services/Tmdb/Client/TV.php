@@ -18,8 +18,10 @@ namespace App\Services\Tmdb\Client;
 
 use App\Enums\Occupation;
 use App\Services\Tmdb\TMDB;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use function array_key_exists;
 
 class TV
 {
@@ -297,7 +299,7 @@ class TV
     public TMDB $tmdb;
 
     /**
-     * @throws \Illuminate\Http\Client\ConnectionException
+     * @throws ConnectionException
      */
     public function __construct(int $id)
     {
@@ -420,7 +422,7 @@ class TV
 
         foreach ($this->data['aggregate_credits']['crew'] ?? [] as $person) {
             foreach ($person['jobs'] ?? [] as $job) {
-                if (!\array_key_exists('job', $job) || $job['job'] === null) {
+                if (!array_key_exists('job', $job) || $job['job'] === null) {
                     continue;
                 }
 

@@ -19,8 +19,6 @@ namespace App\Services\Tmdb\Client;
 use App\Enums\Occupation;
 use App\Services\Tmdb\TMDB;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Sleep;
 use Illuminate\Support\Str;
 use DateTime;
 use Exception;
@@ -252,7 +250,7 @@ class Movie
             ])
             ->json();
 
-        Sleep::for(2)->seconds();
+        //Sleep::for(2)->seconds();
         $this->tmdb = new TMDB();
     }
 
