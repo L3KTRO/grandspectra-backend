@@ -182,17 +182,12 @@ return [
     'defaults' => [
         'supervisor-1' => [
             'connection' => 'redis',
-            'queue' => ['default'],
-            'balance' => 'auto',
-            'autoScalingStrategy' => 'time',
-            'maxProcesses' => 1,
-            'maxTime' => 0,
-            'maxJobs' => 0,
-            'memory' => 1024,
-            'tries' => 1,
-            'timeout' => 60,
-            'nice' => 0,
-        ],
+            'queue' => ['tmdb-scrap'],
+            'processes' => 4,  # Workers en paralelo
+            'balance' => 'auto', # auto/simple
+            'maxProcesses' => 6,
+            'minProcesses' => 2,
+        ]
     ],
 
     'environments' => [
