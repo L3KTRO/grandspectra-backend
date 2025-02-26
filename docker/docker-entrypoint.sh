@@ -4,6 +4,8 @@
 php artisan config:cache
 php artisan view:cache
 php artisan route:cache
+php artisan horizon:terminate  # Eliminar instancias residuales
+php artisan horizon
 
 # Asegurar permisos finales
 chown -R www-data:www-data /var/www/storage
