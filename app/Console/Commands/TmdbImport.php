@@ -103,7 +103,7 @@ class TmdbImport extends Command
                     continue;
                 }
 
-                $lines = preg_split('/\r\n|\r|\n/', $content);
+                $lines = collect(preg_split('/\r\n|\r|\n/', $content))->shuffle()->toArray();
                 $count = 0;
                 foreach ($lines as $line) {
 
