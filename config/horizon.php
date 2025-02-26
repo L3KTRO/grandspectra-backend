@@ -204,14 +204,7 @@ return [
                 'balance' => 'auto', # auto/simple
                 'maxProcesses' => 6,
                 'minProcesses' => 2,
-            ],
-            'tmdb-scrap' => [
-                'connection' => 'redis',
-                'queue' => ['tmdb-scrap'],
-                'processes' => 4, // Número de workers
-                'tries' => 3,
-                'timeout' => 300,
-            ],
+            ]
         ],
 
         'local' => [
