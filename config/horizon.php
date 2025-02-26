@@ -191,7 +191,7 @@ return [
     ],
 
     'environments' => [
-        'production' => [
+        '*' => [
             'supervisor-1' => [
                 'connection' => 'redis',
                 'queue' => ['tmdb-scrap'],
@@ -200,12 +200,6 @@ return [
                 'maxProcesses' => 6,
                 'minProcesses' => 2,
             ]
-        ],
-
-        'local' => [
-            'supervisor-1' => [
-                'maxProcesses' => 3,
-            ],
-        ],
+        ]
     ],
 ];
