@@ -195,9 +195,9 @@ return [
             'supervisor-1' => [
                 'connection' => 'redis',
                 'queue' => ['tmdb-scrap'],
-                'processes' => 4,  # Workers en paralelo
-                'balance' => 'auto', # auto/simple
-                'maxProcesses' => 6,
+                'processes' => 5,  # Workers en paralelo
+                'balance' => 'simple', # auto/simple
+                'maxProcesses' => 10,
                 'minProcesses' => 2,
             ]
         ]
