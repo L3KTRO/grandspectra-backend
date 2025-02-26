@@ -40,14 +40,8 @@ COPY --from=composer /app/vendor /var/www/vendor
 # Ajustar permisos para el usuario de PHP
 RUN chown -R www-data:www-data /var/www
 
-# Crear un archivo crontab para ejecutar el scheduler cada minuto
-RUN echo '* * * * * www-data php /var/www/artisan schedule:run >> /var/log/cron.log 2>&1' > /etc/crontabs/www-data
-
-# Crear un archivo de log para cron
-RUN touch /var/log/cron.log
-
 # Exponer el puerto en el que PHP-FPM atenderá las peticiones
 EXPOSE 9000
 
 # Comando para iniciar cron en segundo plano y PHP-FPM
-CMD ["sh", "-c", "crond & php-fpm"]
+CMD ["sh", "-c", "php-fpm"]

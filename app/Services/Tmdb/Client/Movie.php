@@ -20,6 +20,7 @@ use App\Enums\Occupation;
 use App\Services\Tmdb\TMDB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Sleep;
 use Illuminate\Support\Str;
 use DateTime;
 use Exception;
@@ -251,8 +252,7 @@ class Movie
             ])
             ->json();
 
-        var_dump($this->data);
-        sleep(1);
+        Sleep::for(2)->seconds();
         $this->tmdb = new TMDB();
     }
 
