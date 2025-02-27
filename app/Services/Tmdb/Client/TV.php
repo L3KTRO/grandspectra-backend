@@ -306,8 +306,8 @@ class TV
         $this->data = Http::acceptJson()
             ->withUrlParameters(['id' => $id])
             ->get('https://api.TheMovieDB.org/3/tv/{id}', [
-                'api_key'            => config('tmdb.api_key'),
-                'language'           => config('app.meta_locale'),
+                'api_key' => config('tmdb.api_key'),
+                'language' => config('app.meta_locale'),
                 'append_to_response' => 'videos,images,aggregate_credits,external_ids,keywords,recommendations,alternative_titles',
             ])
             ->json();
@@ -344,28 +344,28 @@ class TV
     {
         if (isset($this->data['id'], $this->data['name'])) {
             return [
-                'backdrop'           => $this->tmdb->image('backdrop', $this->data),
-                'episode_run_time'   => $this->tmdb->ifHasItems('episode_run_time', $this->data),
-                'first_air_date'     => $this->tmdb->ifExists('first_air_date', $this->data),
-                'homepage'           => $this->data['homepage'] ?? null,
-                'imdb_id'            => substr($this->data['external_ids']['imdb_id'] ?? '', 2),
-                'tvdb_id'            => (string) $this->data['external_ids']['tvdb_id'],
-                'in_production'      => $this->data['in_production'] ?? null,
-                'last_air_date'      => $this->data['last_air_date'] ?? null,
-                'name'               => Str::limit($this->data['name'], 200),
-                'name_sort'          => addslashes(str_replace(['The ', 'An ', 'A ', '"'], [''], Str::limit($this->data['name'], 100))),
+                'backdrop' => $this->tmdb->image('backdrop', $this->data),
+                'episode_run_time' => $this->tmdb->ifHasItems('episode_run_time', $this->data),
+                'first_air_date' => $this->tmdb->ifExists('first_air_date', $this->data),
+                'homepage' => $this->data['homepage'] ?? null,
+                'imdb_id' => substr($this->data['external_ids']['imdb_id'] ?? '', 2),
+                'tvdb_id' => (string)$this->data['external_ids']['tvdb_id'],
+                'in_production' => $this->data['in_production'] ?? null,
+                'last_air_date' => $this->data['last_air_date'] ?? null,
+                'name' => Str::limit($this->data['name'], 200),
+                'name_sort' => addslashes(str_replace(['The ', 'An ', 'A ', '"'], [''], Str::limit($this->data['name'], 100))),
                 'number_of_episodes' => $this->data['number_of_episodes'] ?? null,
-                'number_of_seasons'  => $this->data['number_of_seasons'] ?? null,
-                'origin_country'     => $this->tmdb->ifHasItems('origin_country', $this->data),
-                'original_language'  => $this->data['original_language'] ?? null,
-                'original_name'      => $this->data['original_name'] ?? null,
-                'overview'           => $this->data['overview'] ?? null,
-                'popularity'         => $this->data['popularity'] ?? null,
-                'poster'             => $this->tmdb->image('poster', $this->data),
-                'status'             => $this->data['status'] ?? null,
-                'vote_average'       => $this->data['vote_average'] ?? null,
-                'vote_count'         => $this->data['vote_count'] ?? null,
-                'trailer'            => $this->data['videos']['results'][0]['key'] ?? null,
+                'number_of_seasons' => $this->data['number_of_seasons'] ?? null,
+                'origin_country' => $this->tmdb->ifHasItems('origin_country', $this->data),
+                'original_language' => $this->data['original_language'] ?? null,
+                'original_name' => $this->data['original_name'] ?? null,
+                'overview' => $this->data['overview'] ?? null,
+                'popularity' => $this->data['popularity'] ?? null,
+                'poster' => $this->tmdb->image('poster', $this->data),
+                'status' => $this->data['status'] ?? null,
+                'vote_average' => $this->data['vote_average'] ?? null,
+                'vote_count' => $this->data['vote_count'] ?? null,
+                'trailer' => $this->data['videos']['results'][0]['key'] ?? null,
             ];
         }
 
@@ -384,7 +384,7 @@ class TV
 
         foreach ($this->data['genres'] ?? [] as $genre) {
             $genres[] = [
-                'id'   => $genre['id'],
+                'id' => $genre['id'],
                 'name' => $genre['name'],
             ];
         }
@@ -411,11 +411,11 @@ class TV
         foreach ($this->data['aggregate_credits']['cast'] ?? [] as $person) {
             foreach ($person['roles'] ?? [] as $role) {
                 $credits[] = [
-                    'tv_id'         => $this->data['id'],
-                    'person_id'     => $person['id'],
+                    'tv_id' => $this->data['id'],
+                    'person_id' => $person['id'],
                     'occupation_id' => Occupation::ACTOR->value,
-                    'character'     => $role['character'] ?? '',
-                    'order'         => $person['order'] ?? null
+                    'character' => $role['character'] ?? '',
+                    'order' => $person['order'] ?? null
                 ];
             }
         }
@@ -430,11 +430,11 @@ class TV
 
                 if ($occupation !== null) {
                     $credits[] = [
-                        'tv_id'         => $this->data['id'],
-                        'person_id'     => $person['id'],
+                        'tv_id' => $this->data['id'],
+                        'person_id' => $person['id'],
                         'occupation_id' => $occupation->value,
-                        'character'     => null,
-                        'order'         => null,
+                        'character' => null,
+                        'order' => null,
                     ];
                 }
             }
@@ -442,11 +442,11 @@ class TV
 
         foreach ($this->data['created_by'] ?? [] as $person) {
             $credits[] = [
-                'tv_id'         => $this->data['id'],
-                'person_id'     => $person['id'],
+                'tv_id' => $this->data['id'],
+                'person_id' => $person['id'],
                 'occupation_id' => Occupation::CREATOR->value,
-                'character'     => null,
-                'order'         => null,
+                'character' => null,
+                'order' => null,
             ];
         }
 
@@ -469,7 +469,7 @@ class TV
         foreach ($this->data['seasons'] ?? [] as $season) {
             if ($season['season_number'] !== null) {
                 $seasons[] = [
-                    'id'            => $season['id'],
+                    'id' => $season['id'],
                     'season_number' => $season['season_number'],
                 ];
             }
@@ -508,11 +508,12 @@ class TV
             if ($tv_ids->contains($recommendation['id'])) {
                 $recommendations[] = [
                     'recommendation_tv_id' => $recommendation['id'],
-                    'tv_id'                => $this->data['id'],
-                    'title'                => $recommendation['name'],
-                    'vote_average'         => $recommendation['vote_average'],
-                    'poster'               => $this->tmdb->image('poster', $recommendation),
-                    'first_air_date'       => $recommendation['first_air_date'],
+                    'tv_id' => $this->data['id'],
+                    'title' => $recommendation['name'],
+                    "release_date" => $recommendation['release_date'],
+                    'vote_average' => $recommendation['vote_average'],
+                    'poster' => $this->tmdb->image('poster', $recommendation),
+                    'first_air_date' => $recommendation['first_air_date'],
                 ];
             }
         }

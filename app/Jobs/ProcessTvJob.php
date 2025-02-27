@@ -124,6 +124,6 @@ class ProcessTvJob implements ShouldQueue
 
         // Recommendations
 
-        Recommendation::upsert($tvScraper->getRecommendations(), ['recommendation_tv_id', 'tv_id']);
+        //Recommendation::upsert($tvScraper->getRecommendations(), ['recommendation_tv_id', 'tv_id']);
     }
 }
