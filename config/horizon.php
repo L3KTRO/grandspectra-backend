@@ -212,6 +212,10 @@ return [
                 'maxProcesses' => 1,
                 'minProcesses' => 1,
             ]
+        ],
+
+        "dev" => [
+
         ]
     ],
 ];

@@ -52,6 +52,15 @@ class ProcessTvJob implements ShouldQueue
 
     public function handle(): void
     {
+        try {
+            $this->handle();
+        } catch (\Exception $e) {
+            $this->fail($e);
+        }
+    }
+
+    public function manage(): void
+    {
         // Tv
 
         $tvScraper = new Client\TV($this->id);
@@ -116,10 +125,5 @@ class ProcessTvJob implements ShouldQueue
         // Recommendations
 
         Recommendation::upsert($tvScraper->getRecommendations(), ['recommendation_tv_id', 'tv_id']);
-    }
-
-    public function failed(\Throwable $exception): void
-    {
-        Log::error("Error procesando TMDB ID {$this->id}: " . $exception->getMessage());
     }
 }

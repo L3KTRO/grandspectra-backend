@@ -50,6 +50,15 @@ class ProcessMovieJob implements ShouldQueue
 
     public function handle(): void
     {
+        try {
+            $this->handle();
+        } catch (\Exception $e) {
+            $this->fail($e);
+        }
+    }
+
+    public function manage(): void
+    {
         // Movie
 
         $movieScraper = new Client\Movie($this->id);
@@ -97,10 +106,5 @@ class ProcessMovieJob implements ShouldQueue
         // Recommendations
 
         Recommendation::upsert($movieScraper->getRecommendations(), ['recommendation_movie_id', 'movie_id']);
-    }
-
-    public function failed(\Throwable $exception): void
-    {
-        Log::error("Error procesando TMDB ID {$this->id}: " . $exception->getMessage());
     }
 }
