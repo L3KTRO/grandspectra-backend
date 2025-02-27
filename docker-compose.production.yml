@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: grandspectra-backend
     environment:
-      APP_ENV: dev
+      APP_ENV: ${APP_ENV}
       APP_DEBUG: 'true'
       APP_KEY: "${APP_KEY}"
       DB_CONNECTION: ${DB_CONNECTION}

@@ -191,7 +191,7 @@ return [
     ],
 
     'environments' => [
-        '*' => [
+        'production' => [
             'supervisor-1' => [
                 "memory" => 128,
                 'connection' => 'redis',

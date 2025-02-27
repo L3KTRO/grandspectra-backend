@@ -47,10 +47,6 @@ COPY docker/supervisor.conf /etc/supervisor/supervisord.conf
 
 COPY docker/www.conf /usr/local/etc/php/pool.d/www.conf
 
-# Variables de entorno
-ENV APP_ENV=production
-ENV APP_DEBUG=false
-
 WORKDIR /var/www
 
 # Copiar aplicación y dependencias
