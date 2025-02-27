@@ -191,7 +191,7 @@ return [
     ],
 
     'environments' => [
-        'production' => [
+        '*' => [
             'supervisor-1' => [
                 'connection' => 'redis',
                 'queue' => ['tmdb-scrap-tv', "tmdb-scrap-movie"],
