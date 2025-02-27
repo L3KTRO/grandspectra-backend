@@ -51,7 +51,7 @@ class ProcessMovieJob implements ShouldQueue
     public function handle(): void
     {
         try {
-            $this->handle();
+            $this->manage();
         } catch (\Exception $e) {
             $this->fail($e);
         }
