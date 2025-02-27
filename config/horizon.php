@@ -198,7 +198,7 @@ return [
                 'queue' => ['tmdb-scrap-tv', "tmdb-scrap-movie"],
                 'processes' => 1,  # Workers en paralelo
                 'balance' => 'auto', # auto/simple
-                'maxProcesses' => 20,
+                'maxProcesses' => 12,
                 'minProcesses' => 1,
             ]
         ],
