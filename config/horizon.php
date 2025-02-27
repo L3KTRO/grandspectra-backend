@@ -191,14 +191,25 @@ return [
     ],
 
     'environments' => [
-        '*' => [
+        'production' => [
             'supervisor-1' => [
                 'connection' => 'redis',
-                'queue' => ['tmdb-scrap'],
-                'processes' => 5,  # Workers en paralelo
-                'balance' => 'simple', # auto/simple
-                'maxProcesses' => 10,
-                'minProcesses' => 2,
+                'queue' => ['tmdb-scrap-tv', "tmdb-scrap-movie"],
+                'processes' => 3,  # Workers en paralelo
+                'balance' => 'auto', # auto/simple
+                'maxProcesses' => 5,
+                'minProcesses' => 1,
+            ]
+        ],
+
+        "local" => [
+            'supervisor-1' => [
+                'connection' => 'redis',
+                'queue' => ['tmdb-scrap-tv', "tmdb-scrap-movie"],
+                'processes' => 1,  # Workers en paralelo
+                'balance' => 'auto', # auto/simple
+                'maxProcesses' => 1,
+                'minProcesses' => 1,
             ]
         ]
     ],
