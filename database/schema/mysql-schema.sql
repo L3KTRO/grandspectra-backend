@@ -1676,27 +1676,6 @@ CREATE TABLE `resurrections` (
   CONSTRAINT `graveyard_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-DROP TABLE IF EXISTS `rss`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `rss` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `position` int NOT NULL DEFAULT '0',
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Default',
-  `user_id` int unsigned NOT NULL DEFAULT '1',
-  `is_private` tinyint(1) NOT NULL DEFAULT '0',
-  `is_torrent` tinyint(1) NOT NULL DEFAULT '0',
-  `json_torrent` json NOT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `rss_is_private_index` (`is_private`),
-  KEY `rss_is_torrent_index` (`is_torrent`),
-  KEY `rss_user_id_foreign` (`user_id`),
-  CONSTRAINT `rss_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `rsskeys`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;

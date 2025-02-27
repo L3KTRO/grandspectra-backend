@@ -196,10 +196,10 @@ return [
                 "memory" => 128,
                 'connection' => 'redis',
                 'queue' => ['tmdb-scrap-tv', "tmdb-scrap-movie"],
-                'processes' => 1,  # Workers en paralelo
+                'processes' => 8,  # Workers en paralelo
                 'balance' => 'auto', # auto/simple
-                'maxProcesses' => 12,
-                'minProcesses' => 1,
+                'maxProcesses' => 16,
+                'minProcesses' => 2,
             ]
         ],
 
