@@ -214,8 +214,7 @@ return [
             ]
         ],
 
-        "dev" => [
-
-        ]
+        "dev" => [],
+        "production-non-computing" => []
     ],
 ];

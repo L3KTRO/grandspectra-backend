@@ -14,14 +14,14 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Sleep;
 
-class TmdbImport extends Command
+class TmdbUpsert extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'tmdb:import';
+    protected $signature = 'tmdb:upsert';
 
     /**
      * The console command description.
