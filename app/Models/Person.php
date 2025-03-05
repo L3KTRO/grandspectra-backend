@@ -48,6 +48,7 @@ class Person extends Model
     use HasFactory;
 
     protected $guarded = [];
+    public $with = [];
 
     public $timestamps = false;
 

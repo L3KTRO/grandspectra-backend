@@ -1,28 +1,22 @@
 <?php
 
-use App\Http\Controllers\KeywordController;
+use App\Http\Controllers\CreditController;
+use App\Http\Controllers\EpisodeController;
+use App\Http\Controllers\GenreController;
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\OccupationController;
 use App\Http\Controllers\PersonController;
-use App\Http\Controllers\ProductionCompanyController;
-use App\Http\Controllers\TmdbCollectionController;
-use App\Http\Controllers\TvNetworkController;
-use App\Http\Controllers\TvSeriesController;
+use App\Http\Controllers\SeasonController;
+use App\Http\Controllers\TvController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\RatingController;
 
 // Definición de rutas API
-Route::apiResource('users', UserController::class);
-Route::apiResource('ratings', RatingController::class);
 Route::apiResource('movies', MovieController::class);
+Route::apiResource('genres', GenreController::class);
+Route::apiResource('credits', CreditController::class);
 Route::apiResource('people', PersonController::class);
-Route::apiResource('tmdb-collections', TmdbCollectionController::class);
-Route::apiResource('tv-series', TvSeriesController::class);
-Route::apiResource('keywords', KeywordController::class);
-Route::apiResource('company', ProductionCompanyController::class);
-Route::apiResource('tv-networks', TvNetworkController::class);
+Route::apiResource('occupations', OccupationController::class);
+Route::apiResource('tv', TvController::class);
+Route::apiResource('seasons', SeasonController::class);
+Route::apiResource('episodes', EpisodeController::class);
 
-
-// Special routes
-
-Route::get('popular/movies', [MovieController::class, 'indexByPopularity']);

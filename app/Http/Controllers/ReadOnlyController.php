@@ -53,7 +53,12 @@ abstract class ReadOnlyController extends Controller
      */
     public function show(string $id): JsonResponse
     {
-        $record = $this->model::select($this->columns)
+        $relationships = property_exists($this->model, 'with') && !empty($this->model->with)
+            ? $this->model->with
+            : [];
+
+        $record = $this->model::with($relationships)
+            ->select($this->columns)
             ->where($this->model->getRouteKeyName(), $id)
             ->firstOrFail();
 

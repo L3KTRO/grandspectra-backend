@@ -58,6 +58,7 @@ class Movie extends Model
     use HasFactory;
 
     protected $guarded = [];
+    public $with = ['credits.person', "credits.occupation", "genres", "companies", "collection"];
 
     /**
      * Get the attributes that should be cast.
