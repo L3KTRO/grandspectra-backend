@@ -215,15 +215,6 @@ return [
         ],
 
         "dev" => [],
-        "production-non-computing" => [
-            'supervisor-1' => [
-                'connection' => 'redis',
-                'queue' => [],
-                'processes' => 0,  # Workers en paralelo
-                'balance' => 'auto', # auto/simple
-                'maxProcesses' => 0,
-                'minProcesses' => 0,
-            ]
-        ]
+        "production-non-computing" => []
     ],
 ];
