@@ -2,39 +2,27 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Keyword;
 use App\Models\Movie;
-use App\Models\Person;
-use App\Models\Company;
-use App\Models\Collection;
-use App\Models\Network;
 use App\Models\Tv;
 use App\Services\Tmdb\TMDBScraper;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Sleep;
 
-class TmdbUpsert extends Command
+class TmdbImport extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'tmdb:upsert';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Command description';
+    protected $signature = 'tmdb:import';
+    protected $description = 'Import TMDB data';
 
     /**
      * Execute the console command.
      */
     public function handle(): int
     {
+
+        $mode = $this->choice('Select mode:', ["upsert", "create"], 0);
+        $allowedEntities = $this->choice('Select entity:', ["both", "movies", "series"], 0);
+
         ini_set('memory_limit', '1024M');
 
         $this->info("Iniciando la importación de datos de TMDB");
@@ -51,7 +39,7 @@ class TmdbUpsert extends Command
 
         // Definir la configuración de cada entidad con el "template" del nombre
         $entities = [
-            'TV_Series' => [
+            'Series' => [
                 'file' => 'tv_series_ids_MM_DD_YYYY.json.gz',
                 'model' => Tv::class,
             ],
@@ -59,35 +47,17 @@ class TmdbUpsert extends Command
                 'file' => 'movie_ids_MM_DD_YYYY.json.gz',
                 'model' => Movie::class,
             ],
-            /*            'People' => [
-                            'file' => 'person_ids_MM_DD_YYYY.json.gz',
-                            'model' => Person::class,
-                        ],
-                        'TmdbCollections' => [
-                            'file' => 'collection_ids_MM_DD_YYYY.json.gz',
-                            'model' => Collection::class,
-                        ],
-                        'Keywords' => [
-                            'file' => 'keyword_ids_MM_DD_YYYY.json.gz',
-                            'model' => Keyword::class,
-                        ],
-                        'Production_Companies' => [
-                            'file' => 'production_company_ids_MM_DD_YYYY.json.gz',
-                            'model' => Company::class,
-                        ],
-                        'TV_Networks' => [
-                            'file' => 'tv_network_ids_MM_DD_YYYY.json.gz',
-                            'model' => Network::class,
-                        ],
-            */
         ];
 
         // Ruta base de TMDB
         $basePath = '/p/exports';
 
-        foreach ($entities as $entityName => $data) {
+        foreach ($entities as $entityName => $dataEntity) {
+            if ($allowedEntities !== "both" && $allowedEntities !== strtolower($entityName)) {
+                continue;
+            }
             // Reemplaza la fecha en el nombre del archivo
-            $fileName = str_replace('MM_DD_YYYY', $requiredFormatDate, $data['file']);
+            $fileName = str_replace('MM_DD_YYYY', $requiredFormatDate, $dataEntity['file']);
             // Construir la URL completa
             $url = "https://files.tmdb.org{$basePath}/{$fileName}";
             $this->info("Procesando {$entityName}: descargando {$url}");
@@ -106,24 +76,31 @@ class TmdbUpsert extends Command
                 $lines = collect(preg_split('/\r\n|\r|\n/', $content))->shuffle()->toArray();
                 $count = 0;
                 foreach ($lines as $line) {
-
                     $line = trim($line);
                     if (!empty($line)) {
+                        $data = json_decode($line, true);
+
+                        if ($mode == "create") {
+                            if ($dataEntity["model"]::find($data['id'])) {
+                                $this->info("La ID {$data['id']} ya existe en la base de datos");
+                                continue;
+                            }
+                        }
+
+                        $this->info("Procesando {$entityName}: {$data['id']}");
+
                         if ($entityName === 'Movies') {
-                            $data = json_decode($line, true);
                             if ($data['adult'] === true) {
                                 $this->info("Adulto: {$data['id']}");
                                 continue;
                             }
-                            $this->info("Procesando {$entityName}: {$data['id']}");
                             $tmdbScraper->movie($data['id']);
-                            $count++;
-                        } elseif ($entityName === 'TV_Series') {
-                            $data = json_decode($line, true);
+                        } elseif ($entityName === 'Series') {
                             $this->info("Procesando {$entityName}: {$data['id']}");
                             $tmdbScraper->tv($data['id']);
-                            $count++;
                         }
+
+                        $count++;
                     }
                 }
                 $this->info("{$count} registros importados para {$entityName}");

@@ -120,7 +120,7 @@ class ProcessTvJob implements ShouldQueue
             $seasonScraper = new Client\Season($this->id, $season['season_number']);
 
             $seasons[] = $seasonScraper->getSeason();
-            array_push($episodes, ...$seasonScraper->getEpisodes());
+            //array_push($episodes, ...$seasonScraper->getEpisodes());
         }
 
         Season::upsert($seasons, 'id');
