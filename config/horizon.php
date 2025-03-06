@@ -193,13 +193,13 @@ return [
     'environments' => [
         'production' => [
             'supervisor-1' => [
-                "memory" => 128,
+                "memory" => 256,
                 'connection' => 'redis',
                 'queue' => ['tmdb-scrap-tv', "tmdb-scrap-movie"],
-                'processes' => 8,  # Workers en paralelo
+                'processes' => 4,  # Workers en paralelo
                 'balance' => 'auto', # auto/simple
-                'maxProcesses' => 12,
-                'minProcesses' => 2,
+                'maxProcesses' => 10,
+                'minProcesses' => 1,
             ]
         ],
 
@@ -215,6 +215,15 @@ return [
         ],
 
         "dev" => [],
-        "production-non-computing" => []
+        "production-non-computing" => [
+            'supervisor-1' => [
+                'connection' => 'redis',
+                'queue' => [],
+                'processes' => 0,  # Workers en paralelo
+                'balance' => 'auto', # auto/simple
+                'maxProcesses' => 0,
+                'minProcesses' => 0,
+            ]
+        ]
     ],
 ];
