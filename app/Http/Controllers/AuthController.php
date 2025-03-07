@@ -5,33 +5,79 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\JsonResponse;
 
-
-class AuthController
+class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function register(Request $request): JsonResponse
     {
-        $validated = $request->validate([
-            'nickname' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|string|confirmed|min:8'
+        $validator = Validator::make($request->all(), [
+            'username' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
-        $user = User::create($validated);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $user = User::create([
+            'username' => $request->username,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
         return response()->json([
             'user' => $user,
-            'token' => $user->createToken('vue-token')->plainTextToken
+            'access_token' => $token,
+            'token_type' => 'Bearer',
         ], 201);
     }
 
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse
     {
-        if (!Auth::attempt($request->only('email', 'password'))) {
-            return response()->json(['message' => 'Credenciales inválidas'], 401);
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            return response()->json([
+                'message' => 'Credenciales incorrectas'
+            ], 401);
+        }
+
+        $user = User::where('email', $request->email)->firstOrFail();
+        $token = $user->createToken('auth_token')->plainTextToken;
+
         return response()->json([
-            'token' => $request->user()->createToken('vue-token')->plainTextToken
+            'user' => $user,
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+        ]);
+    }
+
+    public function logout(Request $request): JsonResponse
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'message' => 'Has cerrado sesión exitosamente'
+        ]);
+    }
+
+    public function profile(Request $request): JsonResponse
+    {
+        return response()->json([
+            'user' => $request->user()
         ]);
     }
 }
