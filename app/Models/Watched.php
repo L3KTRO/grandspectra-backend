@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\MorphContentModel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Rating extends MorphContentModel
+class Watched extends MorphContentModel
 {
-    protected $fillable = ['user_id', 'qualification', 'movie_id', 'tv_id'];
+    protected $table = 'watched';
+    protected $fillable = ['user_id', 'movie_id', 'tv_id'];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 }
-

@@ -28,8 +28,18 @@ class User extends Authenticatable
         ];
     }
 
-    public function rating(): HasMany
+    public function ratings(): HasMany
     {
         return $this->hasMany(Rating::class);
+    }
+
+    public function watched(): HasMany
+    {
+        return $this->hasMany(Watched::class);
+    }
+
+    public function watchlist(): HasMany
+    {
+        return $this->hasMany(Watchlist::class);
     }
 }

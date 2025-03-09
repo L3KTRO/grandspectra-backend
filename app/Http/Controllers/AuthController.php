@@ -73,11 +73,4 @@ class AuthController extends Controller
             'message' => 'Has cerrado sesión exitosamente'
         ]);
     }
-
-    public function profile(Request $request): JsonResponse
-    {
-        return response()->json([
-            'user' => $request->user()
-        ]);
-    }
 }
