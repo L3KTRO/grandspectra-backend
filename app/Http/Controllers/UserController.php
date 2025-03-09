@@ -23,7 +23,7 @@ class UserController extends Controller
 
         return response()->json([
             'user' => $request->user(),
-            "data" => [
+            "contents" => [
                 "ratings" => $this->formatContent($ratings),
                 "watched" => $this->formatContent($watched),
                 "watchlist" => $this->formatContent($watchlist)
