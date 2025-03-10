@@ -55,8 +55,8 @@ class Network
         $this->data = Http::acceptJson()
             ->withUrlParameters(['id' => $id])
             ->get('https://api.TheMovieDB.org/3/network/{id}', [
-                'api_key'            => config('tmdb.api_key'),
-                'language'           => config('app.meta_locale'),
+                'api_key' => config('tmdb.api_key'),
+                'language' => config('app.meta_locale'),
                 'append_to_response' => 'images',
             ])
             ->json();
@@ -78,17 +78,17 @@ class Network
     {
         if (isset($this->data['id'], $this->data['name'])) {
             if (isset($this->data['images']['logos'][0]) && \array_key_exists('file_path', $this->data['images']['logos'][0])) {
-                $logo = 'https://image.tmdb.org/t/p/original'.$this->data['images']['logos'][0]['file_path'];
+                $logo = 'https://image.tmdb.org/t/p/original' . $this->data['images']['logos'][0]['file_path'];
             } else {
                 $logo = null;
             }
 
             return [
-                'id'             => $this->data['id'],
-                'headquarters'   => $this->tmdb->ifExists('headquarters', $this->data),
-                'homepage'       => $this->tmdb->ifExists('homepage', $this->data),
-                'logo'           => $logo,
-                'name'           => $this->data['name'],
+                'id' => $this->data['id'],
+                'headquarters' => $this->tmdb->ifExists('headquarters', $this->data),
+                'homepage' => $this->tmdb->ifExists('homepage', $this->data),
+                'logo' => $logo,
+                'name' => $this->data['name'],
                 'origin_country' => $this->data['origin_country'] ?? null,
             ];
         }

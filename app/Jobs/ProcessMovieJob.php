@@ -71,27 +71,27 @@ class ProcessMovieJob implements ShouldQueue
         $movie->genres()->sync(array_unique(array_column($movieScraper->getGenres(), 'id')));
 
         // Companies
+        /*
+                $companies = [];
 
-        $companies = [];
+                foreach ($movieScraper->data['production_companies'] ?? [] as $company) {
+                    usleep(500000);
+                    $companies[] = (new Client\Company($company['id']))->getCompany();
+                }
 
-        foreach ($movieScraper->data['production_companies'] ?? [] as $company) {
-            usleep(500000);
-            $companies[] = (new Client\Company($company['id']))->getCompany();
-        }
+                Company::upsert($companies, 'id');
+                $movie->companies()->sync(array_unique(array_column($companies, 'id')));
 
-        Company::upsert($companies, 'id');
-        $movie->companies()->sync(array_unique(array_column($companies, 'id')));
+                // Collection
 
-        // Collection
+                if ($movieScraper->data['belongs_to_collection'] !== null) {
+                    usleep(500000);
+                    $collection = (new Client\Collection($movieScraper->data['belongs_to_collection']['id']))->getCollection();
 
-        if ($movieScraper->data['belongs_to_collection'] !== null) {
-            usleep(500000);
-            $collection = (new Client\Collection($movieScraper->data['belongs_to_collection']['id']))->getCollection();
-
-            Collection::upsert($collection, 'id');
-            $movie->collection()->sync([$collection['id']]);
-        }
-
+                    Collection::upsert($collection, 'id');
+                    $movie->collection()->sync([$collection['id']]);
+                }
+        */
         // People
 
         $credits = $movieScraper->getCredits();

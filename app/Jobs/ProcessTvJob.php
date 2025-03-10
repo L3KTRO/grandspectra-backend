@@ -68,28 +68,28 @@ class ProcessTvJob implements ShouldQueue
         $tv = Tv::updateOrCreate(['id' => $this->id], $tvScraper->getTv());
 
         // Companies
+        /*
+                $companies = [];
 
-        $companies = [];
+                foreach ($this->tv['production_companies'] ?? [] as $company) {
+                    $companies[] = (new Client\Company($company['id']))->getCompany();
+                }
 
-        foreach ($this->tv['production_companies'] ?? [] as $company) {
-            $companies[] = (new Client\Company($company['id']))->getCompany();
-        }
+                Company::upsert($companies, 'id');
+                $tv->companies()->sync(array_unique(array_column($companies, 'id')));
 
-        Company::upsert($companies, 'id');
-        $tv->companies()->sync(array_unique(array_column($companies, 'id')));
+                // Networks
 
-        // Networks
+                $networks = [];
 
-        $networks = [];
+                foreach ($this->tv['networks'] ?? [] as $network) {
+                    usleep(500000);
+                    $networks[] = (new Client\Network($network['id']))->getNetwork();
+                }
 
-        foreach ($this->tv['networks'] ?? [] as $network) {
-            usleep(500000);
-            $networks[] = (new Client\Network($network['id']))->getNetwork();
-        }
-
-        Network::upsert($networks, 'id');
-        $tv->networks()->sync(array_unique(array_column($networks, 'id')));
-
+                Network::upsert($networks, 'id');
+                $tv->networks()->sync(array_unique(array_column($networks, 'id')));
+        */
         // Genres
 
         Genre::upsert($tvScraper->getGenres(), 'id');
@@ -110,21 +110,21 @@ class ProcessTvJob implements ShouldQueue
         Credit::upsert($credits, ['person_id', 'movie_id', 'tv_id', 'occupation_id', 'character']);
 
         // Seasons and episodes
+        /*
+                $seasons = [];
+                $episodes = [];
 
-        $seasons = [];
-        $episodes = [];
+                foreach ($tvScraper->getSeasons() as $season) {
+                    usleep(500000);
+                    $seasonScraper = new Client\Season($this->id, $season['season_number']);
 
-        foreach ($tvScraper->getSeasons() as $season) {
-            usleep(500000);
-            $seasonScraper = new Client\Season($this->id, $season['season_number']);
+                    $seasons[] = $seasonScraper->getSeason();
+                    //array_push($episodes, ...$seasonScraper->getEpisodes());
+                }
 
-            $seasons[] = $seasonScraper->getSeason();
-            //array_push($episodes, ...$seasonScraper->getEpisodes());
-        }
-
-        Season::upsert($seasons, 'id');
-        Episode::upsert($episodes, 'id');
-
+                Season::upsert($seasons, 'id');
+                Episode::upsert($episodes, 'id');
+        */
         // Recommendations
 
         //Recommendation::upsert($tvScraper->getRecommendations(), ['recommendation_tv_id', 'tv_id']);
