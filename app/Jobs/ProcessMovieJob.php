@@ -75,7 +75,7 @@ class ProcessMovieJob implements ShouldQueue
         $companies = [];
 
         foreach ($movieScraper->data['production_companies'] ?? [] as $company) {
-            sleep(1);
+            usleep(500000);
             $companies[] = (new Client\Company($company['id']))->getCompany();
         }
 
@@ -85,7 +85,7 @@ class ProcessMovieJob implements ShouldQueue
         // Collection
 
         if ($movieScraper->data['belongs_to_collection'] !== null) {
-            sleep(1);
+            usleep(500000);
             $collection = (new Client\Collection($movieScraper->data['belongs_to_collection']['id']))->getCollection();
 
             Collection::upsert($collection, 'id');
@@ -98,7 +98,7 @@ class ProcessMovieJob implements ShouldQueue
         $people = [];
 
         foreach (array_unique(array_column($credits, 'person_id')) as $person_id) {
-            sleep(1);
+            usleep(500000);
             $people[] = (new Client\Person($person_id))->getPerson();
         }
 
