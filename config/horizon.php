@@ -179,16 +179,7 @@ return [
     |
     */
 
-    'defaults' => [
-        'supervisor-1' => [
-            'connection' => 'redis',
-            'queue' => ['tmdb-scrap'],
-            'processes' => 4,  # Workers en paralelo
-            'balance' => 'auto', # auto/simple
-            'maxProcesses' => 6,
-            'minProcesses' => 2,
-        ]
-    ],
+    'defaults' => [],
 
     'environments' => [
         'production' => [
@@ -199,6 +190,15 @@ return [
                 'processes' => 4,  # Workers en paralelo
                 'balance' => 'auto', # auto/simple
                 'maxProcesses' => 10,
+                'minProcesses' => 1,
+            ],
+            'supervisor-2' => [
+                "memory" => 256,
+                'connection' => 'redis',
+                'queue' => ['tmdb-scrap-hp'],
+                'processes' => 1,  # Workers en paralelo
+                'balance' => 'auto', # auto/simple
+                'maxProcesses' => 4,
                 'minProcesses' => 1,
             ]
         ],
