@@ -14,18 +14,17 @@ class TvController extends ReadOnlyController
     public function __construct()
     {
         $this->model = new Tv();
-        $this->allowedFilters = ["name", "id", "overview", "name_sort", "number_of_episodes", "number_of_seasons", "first_air_date", "last_air_date", "next_episode_to_air", "origin_country", "original_language", "original_name", "popularity", "status", "vote_average", "vote_count"];
+        $this->allowedFilters = ["name", "id", "overview", "number_of_episodes", "number_of_seasons", "first_air_date", "last_air_date", "next_episode_to_air", "popularity", "status", "vote_average", "vote_count", "poster"];
         $this->columns = ['id', 'imdb_id', "tvdb_id", 'type', 'name', 'name_sort', 'overview', 'number_of_episodes', 'number_of_seasons', 'episode_run_time', 'first_air_date', 'homepage', 'in_production', 'last_air_date', 'next_episode_to_air', "origin_country", "original_language", "original_name", "popularity", "poster", "backdrop", "status", "vote_average", "vote_count", "trailer"];
     }
 
     public function index(Request $request): JsonResponse
     {
-        $query = $this->model->without(['credits.person', 'credits.occupation', 'genres']);
+        $query = $this->model->query();
 
         // Aplicar filtrado por nombre (específico de series TV)
         if ($request->has('name')) {
-            $query->where('name', 'LIKE', '%' . $request->name . '%')
-                ->orWhere('original_name', 'LIKE', '%' . $request->name . '%');
+            $query->where('name', 'LIKE', $request->name . '%');
         }
 
         // Aplicar filtrados de fecha específicos de series TV

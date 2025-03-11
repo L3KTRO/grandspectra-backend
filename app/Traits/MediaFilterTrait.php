@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 trait MediaFilterTrait
 {
+
     /**
      * Aplica filtros numéricos (greater than/less than)
      */
@@ -72,7 +73,7 @@ trait MediaFilterTrait
      */
     protected function paginateResults(Builder $query, Request $request)
     {
-        $perPage = $request->has('per_page') ? (int)$request->per_page : 15;
+        $perPage = $request->has('per_page') ? (int)$request->per_page : 10;
         return $query->paginate($perPage);
     }
 }

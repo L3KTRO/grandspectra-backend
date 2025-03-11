@@ -14,18 +14,17 @@ class MovieController extends ReadOnlyController
     public function __construct()
     {
         $this->model = new Movie();
-        $this->allowedFilters = ["id", "title", "release_date", "original_language", "original_title", "popularity", "vote_average", "vote_count"];
+        $this->allowedFilters = ["id", "title", "release_date", "original_title", "popularity", "vote_average", "vote_count"];
         $this->columns = ['id', 'title', 'overview', 'release_date', 'poster', 'backdrop', 'runtime', 'budget', 'revenue', 'imdb_id', 'tmdb_id', 'original_language', 'original_title', "title", "title_sort", 'popularity', 'vote_average', 'vote_count', "trailer"];
     }
 
     public function index(Request $request): JsonResponse
     {
-        $query = $this->model->without(['credits.person', 'credits.occupation', 'genres']);
+        $query = $this->model->query();
 
         // Aplicar filtrado por título (específico de películas)
         if ($request->has('title')) {
-            $query->where('title', 'LIKE', '%' . $request->title . '%')
-                ->orWhere('original_title', 'LIKE', '%' . $request->title . '%');
+            $query->where('title', 'LIKE', $request->title . '%');
         }
 
         // Aplicar filtrados de fecha específicos de películas
