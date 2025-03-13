@@ -41,6 +41,7 @@ class ProcessTvJob implements ShouldQueue
     use SerializesModels;
 
     public int $tries = 3;
+    public int $timeout = 60 * 5;
 
     /**
      * ProcessTvJob Constructor.

@@ -4,11 +4,8 @@ namespace App\Console\Commands;
 
 use App\Jobs\ProcessMovieJob;
 use App\Jobs\ProcessTvJob;
-use App\Models\Movie;
-use App\Models\Tv;
 use App\Services\Tmdb\TMDBScraper;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Http;
 
 class TmdbScrap extends Command
 {
@@ -26,10 +23,12 @@ class TmdbScrap extends Command
 
         ini_set('memory_limit', '1024M');
 
+        $tmdbScraper = new TMDBScraper();
+
         if ($entity === "movies") {
-            ProcessMovieJob::dispatch($id)->onQueue("tmdb-scrap-hp");
+            $tmdbScraper->moviePriority($id);
         } else {
-            ProcessTvJob::dispatch($id)->onQueue("tmdb-scrap-hp");
+            $tmdbScraper->tvPriority($id);
         }
 
         $this->info("The job has been dispatched to high priority queue");

@@ -38,4 +38,14 @@ class TMDBScraper implements ShouldQueue
     {
         ProcessMovieJob::dispatch($id)->onQueue("tmdb-scrap-movie");
     }
+
+    public function tvPriority(int $id): void
+    {
+        ProcessTvJob::dispatch($id)->onQueue("tmdb-scrap-hp")->withoutDelay();
+    }
+
+    public function moviePriority(int $id): void
+    {
+        ProcessMovieJob::dispatch($id)->onQueue("tmdb-scrap-hp")->withoutDelay();
+    }
 }
