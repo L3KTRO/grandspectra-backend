@@ -197,7 +197,7 @@ return [
         "local" => [
             'supervisor-1' => [
                 'connection' => 'redis',
-                'queue' => ['tmdb-scrap-tv', "tmdb-scrap-movie"],
+                'queue' => ["tmdb-scrap-hp", "tmdb-scrap-movie", 'tmdb-scrap-tv'],
                 'processes' => 1,  # Workers en paralelo
                 'balance' => 'auto', # auto/simple
                 'maxProcesses' => 1,
