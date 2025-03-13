@@ -40,7 +40,7 @@ class ProcessTvJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    public $tries = 3;
+    public int $tries = 3;
 
     /**
      * ProcessTvJob Constructor.
