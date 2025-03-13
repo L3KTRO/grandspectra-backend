@@ -38,8 +38,6 @@ class ProcessMovieJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    public $tries = 3;
-
     /**
      * ProcessMovieJob constructor.
      */
