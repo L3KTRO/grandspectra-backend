@@ -186,20 +186,11 @@ return [
             'supervisor-1' => [
                 "memory" => 256,
                 'connection' => 'redis',
-                'queue' => ['tmdb-scrap-tv', "tmdb-scrap-movie"],
-                'processes' => 4,  # Workers en paralelo
+                'queue' => ["tmdb-scrap-hp", "tmdb-scrap-movie", 'tmdb-scrap-tv'],
+                'processes' => 3,  # Workers en paralelo
                 'balance' => 'auto', # auto/simple
-                'maxProcesses' => 10,
-                'minProcesses' => 1,
-            ],
-            'supervisor-2' => [
-                "memory" => 256,
-                'connection' => 'redis',
-                'queue' => ['tmdb-scrap-hp'],
-                'processes' => 1,  # Workers en paralelo
-                'balance' => 'auto', # auto/simple
-                'maxProcesses' => 4,
-                'minProcesses' => 1,
+                'maxProcesses' => 12,
+                'minProcesses' => 0,
             ]
         ],
 
