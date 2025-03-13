@@ -86,7 +86,7 @@ return [
     */
 
     'batching' => [
-        'database' => "redis",
+        'database' => "mysql",
         'table' => 'job_batches',
     ],
 
@@ -104,7 +104,7 @@ return [
     */
 
     'failed' => [
-        'database' => "redis",
+        'database' => "mysql",
         'table' => 'failed_jobs',
         'driver' => env('QUEUE_FAILED_DRIVER', 'database-uuids'),
     ],

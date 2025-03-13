@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,6 +12,8 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use HasFactory, HasApiTokens, Notifiable;
+
+    public $with = [];
 
     // Campos que se pueden asignar masivamente con create()
     protected $fillable = ['email', 'username', 'password'];
@@ -23,7 +26,6 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
@@ -41,5 +43,16 @@ class User extends Authenticatable
     public function watchlist(): HasMany
     {
         return $this->hasMany(Watchlist::class);
+    }
+
+
+    public function following(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'followers', 'follower_id', 'following_id')->withTimestamps();
+    }
+
+    public function followers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'followers', 'following_id', 'following_id')->withTimestamps();
     }
 }

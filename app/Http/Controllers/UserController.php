@@ -7,44 +7,66 @@ use App\Http\Controllers\Controller;
 use App\Models\Movie;
 use App\Models\Rating;
 use App\Models\Tv;
+use App\Models\User;
 use App\Models\Watched;
 use App\Models\Watchlist;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    protected Model $model;
+    protected array $allowedFilters = ["username"];
+    protected array $columns = ['*'];
+
+    public array $relationships = ["followers", "following", 'ratings', "watched", "watchlist"];
+
+    public function __construct()
+    {
+        $this->model = new User();
+    }
+
     public function me(Request $request): JsonResponse
     {
-        $user = $request->user();
-        $ratings = Rating::where('user_id', $user->id)->get();
-        $watched = Watched::where('user_id', $user->id)->get();
-        $watchlist = Watchlist::where('user_id', $user->id)->get();
+        return response()->json($request->user()->load($this->relationships));
+    }
+
+    public function index(Request $request): JsonResponse
+    {
+        $query = $this->model::query()->select($this->columns)->with($this->relationships);
+
+        foreach ($this->allowedFilters as $filter) {
+            if ($request->has($filter)) {
+                $query->where($filter, "LIKE", $request->input($filter) . "%");
+            }
+        }
+
+        $perPage = $request->input('per_page', 15);
+        $data = $query->paginate($perPage);
 
         return response()->json([
-            'user' => $request->user(),
-            "contents" => [
-                "ratings" => $this->formatContent($ratings),
-                "watched" => $this->formatContent($watched),
-                "watchlist" => $this->formatContent($watchlist)
+            'data' => $data->items(),
+            'meta' => [
+                'total' => $data->total(),
+                'per_page' => $data->perPage(),
+                'current_page' => $data->currentPage()
             ]
         ]);
     }
 
-    private function formatContent($content)
+    public function show(string $username): JsonResponse
     {
-        $loaded = [];
-        foreach ($content as $c) {
-            if ($c->movie_id) {
-                $c->loaded = Movie::find($c->movie_id);
-                array_push($loaded, $c);
-            } else {
-                $c->loaded = Tv::find($c->tv_id);
-                array_push($loaded, $c);
-            }
-        };
+        $record = $this->model::with($this->relationships)
+            ->select($this->columns)
+            ->where("username", $username)
+            ->first();
 
-        return $loaded;
+        if (!$record) {
+            return response()->json(["error" => "User not found"], 404);
+        }
+
+        return response()->json($record);
     }
 }
 

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CreditController;
 use App\Http\Controllers\EpisodeController;
+use App\Http\Controllers\FollowController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\OccupationController;
@@ -25,6 +26,7 @@ Route::apiResource('occupations', OccupationController::class);
 Route::apiResource('tv', TvController::class);
 Route::apiResource('seasons', SeasonController::class);
 Route::apiResource('episodes', EpisodeController::class);
+Route::apiResource('users', UserController::class);
 
 // Rutas de autenticación
 Route::prefix('auth')->group(function () {
@@ -47,7 +49,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('watchlist', WatchlistController::class)
             ->only(['store', 'destroy']);
 
-        // Método especial para toggle
-        Route::post('watched/toggle', [WatchedController::class, 'toggle']);
+
+        Route::apiResource('follow', FollowController::class)
+            ->only(['update', 'destroy']);;
     });
 });

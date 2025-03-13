@@ -53,8 +53,8 @@ abstract class ReadOnlyController extends Controller
      */
     public function show(string $id): JsonResponse
     {
-        $relationships = property_exists($this->model, 'rels') && !empty($this->model->rels)
-            ? $this->model->rels
+        $relationships = property_exists($this->model, 'with') && !empty($this->model->with)
+            ? $this->model->with
             : [];
 
         $record = $this->model::with($relationships)
