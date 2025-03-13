@@ -190,7 +190,7 @@ return [
                 'processes' => 3,  # Workers en paralelo
                 'balance' => 'auto', # auto/simple
                 'maxProcesses' => 12,
-                'minProcesses' => 0,
+                'minProcesses' => 1,
             ]
         ],
 
