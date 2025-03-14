@@ -22,18 +22,6 @@ services:
     networks:
       - gs-network
 
-  frontend:
-    image: l3ktro/grandspectra:latest
-    container_name: grandspectra-frontend
-    ports:
-      - "3339:80"
-    environment:
-      EXTERNAL_API_URL: "https://gs-backend.lestro.top"
-    networks:
-      - gs-network
-    pull_policy:
-      always
-
   nginx:
     image: nginx:alpine
     container_name: grandspectra-nginx
