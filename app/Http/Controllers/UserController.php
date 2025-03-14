@@ -34,7 +34,7 @@ class UserController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        $query = $this->model::query()->select($this->columns)->with($this->relationships);
+        $query = $this->model::query()->select($this->columns)->with($this->relationships)->orderBy("created_at", "desc");
 
         foreach ($this->allowedFilters as $filter) {
             if ($request->has($filter)) {
@@ -42,7 +42,7 @@ class UserController extends Controller
             }
         }
 
-        $perPage = $request->input('per_page', 15);
+        $perPage = $request->input('per_page', 5);
         $data = $query->paginate($perPage);
 
         return response()->json([
