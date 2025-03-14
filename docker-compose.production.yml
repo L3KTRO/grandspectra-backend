@@ -24,13 +24,13 @@ services:
       - app-network
     pull_policy: build
 
-  frontend:
-    image: l3ktro/grandspectra:latest
-    container_name: grandspectra-frontend
-    ports:
-      - "3000:3000"
-    environment:
-      - VITE_API_URL=http://app:9000
+#  frontend:
+#    image: l3ktro/grandspectra:latest
+#    container_name: grandspectra-frontend
+#    ports:
+#      - "3000:3000"
+#    environment:
+#      - VITE_API_URL=http://app:9000
 
   nginx:
     image: nginx:alpine
