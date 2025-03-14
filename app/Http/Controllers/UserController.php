@@ -34,7 +34,7 @@ class UserController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        $query = $this->model::query()->select($this->columns)->with($this->relationships)->orderBy("created_at", "desc");
+        $query = $this->model::query()->select($this->columns)->with(["followers", "following"])->orderBy("created_at", "desc");
 
         foreach ($this->allowedFilters as $filter) {
             if ($request->has($filter)) {
