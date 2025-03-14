@@ -68,7 +68,7 @@ class Tv extends Model
     public $table = 'tv';
 
     protected $hidden = ['created_at', 'updated_at'];
-    public $with = ['credits.person', "credits.occupation", "genres"];
+    public $with = [];
 
     /**
      * Get the attributes that should be cast.

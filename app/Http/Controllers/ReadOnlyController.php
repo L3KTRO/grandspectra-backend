@@ -11,6 +11,7 @@ abstract class ReadOnlyController extends Controller
     protected Model $model;
     protected array $allowedFilters = [];
     protected array $columns = ['*'];
+    public array $rels = ['credits.person', "credits.occupation", "genres"];
 
     /**
      * Obtiene múltiples registros con paginación y filtros
@@ -53,11 +54,7 @@ abstract class ReadOnlyController extends Controller
      */
     public function show(string $id): JsonResponse
     {
-        $relationships = property_exists($this->model, 'with') && !empty($this->model->with)
-            ? $this->model->with
-            : [];
-
-        $record = $this->model::with($relationships)
+        $record = $this->model::with($this->rels)
             ->select($this->columns)
             ->where($this->model->getRouteKeyName(), $id)
             ->firstOrFail();

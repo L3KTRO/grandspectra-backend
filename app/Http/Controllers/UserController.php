@@ -20,7 +20,7 @@ class UserController extends Controller
     protected array $allowedFilters = ["username"];
     protected array $columns = ['*'];
 
-    public array $relationships = ["followers", "following", 'ratings', "watched", "watchlist"];
+    public array $relationships = ["followers", "following", "ratings.tv", "ratings.movie", "watched", "watchlist"];
 
     public function __construct()
     {
@@ -57,6 +57,7 @@ class UserController extends Controller
 
     public function show(string $username): JsonResponse
     {
+
         $record = $this->model::with($this->relationships)
             ->select($this->columns)
             ->where("username", $username)

@@ -11,6 +11,7 @@ use Illuminate\Validation\Rule;
 
 class RatingController extends Controller
 {
+    public array $relations = ['movie', "tv"];
     // Obtener todas las calificaciones de un usuario
     public function userRatings(User $user)
     {
@@ -83,6 +84,7 @@ class RatingController extends Controller
     // Eliminar calificación
     public function destroy(Rating $rating)
     {
+
         $rating->delete();
         return response()->json(['message' => 'Calificación eliminada']);
     }
