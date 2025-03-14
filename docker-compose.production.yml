@@ -28,7 +28,7 @@ services:
     ports:
       - "3339:80"
     environment:
-      EXTERNAL_API_URL: "http://app:9000"
+      EXTERNAL_API_URL: "https://gs-backend.lestro.top"
     networks:
       - gs-network
     pull_policy:
