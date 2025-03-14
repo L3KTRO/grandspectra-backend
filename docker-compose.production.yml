@@ -23,7 +23,7 @@ services:
       - gs-network
 
   frontend:
-    image: l3ktro/grandspectra-frontend:latest
+    image: l3ktro/grandspectra:latest
     container_name: grandspectra-frontend
     ports:
       - "3339:80"
