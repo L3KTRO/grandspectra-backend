@@ -18,7 +18,6 @@ namespace App\Models;
 
 use Database\Factories\OccupationFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -32,7 +31,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Occupation extends Model
 {
-    use Auditable;
 
     /** @use HasFactory<OccupationFactory> */
     use HasFactory;

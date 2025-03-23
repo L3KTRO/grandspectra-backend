@@ -22,6 +22,7 @@ class TmdbImport extends Command
 
         $mode = $this->choice('Select mode:', ["upsert", "create"], 0);
         $allowedEntities = $this->choice('Select entity:', ["both", "movies", "series"], 0);
+        $prior = $this->choice('Select entity:', ["normal", "popular"], 0);
 
         ini_set('memory_limit', '1024M');
 
@@ -87,6 +88,11 @@ class TmdbImport extends Command
                             }
                         }
 
+                        if ($prior === "popular" && $data["popularity"] < 100) {
+                            $this->info("La ID {$data['id']} está por debajo de la popularidad requerida (100)");
+                            continue;
+                        }
+
                         $this->info("Procesando {$entityName}: {$data['id']}");
 
                         if ($entityName === 'Movies') {
@@ -94,10 +100,10 @@ class TmdbImport extends Command
                                 $this->info("Adulto: {$data['id']}");
                                 continue;
                             }
-                            $tmdbScraper->movie($data['id']);
+                            $tmdbScraper->movie($data['id'], $prior === "popular");
                         } elseif ($entityName === 'Series') {
                             $this->info("Procesando {$entityName}: {$data['id']}");
-                            $tmdbScraper->tv($data['id']);
+                            $tmdbScraper->tv($data['id'], $prior === "popular");
                         }
 
                         $count++;

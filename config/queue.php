@@ -86,7 +86,7 @@ return [
     */
 
     'batching' => [
-        'database' => "mysql",
+        'database' => "redis",
         'table' => 'job_batches',
     ],
 

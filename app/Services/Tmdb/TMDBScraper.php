@@ -29,14 +29,16 @@ class TMDBScraper implements ShouldQueue
     {
     }
 
-    public function tv(int $id): void
+    public function tv(int $id, bool $prior): void
     {
-        ProcessTvJob::dispatch($id)->onQueue("tmdb-scrap-tv");
+        if ($prior) $this->tvPopular($id);
+        else ProcessTvJob::dispatch($id)->onQueue("tmdb-scrap-tv");
     }
 
-    public function movie(int $id): void
+    public function movie(int $id, bool $prior): void
     {
-        ProcessMovieJob::dispatch($id)->onQueue("tmdb-scrap-movie");
+        if ($prior) $this->moviePopular($id);
+        else ProcessMovieJob::dispatch($id)->onQueue("tmdb-scrap-movie");
     }
 
     public function tvPriority(int $id): void
@@ -47,5 +49,15 @@ class TMDBScraper implements ShouldQueue
     public function moviePriority(int $id): void
     {
         ProcessMovieJob::dispatch($id)->onQueue("tmdb-scrap-hp")->withoutDelay();
+    }
+
+    public function tvPopular(int $id): void
+    {
+        ProcessTvJob::dispatch($id)->onQueue("tmdb-scrap-popular");
+    }
+
+    public function moviePopular(int $id): void
+    {
+        ProcessTvJob::dispatch($id)->onQueue("tmdb-scrap-popular");
     }
 }

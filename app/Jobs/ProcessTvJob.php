@@ -68,28 +68,28 @@ class ProcessTvJob implements ShouldQueue
         $tv = Tv::updateOrCreate(['id' => $this->id], $tvScraper->getTv());
 
         // Companies
-        /*
-                $companies = [];
 
-                foreach ($this->tv['production_companies'] ?? [] as $company) {
-                    $companies[] = (new Client\Company($company['id']))->getCompany();
-                }
+        $companies = [];
 
-                Company::upsert($companies, 'id');
-                $tv->companies()->sync(array_unique(array_column($companies, 'id')));
+        foreach ($this->tv['production_companies'] ?? [] as $company) {
+            $companies[] = (new Client\Company($company['id']))->getCompany();
+        }
 
-                // Networks
+        Company::upsert($companies, 'id');
+        $tv->companies()->sync(array_unique(array_column($companies, 'id')));
 
-                $networks = [];
+        // Networks
 
-                foreach ($this->tv['networks'] ?? [] as $network) {
-                    usleep(500000);
-                    $networks[] = (new Client\Network($network['id']))->getNetwork();
-                }
+        $networks = [];
 
-                Network::upsert($networks, 'id');
-                $tv->networks()->sync(array_unique(array_column($networks, 'id')));
-        */
+        foreach ($this->tv['networks'] ?? [] as $network) {
+            usleep(500000);
+            $networks[] = (new Client\Network($network['id']))->getNetwork();
+        }
+
+        Network::upsert($networks, 'id');
+        $tv->networks()->sync(array_unique(array_column($networks, 'id')));
+
         // Genres
 
         Genre::upsert($tvScraper->getGenres(), 'id');

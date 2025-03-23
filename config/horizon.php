@@ -28,7 +28,7 @@ return [
     |
     */
 
-    'path' => env('HORIZON_PATH', 'storage/private/horizon'),
+    'path' => env('HORIZON_PATH', 'horizon'),
 
     /*
     |--------------------------------------------------------------------------
@@ -186,7 +186,7 @@ return [
             'supervisor-1' => [
                 "memory" => 256,
                 'connection' => 'redis',
-                'queue' => ["tmdb-scrap-hp", "tmdb-scrap-movie", 'tmdb-scrap-tv'],
+                'queue' => ["tmdb-scrap-hp", "tmdb-scrap-movie", 'tmdb-scrap-tv', 'tmdb-scrap-popular'],
                 'processes' => 3,  # Workers en paralelo
                 'balance' => 'auto', # auto/simple
                 'maxProcesses' => 12,
