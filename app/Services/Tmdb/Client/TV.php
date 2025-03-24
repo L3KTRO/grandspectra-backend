@@ -308,7 +308,7 @@ class TV
             ->get('https://api.TheMovieDB.org/3/tv/{id}', [
                 'api_key' => config('tmdb.api_key'),
                 'language' => config('app.meta_locale'),
-                'append_to_response' => 'videos,images,aggregate_credits,external_ids,alternative_titles',
+                'append_to_response' => 'videos,images,aggregate_credits,external_ids,alternative_titles,recommendations',
             ])
             ->json();
 
