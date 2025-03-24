@@ -523,7 +523,7 @@ class TV
                     "release_date" => $recommendation['release_date'] ?? null,
                     'vote_average' => $recommendation['vote_average'] ?? null,
                     'poster' => $this->tmdb->image('poster', $recommendation),
-                    'first_air_date' => $recommendation['first_air_date'] ?? null,
+                    //'first_air_date' => $recommendation['first_air_date'] ?? null,
                 ];
             }
         }
