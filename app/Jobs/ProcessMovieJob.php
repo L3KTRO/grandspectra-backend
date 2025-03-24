@@ -69,27 +69,27 @@ class ProcessMovieJob implements ShouldQueue
         $movie->genres()->sync(array_unique(array_column($movieScraper->getGenres(), 'id')));
 
         // Companies
-        /*
-                $companies = [];
 
-                foreach ($movieScraper->data['production_companies'] ?? [] as $company) {
-                    usleep(500000);
-                    $companies[] = (new Client\Company($company['id']))->getCompany();
-                }
+        $companies = [];
 
-                Company::upsert($companies, 'id');
-                $movie->companies()->sync(array_unique(array_column($companies, 'id')));
+        foreach ($movieScraper->data['production_companies'] ?? [] as $company) {
+            usleep(500000);
+            $companies[] = (new Client\Company($company['id']))->getCompany();
+        }
 
-                // Collection
+        Company::upsert($companies, 'id');
+        $movie->companies()->sync(array_unique(array_column($companies, 'id')));
 
-                if ($movieScraper->data['belongs_to_collection'] !== null) {
-                    usleep(500000);
-                    $collection = (new Client\Collection($movieScraper->data['belongs_to_collection']['id']))->getCollection();
+        // Collection
 
-                    Collection::upsert($collection, 'id');
-                    $movie->collection()->sync([$collection['id']]);
-                }
-        */
+        if ($movieScraper->data['belongs_to_collection'] !== null) {
+            usleep(500000);
+            $collection = (new Client\Collection($movieScraper->data['belongs_to_collection']['id']))->getCollection();
+
+            Collection::upsert($collection, 'id');
+            $movie->collection()->sync([$collection['id']]);
+        }
+
         // People
 
         $credits = $movieScraper->getCredits();
@@ -103,9 +103,5 @@ class ProcessMovieJob implements ShouldQueue
         Person::upsert($people, 'id');
         Credit::where('movie_id', '=', $this->id)->delete();
         Credit::upsert($credits, ['person_id', 'movie_id', 'tv_id', 'occupation_id', 'character']);
-
-        // Recommendations
-
-        //Recommendation::upsert($movieScraper->getRecommendations(), ['recommendation_movie_id', 'movie_id']);
     }
 }

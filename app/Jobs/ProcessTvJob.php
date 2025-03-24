@@ -110,23 +110,20 @@ class ProcessTvJob implements ShouldQueue
         Credit::upsert($credits, ['person_id', 'movie_id', 'tv_id', 'occupation_id', 'character']);
 
         // Seasons and episodes
-        /*
-                $seasons = [];
-                $episodes = [];
 
-                foreach ($tvScraper->getSeasons() as $season) {
-                    usleep(500000);
-                    $seasonScraper = new Client\Season($this->id, $season['season_number']);
+        $seasons = [];
+        $episodes = [];
 
-                    $seasons[] = $seasonScraper->getSeason();
-                    //array_push($episodes, ...$seasonScraper->getEpisodes());
-                }
+        foreach ($tvScraper->getSeasons() as $season) {
+            usleep(500000);
+            $seasonScraper = new Client\Season($this->id, $season['season_number']);
 
-                Season::upsert($seasons, 'id');
-                Episode::upsert($episodes, 'id');
-        */
-        // Recommendations
+            $seasons[] = $seasonScraper->getSeason();
+            array_push($episodes, ...$seasonScraper->getEpisodes());
+        }
 
-        //Recommendation::upsert($tvScraper->getRecommendations(), ['recommendation_tv_id', 'tv_id']);
+        Season::upsert($seasons, 'id');
+        Episode::upsert($episodes, 'id');
+
     }
 }

@@ -58,6 +58,6 @@ class TMDBScraper implements ShouldQueue
 
     public function moviePopular(int $id): void
     {
-        ProcessTvJob::dispatch($id)->onQueue("tmdb-scrap-popular");
+        ProcessMovieJob::dispatch($id)->onQueue("tmdb-scrap-popular");
     }
 }

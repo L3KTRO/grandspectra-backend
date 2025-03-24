@@ -109,6 +109,19 @@ class TmdbImport extends Command
                         $count++;
                     }
                 }
+
+                if ($prior === "popular") {
+                    $popularMovies = Movie::where('popularity', '>=', 100)->get();
+                    $popularTv = Tv::where('popularity', '>=', 100)->get();
+
+                    foreach ($popularMovies as $movie) {
+                        $tmdbScraper->moviePriority($movie->id);
+                    }
+
+                    foreach ($popularTv as $tv) {
+                        $tmdbScraper->tvPriority($tv->id);
+                    }
+                }
                 $this->info("{$count} registros importados para {$entityName}");
             } else {
                 $this->error("Error al descargar el archivo para {$entityName}");
