@@ -59,8 +59,8 @@ class Collection
         $this->data = Http::acceptJson()
             ->withUrlParameters(['id' => $id])
             ->get('https://api.TheMovieDB.org/3/collection/{id}', [
-                'api_key'            => config('tmdb.api_key'),
-                'language'           => config('app.meta_locale'),
+                'api_key' => config('tmdb.api_key'),
+                'language' => config('app.meta_locale'),
                 'append_to_response' => 'videos,images,credits',
             ])
             ->json();
@@ -82,13 +82,13 @@ class Collection
     public function getCollection(): array
     {
         return [
-            'id'        => $this->data['id'] ?? null,
-            'name'      => $this->data['name'] ?? null,
-            'name_sort' => addslashes(str_replace(['The ', 'An ', 'A ', '"'], [''], $this->data['name'] ?? '')),
-            'parts'     => is_countable($this->data['parts']) ? \count($this->data['parts']) : 0,
-            'overview'  => $this->data['overview'] ?? null,
-            'poster'    => $this->tmdb->image('poster', $this->data),
-            'backdrop'  => $this->tmdb->image('backdrop', $this->data),
+            'id' => $this->data['id'] ?? null,
+            'name' => $this->data['name'] ?? null,
+            'name_sort' => addslashes(str_replace(['The ', 'An ', 'A ', '"'], [''], $this->data['name'] ?? '')) ?? null,
+            'parts' => is_countable($this->data['parts']) ? \count($this->data['parts']) : 0,
+            'overview' => $this->data['overview'] ?? null,
+            'poster' => $this->tmdb->image('poster', $this->data) ?? null,
+            'backdrop' => $this->tmdb->image('backdrop', $this->data) ?? null,
         ];
     }
 }

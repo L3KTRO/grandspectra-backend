@@ -52,15 +52,12 @@ class ProcessTvJob implements ShouldQueue
 
     public function handle(): void
     {
-        $this->manage();
-        /*
         try {
             $this->manage();
         } catch (\Exception $e) {
             var_dump($e->getMessage());
             $this->fail($e);
         }
-        */
     }
 
     public function manage(): void
@@ -82,7 +79,6 @@ class ProcessTvJob implements ShouldQueue
         $people = [];
 
         foreach (array_unique(array_column($credits, 'person_id')) as $person_id) {
-            sleep(1);
             $people[] = (new Client\Person($person_id))->getPerson();
         }
 
@@ -95,7 +91,6 @@ class ProcessTvJob implements ShouldQueue
         $companies = [];
 
         foreach ($tvScraper->getCompanies() ?? [] as $company) {
-            sleep(1);
             $companies[] = (new Client\Company($company['id']))->getCompany();
         }
 
@@ -107,7 +102,6 @@ class ProcessTvJob implements ShouldQueue
         $networks = [];
 
         foreach ($tvScraper->getNetworks() ?? [] as $network) {
-            sleep(1);
             $networks[] = (new Client\Network($network['id']))->getNetwork();
         }
 
@@ -120,7 +114,6 @@ class ProcessTvJob implements ShouldQueue
         $episodes = [];
 
         foreach ($tvScraper->getSeasons() as $season) {
-            sleep(1);
             $seasonScraper = new Client\Season($this->id, $season['season_number']);
 
             $seasons[] = $seasonScraper->getSeason();

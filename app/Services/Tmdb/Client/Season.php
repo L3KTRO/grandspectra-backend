@@ -92,8 +92,8 @@ class Season
         $this->data = Http::acceptJson()
             ->withUrlParameters(['tvId' => $tvId, 'seasonNumber' => $seasonNumber])
             ->get('https://api.TheMovieDB.org/3/tv/{tvId}/season/{seasonNumber}', [
-                'api_key'            => config('tmdb.api_key'),
-                'language'           => config('app.meta_locale'),
+                'api_key' => config('tmdb.api_key'),
+                'language' => config('app.meta_locale'),
                 'append_to_response' => 'videos,images,credits,external_ids',
             ])
             ->json();
@@ -115,13 +115,13 @@ class Season
     public function getSeason(): array
     {
         return [
-            'id'            => $this->data['id'] ?? null,
-            'air_date'      => $this->data['air_date'] ?? null,
-            'poster'        => $this->tmdb->image('poster', $this->data),
-            'name'          => $this->data['name'] ?? null,
-            'overview'      => $this->data['overview'] ?? null,
+            'id' => $this->data['id'] ?? null,
+            'air_date' => $this->data['air_date'] ?? null,
+            'poster' => $this->tmdb->image('poster', $this->data),
+            'name' => $this->data['name'] ?? null,
+            'overview' => $this->data['overview'] ?? null,
             'season_number' => $this->data['season_number'] ?? null,
-            'tv_id'         => $this->tvId,
+            'tv_id' => $this->tvId,
         ];
     }
 
@@ -150,18 +150,18 @@ class Season
 
         foreach ($this->data['episodes'] ?? [] as $episode) {
             $episodes[] = [
-                'id'              => $episode['id'] ?? null,
-                'tv_id'           => $this->tvId ?? null,
-                'air_date'        => $this->tmdb->ifExists('air_date', $episode),
-                'name'            => Str::limit($this->tmdb->ifExists('name', $episode), 200),
-                'episode_number'  => $episode['episode_number'] ?? null,
-                'overview'        => $this->tmdb->ifExists('overview', $episode),
-                'still'           => $this->tmdb->image('still', $episode),
+                'id' => $episode['id'] ?? null,
+                'tv_id' => $this->tvId ?? null,
+                'air_date' => $this->tmdb->ifExists('air_date', $episode),
+                'name' => Str::limit($this->tmdb->ifExists('name', $episode), 200),
+                'episode_number' => $episode['episode_number'] ?? null,
+                'overview' => $this->tmdb->ifExists('overview', $episode),
+                'still' => $this->tmdb->image('still', $episode),
                 'production_code' => $episode['production_code'] ?? null,
-                'season_number'   => $episode['season_number'] ?? null,
-                'vote_average'    => $episode['vote_average'] ?? null,
-                'vote_count'      => $episode['vote_count'] ?? null,
-                'season_id'       => $this->data['id'] ?? null,
+                'season_number' => $episode['season_number'] ?? null,
+                'vote_average' => $episode['vote_average'] ?? null,
+                'vote_count' => $episode['vote_count'] ?? null,
+                'season_id' => $this->data['id'] ?? null,
             ];
         }
 

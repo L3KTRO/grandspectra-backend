@@ -511,7 +511,7 @@ class TV
         $recommendations = [];
 
         foreach ($this->data['recommendations']['results'] ?? [] as $recommendation) {
-            if ($recommendation === null || $recommendation['id'] === null) {
+            if ($recommendation === null || $recommendation['id'] === null || $recommendation['name'] === null) {
                 continue;
             }
 
@@ -520,10 +520,10 @@ class TV
                     'recommendation_tv_id' => $recommendation['id'],
                     'tv_id' => $this->data['id'],
                     'title' => $recommendation['name'],
-                    "release_date" => $recommendation['release_date'],
-                    'vote_average' => $recommendation['vote_average'],
+                    "release_date" => $recommendation['release_date'] ?? null,
+                    'vote_average' => $recommendation['vote_average'] ?? null,
                     'poster' => $this->tmdb->image('poster', $recommendation),
-                    'first_air_date' => $recommendation['first_air_date'],
+                    'first_air_date' => $recommendation['first_air_date'] ?? null,
                 ];
             }
         }

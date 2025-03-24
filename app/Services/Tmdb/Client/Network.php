@@ -85,10 +85,10 @@ class Network
 
             return [
                 'id' => $this->data['id'],
-                'headquarters' => $this->tmdb->ifExists('headquarters', $this->data),
-                'homepage' => $this->tmdb->ifExists('homepage', $this->data),
-                'logo' => $logo,
-                'name' => $this->data['name'],
+                'headquarters' => $this->tmdb->ifExists('headquarters', $this->data) ?? null,
+                'homepage' => $this->tmdb->ifExists('homepage', $this->data) ?? null,
+                'logo' => $logo ?? null,
+                'name' => $this->data['name'] ?? null,
                 'origin_country' => $this->data['origin_country'] ?? null,
             ];
         }

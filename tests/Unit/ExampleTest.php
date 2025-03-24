@@ -12,7 +12,7 @@ class ExampleTest extends TestCase
     public function test_that_true_is_true(): void
     {
         $job = new ProcessTvJob("1396");
-        $job->handle();
+        $job->manage();
         $this->assertTrue(true);
     }
 }
