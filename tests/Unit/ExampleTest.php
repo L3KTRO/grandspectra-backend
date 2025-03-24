@@ -2,15 +2,17 @@
 
 namespace Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
+use App\Jobs\ProcessTvJob;
+use Tests\TestCase;
+
 
 class ExampleTest extends TestCase
 {
-    /**
-     * A basic test example.
-     */
+
     public function test_that_true_is_true(): void
     {
+        $job = new ProcessTvJob("1396");
+        $job->handle();
         $this->assertTrue(true);
     }
 }

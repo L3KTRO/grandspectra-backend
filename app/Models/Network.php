@@ -38,6 +38,7 @@ class Network extends Model
     use HasFactory;
 
     protected $guarded = [];
+    public $table = 'networks';
 
     public $timestamps = false;
 

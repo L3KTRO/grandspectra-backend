@@ -115,11 +115,11 @@ class TmdbImport extends Command
                     $popularTv = Tv::where('popularity', '>=', 100)->get();
 
                     foreach ($popularMovies as $movie) {
-                        $tmdbScraper->moviePriority($movie->id);
+                        $tmdbScraper->moviePopular($movie->id);
                     }
 
                     foreach ($popularTv as $tv) {
-                        $tmdbScraper->tvPriority($tv->id);
+                        $tmdbScraper->tvPopular($tv->id);
                     }
                 }
                 $this->info("{$count} registros importados para {$entityName}");

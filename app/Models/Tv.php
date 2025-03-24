@@ -64,7 +64,6 @@ class Tv extends Model
     use HasFactory;
 
     protected $guarded = [];
-
     public $table = 'tv';
 
     protected $hidden = ['created_at', 'updated_at'];

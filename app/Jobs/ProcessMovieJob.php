@@ -68,6 +68,20 @@ class ProcessMovieJob implements ShouldQueue
         Genre::upsert($movieScraper->getGenres(), 'id');
         $movie->genres()->sync(array_unique(array_column($movieScraper->getGenres(), 'id')));
 
+        // People
+
+        $credits = $movieScraper->getCredits();
+        $people = [];
+
+        foreach (array_unique(array_column($credits, 'person_id')) as $person_id) {
+            sleep(1);
+            $people[] = (new Client\Person($person_id))->getPerson();
+        }
+
+        Person::upsert($people, 'id');
+        Credit::where('movie_id', '=', $this->id)->delete();
+        Credit::upsert($credits, ['person_id', 'movie_id', 'tv_id', 'occupation_id', 'character']);
+
         // Companies
 
         $companies = [];
@@ -89,19 +103,5 @@ class ProcessMovieJob implements ShouldQueue
             Collection::upsert($collection, 'id');
             $movie->collection()->sync([$collection['id']]);
         }
-
-        // People
-
-        $credits = $movieScraper->getCredits();
-        $people = [];
-
-        foreach (array_unique(array_column($credits, 'person_id')) as $person_id) {
-            usleep(500000);
-            $people[] = (new Client\Person($person_id))->getPerson();
-        }
-
-        Person::upsert($people, 'id');
-        Credit::where('movie_id', '=', $this->id)->delete();
-        Credit::upsert($credits, ['person_id', 'movie_id', 'tv_id', 'occupation_id', 'character']);
     }
 }

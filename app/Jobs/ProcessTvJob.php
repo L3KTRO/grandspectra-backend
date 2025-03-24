@@ -52,11 +52,15 @@ class ProcessTvJob implements ShouldQueue
 
     public function handle(): void
     {
+        $this->manage();
+        /*
         try {
             $this->manage();
         } catch (\Exception $e) {
+            var_dump($e->getMessage());
             $this->fail($e);
         }
+        */
     }
 
     public function manage(): void
@@ -66,29 +70,6 @@ class ProcessTvJob implements ShouldQueue
         $tvScraper = new Client\TV($this->id);
 
         $tv = Tv::updateOrCreate(['id' => $this->id], $tvScraper->getTv());
-
-        // Companies
-
-        $companies = [];
-
-        foreach ($this->tv['production_companies'] ?? [] as $company) {
-            $companies[] = (new Client\Company($company['id']))->getCompany();
-        }
-
-        Company::upsert($companies, 'id');
-        $tv->companies()->sync(array_unique(array_column($companies, 'id')));
-
-        // Networks
-
-        $networks = [];
-
-        foreach ($this->tv['networks'] ?? [] as $network) {
-            usleep(500000);
-            $networks[] = (new Client\Network($network['id']))->getNetwork();
-        }
-
-        Network::upsert($networks, 'id');
-        $tv->networks()->sync(array_unique(array_column($networks, 'id')));
 
         // Genres
 
@@ -101,7 +82,7 @@ class ProcessTvJob implements ShouldQueue
         $people = [];
 
         foreach (array_unique(array_column($credits, 'person_id')) as $person_id) {
-            usleep(500000);
+            sleep(1);
             $people[] = (new Client\Person($person_id))->getPerson();
         }
 
@@ -109,13 +90,37 @@ class ProcessTvJob implements ShouldQueue
         Credit::where('tv_id', '=', $this->id)->delete();
         Credit::upsert($credits, ['person_id', 'movie_id', 'tv_id', 'occupation_id', 'character']);
 
+        // Companies
+
+        $companies = [];
+
+        foreach ($tvScraper->getCompanies() ?? [] as $company) {
+            sleep(1);
+            $companies[] = (new Client\Company($company['id']))->getCompany();
+        }
+
+        Company::upsert($companies, 'id');
+        $tv->companies()->sync(array_unique(array_column($companies, 'id')));
+
+        // Networks
+
+        $networks = [];
+
+        foreach ($tvScraper->getNetworks() ?? [] as $network) {
+            sleep(1);
+            $networks[] = (new Client\Network($network['id']))->getNetwork();
+        }
+
+        Network::upsert($networks, 'id');
+        $tv->networks()->sync(array_unique(array_column($networks, 'id')));
+
         // Seasons and episodes
 
         $seasons = [];
         $episodes = [];
 
         foreach ($tvScraper->getSeasons() as $season) {
-            usleep(500000);
+            sleep(1);
             $seasonScraper = new Client\Season($this->id, $season['season_number']);
 
             $seasons[] = $seasonScraper->getSeason();
@@ -124,6 +129,5 @@ class ProcessTvJob implements ShouldQueue
 
         Season::upsert($seasons, 'id');
         Episode::upsert($episodes, 'id');
-
     }
 }
