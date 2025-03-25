@@ -12,6 +12,7 @@ use Illuminate\Validation\Rule;
 class RatingController extends Controller
 {
     public array $relations = ['movie', "tv"];
+
     // Obtener todas las calificaciones de un usuario
     public function userRatings(User $user)
     {
@@ -40,7 +41,6 @@ class RatingController extends Controller
     // Crear nueva calificación
     public function store(Request $request)
     {
-
         $user_id = $request->user()->id;
 
         $validated = $request->validate([
@@ -73,6 +73,12 @@ class RatingController extends Controller
     // Actualizar calificación existente
     public function update(Request $request, Rating $rating)
     {
+        $user_id = $request->user()->id;
+
+        if ($rating->user_id !== $user_id) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
         $validated = $request->validate([
             'qualification' => 'required|integer|min:1|max:10'
         ]);
@@ -82,9 +88,13 @@ class RatingController extends Controller
     }
 
     // Eliminar calificación
-    public function destroy(Rating $rating)
+    public function destroy(Request $request, Rating $rating)
     {
+        $user_id = $request->user()->id;
 
+        if ($rating->user_id !== $user_id) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
         $rating->delete();
         return response()->json(['message' => 'Calificación eliminada']);
     }

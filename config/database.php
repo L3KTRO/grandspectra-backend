@@ -30,6 +30,24 @@ return [
     */
 
     'connections' => [
+        'metrics_db' => [
+            'driver' => 'mysql',
+            'url' => env('METRICS_DATABASE_URL'),
+            'host' => env('METRICS_DB_HOST', 'metrics_db'),
+            'port' => env('METRICS_DB_PORT', '3306'),
+            'database' => env('METRICS_DB_DATABASE', 'metrics'),
+            'username' => env('METRICS_DB_USERNAME', 'metrics_user'),
+            'password' => env('METRICS_DB_PASSWORD'),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
 
         'sqlite' => [
             'driver' => 'sqlite',
@@ -143,7 +161,6 @@ return [
     */
 
     'redis' => [
-
         'client' => env('REDIS_CLIENT', 'phpredis'),
 
         'options' => [

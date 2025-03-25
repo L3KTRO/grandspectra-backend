@@ -11,7 +11,7 @@ abstract class ReadOnlyController extends Controller
     protected Model $model;
     protected array $allowedFilters = [];
     protected array $columns = ['*'];
-    public array $rels = ['credits.person', "credits.occupation", "genres"];
+    public array $rels = ['credits.person', "credits.occupation", "genres", "recommendations"];
 
     /**
      * Obtiene múltiples registros con paginación y filtros

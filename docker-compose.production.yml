@@ -1,8 +1,27 @@
 services:
+
+  metrics_db:
+    image: mariadb:lts-ubi
+    container_name: metrics_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${METRICS_DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${METRICS_DB_DATABASE}
+      MYSQL_USER: ${METRICS_DB_USERNAME}
+      MYSQL_PASSWORD: ${METRICS_DB_PASSWORD}
+    volumes:
+      - metrics_data:/var/lib/mysql  # Persistencia de datos
+    ports:
+      - "3306:3306"
+    networks:
+      - metrics-network
+
   app:
     build:
       context: .
       dockerfile: Dockerfile
+    depends_on:
+      - metrics_db
     container_name: grandspectra-backend
     environment:
       APP_ENV: ${APP_ENV}
@@ -14,6 +33,11 @@ services:
       DB_DATABASE: ${DB_DATABASE}
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
+      METRICS_DB_HOST: ${METRICS_DB_HOST}
+      METRICS_DB_PORT: ${METRICS_DB_PORT}
+      METRICS_DB_DATABASE: ${METRICS_DB_DATABASE}
+      METRICS_DB_USERNAME: ${METRICS_DB_USERNAME}
+      METRICS_DB_PASSWORD: ${METRICS_DB_PASSWORD}
       REDIS_CLIENT: ${REDIS_CLIENT}
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PASSWORD: ${REDIS_PASSWORD}
@@ -21,6 +45,7 @@ services:
       TMDB_API_KEY: ${TMDB_API_KEY}
     networks:
       - gs-network
+      - metrics-network
     pull_policy: build
 
   nginx:
@@ -38,3 +63,8 @@ services:
 networks:
   gs-network:
     driver: bridge
+  metrics-network:
+    driver: bridge
+
+volumes:
+  metrics_data:
