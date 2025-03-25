@@ -44,6 +44,7 @@ class ProcessMovieJob implements ShouldQueue
     public function __construct(public int $id)
     {
         $this->onConnection('redis');
+        $this->onQueue('tmdb-movie');
     }
 
     public function handle(): void
