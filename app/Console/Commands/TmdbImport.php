@@ -100,10 +100,10 @@ class TmdbImport extends Command
                                 $this->info("Adulto: {$data['id']}");
                                 continue;
                             }
-                            $tmdbScraper->movie($data['id'], $prior === "popular");
+                            $tmdbScraper->movie($data['id']);
                         } elseif ($entityName === 'Series') {
                             $this->info("Procesando {$entityName}: {$data['id']}");
-                            $tmdbScraper->tv($data['id'], $prior === "popular");
+                            $tmdbScraper->tv($data['id']);
                         }
 
                         $count++;
@@ -115,11 +115,11 @@ class TmdbImport extends Command
                     $popularTv = Tv::where('popularity', '>=', 100)->get();
 
                     foreach ($popularMovies as $movie) {
-                        $tmdbScraper->moviePopular($movie->id);
+                        $tmdbScraper->movie($movie->id);
                     }
 
                     foreach ($popularTv as $tv) {
-                        $tmdbScraper->tvPopular($tv->id);
+                        $tmdbScraper->tv($tv->id);
                     }
                 }
                 $this->info("{$count} registros importados para {$entityName}");

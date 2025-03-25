@@ -29,35 +29,23 @@ class TMDBScraper implements ShouldQueue
     {
     }
 
-    public function tv(int $id, bool $prior): void
+    public function tv(int $id): void
     {
-        if ($prior) $this->tvPopular($id);
-        else ProcessTvJob::dispatch($id)->onQueue("tmdb-scrap-tv");
+        ProcessTvJob::dispatch($id)->onQueue("tmdb-tv");
     }
 
-    public function movie(int $id, bool $prior): void
+    public function movie(int $id): void
     {
-        if ($prior) $this->moviePopular($id);
-        else ProcessMovieJob::dispatch($id)->onQueue("tmdb-scrap-movie");
+        ProcessMovieJob::dispatch($id)->onQueue("tmdb-movie");
     }
 
     public function tvPriority(int $id): void
     {
-        ProcessTvJob::dispatch($id)->onQueue("tmdb-scrap-hp")->withoutDelay();
+        ProcessTvJob::dispatch($id)->onQueue("tmdb-hp")->withoutDelay();
     }
 
     public function moviePriority(int $id): void
     {
-        ProcessMovieJob::dispatch($id)->onQueue("tmdb-scrap-hp")->withoutDelay();
-    }
-
-    public function tvPopular(int $id): void
-    {
-        ProcessTvJob::dispatch($id)->onQueue("tmdb-scrap-popular");
-    }
-
-    public function moviePopular(int $id): void
-    {
-        ProcessMovieJob::dispatch($id)->onQueue("tmdb-scrap-popular");
+        ProcessMovieJob::dispatch($id)->onQueue("tmdb-hp")->withoutDelay();
     }
 }

@@ -186,7 +186,7 @@ return [
             'supervisor-1' => [
                 "memory" => 256,
                 'connection' => 'redis',
-                'queue' => ["tmdb-scrap-hp", "tmdb-scrap-popular", "tmdb-scrap-movie", 'tmdb-scrap-tv'],
+                'queue' => ["tmdb-hp", "tmdb-movie", 'tmdb-tv'],
                 'processes' => 3,  # Workers en paralelo
                 'balance' => 'auto', # auto/simple
                 'maxProcesses' => 12,
@@ -197,7 +197,7 @@ return [
         "local" => [
             'supervisor-1' => [
                 'connection' => 'redis',
-                'queue' => ["tmdb-scrap-hp", "tmdb-scrap-movie", 'tmdb-scrap-tv'],
+                'queue' => ["tmdb-hp", "tmdb-movie", 'tmdb-tv'],
                 'processes' => 1,  # Workers en paralelo
                 'balance' => 'auto', # auto/simple
                 'maxProcesses' => 1,
