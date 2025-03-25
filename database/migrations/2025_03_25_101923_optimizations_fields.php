@@ -22,10 +22,14 @@ return new class extends Migration {
 
         Schema::table('companies', function (Blueprint $table) {
             $table->text('description')->nullable()->change();
+            $table->text('headquarters')->nullable()->change();
+            $table->text('homepage')->nullable()->change();
         });
 
         Schema::table('networks', function (Blueprint $table) {
             $table->text('description')->nullable()->change();
+            $table->text('headquarters')->nullable()->change();
+            $table->text('homepage')->nullable()->change();
         });
 
         Schema::table('people', function (Blueprint $table) {
@@ -52,10 +56,14 @@ return new class extends Migration {
 
         Schema::table('companies', function (Blueprint $table) {
             $table->mediumText('description')->nullable()->change();
+            $table->mediumText('headquarters')->nullable()->change();
+            $table->mediumText('homepage')->nullable()->change();
         });
 
         Schema::table('networks', function (Blueprint $table) {
             $table->mediumText('description')->nullable()->change();
+            $table->mediumText('headquarters')->nullable()->change();
+            $table->mediumText('homepage')->nullable()->change();
         });
 
         Schema::table('people', function (Blueprint $table) {

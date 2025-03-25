@@ -24,7 +24,7 @@ class TmdbImport extends Command
         $allowedEntities = $this->choice('Select entity:', ["both", "movies", "series"], 0);
         $prior = $this->choice('Select entity:', ["normal", "popular"], 0);
 
-        ini_set('memory_limit', '1024M');
+        ini_set('memory_limit', '-1');
 
         $this->info("Iniciando la importación de datos de TMDB");
 
