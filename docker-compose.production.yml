@@ -3,8 +3,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    depends_on:
-      - metrics_db
     container_name: grandspectra-backend
     environment:
       APP_ENV: ${APP_ENV}
@@ -28,7 +26,6 @@ services:
       TMDB_API_KEY: ${TMDB_API_KEY}
     networks:
       - gs-network
-      - metrics-network
     pull_policy: build
 
   nginx:
@@ -46,8 +43,3 @@ services:
 networks:
   gs-network:
     driver: bridge
-  metrics-network:
-    driver: bridge
-
-volumes:
-  metrics_data:
