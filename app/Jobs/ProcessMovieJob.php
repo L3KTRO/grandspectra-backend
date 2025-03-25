@@ -103,8 +103,5 @@ class ProcessMovieJob implements ShouldQueue
             Collection::upsert($collection, 'id');
             $movie->collection()->sync([$collection['id']]);
         }
-
-        // Recommendations
-        //Recommendation::upsert($movieScraper->getRecommendations(), ['recommendation_movie_id', 'movie_id']);
     }
 }
