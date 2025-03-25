@@ -424,7 +424,7 @@ class TV
                     'tv_id' => $this->data['id'],
                     'person_id' => $person['id'],
                     'occupation_id' => Occupation::ACTOR->value,
-                    'character' => $role['character'] ?? '',
+                    'character' => Str::limit($role['character'] ?? '', 255),
                     'order' => $person['order'] ?? null
                 ];
             }
