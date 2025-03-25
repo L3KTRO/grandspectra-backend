@@ -107,5 +107,8 @@ class ProcessTvJob implements ShouldQueue
 
         Network::upsert($networks, 'id');
         $tv->networks()->sync(array_unique(array_column($networks, 'id')));
+
+        // Recommendations
+        Recommendation::upsert($tvScraper->getRecommendations(), ['id', 'recommendation_tv_id']);
     }
 }

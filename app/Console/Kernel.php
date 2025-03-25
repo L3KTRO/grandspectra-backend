@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('tmdb:import')->dailyAt("11:00")->timezone("Europe/Madrid");
+        $schedule->command('horizon:snapshot')->everyFiveMinutes();
     }
 
     /**

@@ -424,7 +424,7 @@ class Movie
                     'title' => $recommendation['title'] ?? null,
                     'vote_average' => $recommendation['vote_average'] ?? null,
                     'poster' => $this->tmdb->image('poster', $recommendation),
-                    'release_date' => $recommendation['release_date'] ?? null,
+                    'release_date' => ($recommendation['release_date'] ?? null) !== "" ? $recommendation['release_date'] : null,
                 ];
             }
         }

@@ -520,10 +520,9 @@ class TV
                     'recommendation_tv_id' => $recommendation['id'],
                     'tv_id' => $this->data['id'],
                     'title' => $recommendation['name'],
-                    "release_date" => $recommendation['release_date'] ?? null,
                     'vote_average' => $recommendation['vote_average'] ?? null,
                     'poster' => $this->tmdb->image('poster', $recommendation),
-                    //'first_air_date' => $recommendation['first_air_date'] ?? null,
+                    'first_air_date' => ($recommendation['first_air_date'] ?? null) !== "" ? $recommendation['first_air_date'] : null,
                 ];
             }
         }
