@@ -33,10 +33,10 @@ return [
         'metrics_db' => [
             'driver' => 'mysql',
             'url' => env('METRICS_DATABASE_URL'),
-            'host' => env('METRICS_DB_HOST', 'metrics_db'),
+            'host' => env('METRICS_DB_HOST'),
             'port' => env('METRICS_DB_PORT', '3306'),
-            'database' => env('METRICS_DB_DATABASE', 'metrics'),
-            'username' => env('METRICS_DB_USERNAME', 'metrics_user'),
+            'database' => env('METRICS_DB_DATABASE'),
+            'username' => env('METRICS_DB_USERNAME'),
             'password' => env('METRICS_DB_PASSWORD'),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',

@@ -1,21 +1,4 @@
 services:
-
-  metrics_db:
-    image: mariadb:lts-ubi
-    container_name: metrics_db
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: ${METRICS_DB_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${METRICS_DB_DATABASE}
-      MYSQL_USER: ${METRICS_DB_USERNAME}
-      MYSQL_PASSWORD: ${METRICS_DB_PASSWORD}
-    volumes:
-      - metrics_data:/var/lib/mysql  # Persistencia de datos
-    ports:
-      - "3306:3306"
-    networks:
-      - metrics-network
-
   app:
     build:
       context: .
