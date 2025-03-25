@@ -96,7 +96,7 @@ class RatingController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
         $rating->delete();
-        return response()->json(['message' => 'Calificación eliminada']);
+        return response()->json(['message' => 'Calificación eliminada'], 204);
     }
 
     private function formatRating(Rating $rating)

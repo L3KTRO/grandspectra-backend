@@ -39,7 +39,7 @@ class WatchedController extends Controller
     public function destroy(Watched $watched)
     {
         $watched->delete();
-        return response()->json(['message' => 'Contenido eliminado de vistos']);
+        return response()->json(['message' => 'Contenido eliminado de vistos'], 204);
     }
 
     private function formatWatched(Watched $watched)

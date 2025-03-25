@@ -49,7 +49,7 @@ class FollowController extends Controller
 
         $user->following()->detach($foreign->id);
 
-        return response()->json(['message' => "You are no longer following $foreign->username"]);
+        return response()->json(['message' => "You are no longer following $foreign->username"], 204);
     }
 
 }

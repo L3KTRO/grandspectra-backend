@@ -19,7 +19,9 @@ class ReviewController extends Controller
             'qualification' => 'required|integer|min:1|max:10'
         ]);
 
-        return Review::create(array_merge($validated, ['user_id' => $user_id]));
+        $review = Review::create(array_merge($validated, ['user_id' => $user_id]));
+
+        return response()->json($review, 201);
     }
 
     function update(Request $request, Review $review): JsonResponse

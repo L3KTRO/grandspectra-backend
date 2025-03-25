@@ -19,14 +19,16 @@ class TmdbImport extends Command
      */
     public function handle(): int
     {
+        ini_set('memory_limit', '-1');
 
         $mode = $this->choice('Select mode:', ["upsert", "create"], 0);
         $allowedEntities = $this->choice('Select entity:', ["both", "movies", "series"], 0);
         $prior = $this->choice('Select entity:', ["normal", "popular"], 0);
 
-        ini_set('memory_limit', '-1');
-
         $this->info("Iniciando la importación de datos de TMDB");
+
+        $moviePopularity = 35;
+        $tvPopularity = 100;
 
         $tmdbScraper = new TMDBScraper();
 
@@ -88,7 +90,7 @@ class TmdbImport extends Command
                             }
                         }
 
-                        if ($prior === "popular" && $data["popularity"] < 100) {
+                        if ($prior === "popular" && $data["popularity"] < $entityName == "Movies" ? $moviePopularity : $tvPopularity) {
                             $this->info("La ID {$data['id']} está por debajo de la popularidad requerida (100)");
                             continue;
                         }
@@ -111,8 +113,8 @@ class TmdbImport extends Command
                 }
 
                 if ($prior === "popular") {
-                    $popularMovies = Movie::where('popularity', '>=', 100)->get();
-                    $popularTv = Tv::where('popularity', '>=', 100)->get();
+                    $popularMovies = Movie::where('popularity', '>=', $moviePopularity)->get();
+                    $popularTv = Tv::where('popularity', '>=', $tvPopularity)->get();
 
                     foreach ($popularMovies as $movie) {
                         $tmdbScraper->movie($movie->id);

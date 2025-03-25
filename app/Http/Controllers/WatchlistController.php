@@ -39,7 +39,7 @@ class WatchlistController extends Controller
     public function destroy(Watchlist $watchlist)
     {
         $watchlist->delete();
-        return response()->json(['message' => 'Eliminado de la watchlist']);
+        return response()->json(['message' => 'Eliminado de la watchlist'], 204);
     }
 
     private function formatItem(Watchlist $item)

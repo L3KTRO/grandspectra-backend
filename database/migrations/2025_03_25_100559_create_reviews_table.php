@@ -24,10 +24,6 @@ return new class extends Migration {
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('movie_id')->references('id')->on('movies')->onDelete("restrict");
             $table->foreign('tv_id')->references('id')->on('tv')->onDelete('restrict');
-
-            // Índices únicos compuestos (usuario + contenido)
-            $table->unique(['user_id', 'movie_id']);
-            $table->unique(['user_id', 'tv_id']);
         });
 
         DB::statement('
