@@ -3,13 +3,7 @@
 // app/Http/Controllers/Auth/UserController.php
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Movie;
-use App\Models\Rating;
-use App\Models\Tv;
 use App\Models\User;
-use App\Models\Watched;
-use App\Models\Watchlist;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -20,7 +14,9 @@ class UserController extends Controller
     protected array $allowedFilters = ["username"];
     protected array $columns = ['*'];
 
-    public array $relationships = ["followers", "following", "ratings.tv", "ratings.movie", "watched", "watchlist"];
+    public array $relationships = [
+        "followers", "following", "ratings.tv", "ratings.movie", "watched", "watchlist", "reviews"
+    ];
 
     public function __construct()
     {

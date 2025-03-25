@@ -34,23 +34,12 @@ Route::prefix('auth')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    Route::get("/me", [UserController::class, 'me']);
-
     Route::prefix('me')->group(function () {
-        Route::apiResource('ratings', RatingController::class)
-            ->only(['store', 'update', 'destroy']);
-
-        Route::apiResource('reviews', ReviewController::class)
-            ->only(['store', 'update', 'destroy']);
-
-        Route::apiResource('watched', WatchedController::class)
-            ->only(['store', 'destroy']);
-
-        Route::apiResource('watchlist', WatchlistController::class)
-            ->only(['store', 'destroy']);
-
-
-        Route::apiResource('follow', FollowController::class)
-            ->only(['update', 'destroy']);;
+        Route::get("/", [UserController::class, 'me']);
+        Route::apiResource('ratings', RatingController::class);
+        Route::apiResource('reviews', ReviewController::class);
+        Route::apiResource('watched', WatchedController::class);
+        Route::apiResource('watchlist', WatchlistController::class);
+        Route::apiResource('follow', FollowController::class);
     });
 });

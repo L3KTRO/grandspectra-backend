@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
+
     function store(Request $request): JsonResponse
     {
         $user_id = $request->user()->id;
@@ -19,9 +20,7 @@ class ReviewController extends Controller
             'qualification' => 'required|integer|min:1|max:10'
         ]);
 
-        $review = Review::create(array_merge($validated, ['user_id' => $user_id]));
-
-        return response()->json($review, 201);
+        return response()->json(Review::create(array_merge($validated, ['user_id' => $user_id])), 201);
     }
 
     function update(Request $request, Review $review): JsonResponse
