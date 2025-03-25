@@ -105,6 +105,6 @@ class ProcessMovieJob implements ShouldQueue
         }
 
         // Recommendations
-        Recommendation::upsert($movieScraper->getRecommendations(), ['recommendation_movie_id', 'movie_id']);
+        //Recommendation::upsert($movieScraper->getRecommendations(), ['recommendation_movie_id', 'movie_id']);
     }
 }
