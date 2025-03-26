@@ -189,8 +189,7 @@ return [
                 'queue' => ["tmdb-hp", "tmdb-movie", 'tmdb-tv'],
                 'processes' => 3,  # Workers en paralelo
                 'balance' => 'auto', # auto/simple
-                'maxProcesses' => 12,
-                'minProcesses' => 1,
+                'maxProcesses' => 12
             ]
         ],
 

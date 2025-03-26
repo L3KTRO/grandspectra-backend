@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,10 +22,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Http::globalOptions([
+            'connection_cache' => true,
+            'max_connections' => 100,
+            'dns_ttl' => 300
+        ]);
+
         Route::middleware('api')
             ->group(base_path('routes/api.php'));
 
-        Gate::define('viewPulse', function ($user = null) {
+        Gate::define('viewPulse', function () {
             return true;
         });
     }
