@@ -75,7 +75,7 @@ class ProcessMovieJob implements ShouldQueue
         $people = [];
 
         foreach (array_unique(array_column($credits, 'person_id')) as $person_id) {
-            sleep(1);
+            usleep(500000);
             $people[] = (new Client\Person($person_id))->getPerson();
         }
 
