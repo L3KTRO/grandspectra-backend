@@ -23,7 +23,7 @@ use Illuminate\Support\Str;
 use DateTime;
 use Exception;
 
-class Movie
+class Movie extends Client
 {
     /**
      * @var null|array{
@@ -241,7 +241,7 @@ class Movie
      */
     public function __construct(int $id)
     {
-        $this->data = Http::acceptJson()
+        $this->data = $this->createClient()
             ->withUrlParameters(['id' => $id])
             ->get('https://api.TheMovieDB.org/3/movie/{id}', [
                 'api_key' => config('tmdb.api_key'),

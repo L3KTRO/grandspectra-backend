@@ -19,7 +19,7 @@ namespace App\Services\Tmdb\Client;
 use App\Services\Tmdb\TMDB;
 use Illuminate\Support\Facades\Http;
 
-class Person
+class Person extends Client
 {
     /**
      * @var array{
@@ -45,11 +45,11 @@ class Person
 
     public function __construct(int $id)
     {
-        $this->data = Http::acceptJson()
+        $this->data = $this->createClient()
             ->withUrlParameters(['id' => $id])
             ->get('https://api.TheMovieDB.org/3/person/{id}', [
-                'api_key'            => config('tmdb.api_key'),
-                'language'           => config('app.meta_locale'),
+                'api_key' => config('tmdb.api_key'),
+                'language' => config('app.meta_locale'),
                 'append_to_response' => 'images,credits',
             ])
             ->json();
@@ -77,19 +77,19 @@ class Person
     public function getPerson(): array
     {
         return [
-            'id'                   => $this->data['id'] ?? null,
-            'birthday'             => $this->data['birthday'] ?? null,
+            'id' => $this->data['id'] ?? null,
+            'birthday' => $this->data['birthday'] ?? null,
             'known_for_department' => $this->data['known_for_department'] ?? null,
-            'deathday'             => $this->data['deathday'] ?? null,
-            'name'                 => $this->data['name'] ?? null,
-            'gender'               => $this->data['gender'] ?? null,
-            'biography'            => $this->data['biography'] ?? null,
-            'popularity'           => $this->data['popularity'] ?? null,
-            'place_of_birth'       => $this->data['place_of_birth'] ?? null,
-            'still'                => $this->tmdb->image('profile', $this->data),
-            'adult'                => $this->data['adult'] ?? null,
-            'imdb_id'              => $this->data['imdb_id'] ?? null,
-            'homepage'             => $this->data['homepage'] ?? null,
+            'deathday' => $this->data['deathday'] ?? null,
+            'name' => $this->data['name'] ?? null,
+            'gender' => $this->data['gender'] ?? null,
+            'biography' => $this->data['biography'] ?? null,
+            'popularity' => $this->data['popularity'] ?? null,
+            'place_of_birth' => $this->data['place_of_birth'] ?? null,
+            'still' => $this->tmdb->image('profile', $this->data),
+            'adult' => $this->data['adult'] ?? null,
+            'imdb_id' => $this->data['imdb_id'] ?? null,
+            'homepage' => $this->data['homepage'] ?? null,
         ];
     }
 }

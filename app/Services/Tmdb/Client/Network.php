@@ -19,7 +19,7 @@ namespace App\Services\Tmdb\Client;
 use App\Services\Tmdb\TMDB;
 use Illuminate\Support\Facades\Http;
 
-class Network
+class Network extends Client
 {
     /**
      * @var array{
@@ -52,7 +52,7 @@ class Network
 
     public function __construct(int $id)
     {
-        $this->data = Http::acceptJson()
+        $this->data = $this->createClient()
             ->withUrlParameters(['id' => $id])
             ->get('https://api.TheMovieDB.org/3/network/{id}', [
                 'api_key' => config('tmdb.api_key'),

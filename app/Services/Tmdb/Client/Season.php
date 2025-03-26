@@ -20,7 +20,7 @@ use App\Services\Tmdb\TMDB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
-class Season
+class Season extends Client
 {
     /**
      * @var array{
@@ -89,7 +89,7 @@ class Season
 
     public function __construct(public int $tvId, public int $seasonNumber)
     {
-        $this->data = Http::acceptJson()
+        $this->data = $this->createClient()
             ->withUrlParameters(['tvId' => $tvId, 'seasonNumber' => $seasonNumber])
             ->get('https://api.TheMovieDB.org/3/tv/{tvId}/season/{seasonNumber}', [
                 'api_key' => config('tmdb.api_key'),

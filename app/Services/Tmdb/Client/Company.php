@@ -19,7 +19,7 @@ namespace App\Services\Tmdb\Client;
 use App\Services\Tmdb\TMDB;
 use Illuminate\Support\Facades\Http;
 
-class Company
+class Company extends Client
 {
     /**
      * @var array{
@@ -41,11 +41,11 @@ class Company
     {
         $this->tmdb = new TMDB();
 
-        $this->data = Http::acceptJson()
+        $this->data = $this->createClient()
             ->withUrlParameters(['id' => $id])
             ->get('https://api.TheMovieDB.org/3/company/{id}', [
-                'api_key'            => config('tmdb.api_key'),
-                'language'           => config('app.meta_locale'),
+                'api_key' => config('tmdb.api_key'),
+                'language' => config('app.meta_locale'),
                 'append_to_response' => 'movies,videos,images,credits',
             ])
             ->json();
@@ -65,12 +65,12 @@ class Company
     public function getCompany(): array
     {
         return [
-            'id'             => $this->data['id'] ?? null,
-            'description'    => $this->data['description'] ?? null,
-            'headquarters'   => $this->data['headquarters'] ?? null,
-            'homepage'       => $this->data['homepage'] ?? null,
-            'logo'           => $this->tmdb->image('logo', $this->data),
-            'name'           => $this->data['name'] ?? null,
+            'id' => $this->data['id'] ?? null,
+            'description' => $this->data['description'] ?? null,
+            'headquarters' => $this->data['headquarters'] ?? null,
+            'homepage' => $this->data['homepage'] ?? null,
+            'logo' => $this->tmdb->image('logo', $this->data),
+            'name' => $this->data['name'] ?? null,
             'origin_country' => $this->data['origin_country'] ?? null,
         ];
     }

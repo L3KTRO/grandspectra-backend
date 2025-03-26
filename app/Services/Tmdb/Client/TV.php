@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use function array_key_exists;
 
-class TV
+class TV extends Client
 {
     /**
      * @var ?array{
@@ -303,7 +303,7 @@ class TV
      */
     public function __construct(int $id)
     {
-        $this->data = Http::acceptJson()
+        $this->data = $this->createClient()
             ->withUrlParameters(['id' => $id])
             ->get('https://api.TheMovieDB.org/3/tv/{id}', [
                 'api_key' => config('tmdb.api_key'),
