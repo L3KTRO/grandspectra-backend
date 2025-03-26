@@ -58,7 +58,7 @@ return [
 
     'storage' => [
         'driver' => env('PULSE_STORAGE_DRIVER', 'database'),
-        "connection" => env('PULSE_DB_CONNECTION', 'default'),
+        "connection" => env('PULSE_DB_CONNECTION', 'metrics_db'),
 
         'trim' => [
             'keep' => env('PULSE_STORAGE_KEEP', '7 days'),
