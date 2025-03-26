@@ -184,7 +184,7 @@ return [
     'environments' => [
         'production' => [
             'supervisor-1' => [
-                "memory" => 256,
+                "memory" => 512,
                 'connection' => 'redis',
                 'queue' => ["tmdb-hp", "tmdb-movie", 'tmdb-tv'],
                 'processes' => 3,  # Workers en paralelo
