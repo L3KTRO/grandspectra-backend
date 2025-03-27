@@ -41,5 +41,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('watched', WatchedController::class);
         Route::apiResource('watchlist', WatchlistController::class);
         Route::apiResource('follow', FollowController::class);
+
+        Route::prefix("person/{person_id}")->group(function () {
+            Route::put("/", [PersonController::class, 'userFollow']);
+            Route::delete("/", [PersonController::class, 'userUnfollow']);
+        });
+
     });
 });
