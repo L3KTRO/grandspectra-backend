@@ -15,7 +15,7 @@ class UserController extends Controller
     protected array $columns = ['*'];
 
     public array $relationships = [
-        "followers", "following", "ratings.tv", "ratings.movie", "watched", "watchlist", "reviews"
+        "followers", "following", "ratings.tv", "ratings.movie", "watched", "watchlist", "reviews", "personFollow"
     ];
 
     public function __construct()
