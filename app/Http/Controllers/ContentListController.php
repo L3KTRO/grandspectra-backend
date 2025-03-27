@@ -154,6 +154,6 @@ class ContentListController extends Controller
 
         $contentList->votes()->detach($user->id);
 
-        return response()->json(['message' => 'Vote removed successfully']);
+        return response()->json(['message' => 'Vote removed successfully'], 204);
     }
 }
