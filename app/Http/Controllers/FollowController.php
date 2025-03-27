@@ -15,36 +15,35 @@ class FollowController extends Controller
     public function update(Request $request, $foreignParam): JsonResponse
     {
         $foreign = User::where('username', $foreignParam)->first();
-        if (!$foreign) return response()->json(["message" => "User not found"]);
+        if (!$foreign) return response()->json(["message" => "User not found"], 404);
 
         $user = $request->user();
 
         if ($user->id === $foreign->id) {
-            return response()->json(["message" => "You can't follow yourself"]);
+            return response()->json(["message" => "You can't follow yourself"], 409);
         }
 
         if ($user->following()->where('following_id', $foreign->id)->exists()) {
-            return response()->json(["message" => "You are already following this user"]);
+            return response()->json(["message" => "You are already following this user"], 409);
         }
 
         $user->following()->attach($foreign->id);
 
-        return response()->json(['message' => "You are now following $foreign->username"]);
+        return response()->json(['message' => "You are now following $foreign->username"], 201);
     }
 
     public function destroy(Request $request, $foreignParam): JsonResponse
     {
         $foreign = User::where('username', $foreignParam)->first();
-        if (!$foreign) return response()->json(["message" => "User not found"]);
+        if (!$foreign) return response()->json(["message" => "User not found"], 404);
 
-        $user = Auth::user();
-
+        $user = $request->user();
         if ($user->id === $foreign->id) {
-            return response()->json(["message" => "You can't unfollow yourself"]);
+            return response()->json(["message" => "You can't unfollow yourself"], 409);
         }
 
         if (!$user->following()->where('following_id', $foreign->id)->exists()) {
-            return response()->json(["message" => "You are not following this user"]);
+            return response()->json(["message" => "You are not following this user"], 409);
         }
 
         $user->following()->detach($foreign->id);

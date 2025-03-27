@@ -90,7 +90,7 @@ class TmdbImport extends Command
                             }
                         }
 
-                        if ($prior === "popular" && $data["popularity"] < $entityName == "Movies" ? $moviePopularity : $tvPopularity) {
+                        if ($prior === "popular" && $data["popularity"] < ($entityName == "Movies" ? $moviePopularity : $tvPopularity)) {
                             $this->info("La ID {$data['id']} está por debajo de la popularidad requerida (100)");
                             continue;
                         }

@@ -6,12 +6,13 @@ use App\Models\Watchlist;
 use App\Models\User;
 use App\Models\Movie;
 use App\Models\Tv;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class WatchlistController extends Controller
 {
     // Obtener lista de un usuario
-    public function index(User $user)
+    public function index(User $user): JsonResponse
     {
         return $user->watchlist()
             ->with(['movie', 'tv'])
@@ -22,7 +23,7 @@ class WatchlistController extends Controller
     }
 
     // Añadir a la watchlist
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $user_id = $request->user()->id;
 
@@ -32,17 +33,17 @@ class WatchlistController extends Controller
         ]);
 
         $watchlistItem = Watchlist::firstOrCreate(array_merge($validated, ['user_id' => $user_id]));
-        return $this->formatItem($watchlistItem);
+        return response()->json($this->formatItem($watchlistItem), 201);
     }
 
     // Eliminar de la watchlist
-    public function destroy(Watchlist $watchlist)
+    public function destroy(Watchlist $watchlist): JsonResponse
     {
         $watchlist->delete();
         return response()->json(['message' => 'Eliminado de la watchlist'], 204);
     }
 
-    private function formatItem(Watchlist $item)
+    private function formatItem(Watchlist $item): array
     {
         return [
             'id' => $item->id,

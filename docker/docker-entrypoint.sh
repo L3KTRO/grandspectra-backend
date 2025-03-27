@@ -5,13 +5,6 @@ php artisan config:cache
 php artisan view:cache
 php artisan route:cache
 
-rm -f /var/www/database/migrations/*
-
-php artisan vendor:publish --tag=telescope-migrations
-php artisan vendor:publish --tag=pulse-migrations
-
-php artisan migrate --database=metrics_db --force
-
 # Asegurar permisos finales
 chown -R www-data:www-data /var/www/storage
 

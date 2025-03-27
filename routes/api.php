@@ -8,6 +8,7 @@ use App\Http\Controllers\GenreController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\OccupationController;
 use App\Http\Controllers\PersonController;
+use App\Http\Controllers\PersonFollowController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SeasonController;
@@ -41,11 +42,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('watched', WatchedController::class);
         Route::apiResource('watchlist', WatchlistController::class);
         Route::apiResource('follow', FollowController::class);
-
-        Route::prefix("person/{person_id}")->group(function () {
-            Route::put("/", [PersonController::class, 'userFollow']);
-            Route::delete("/", [PersonController::class, 'userUnfollow']);
-        });
-
+        Route::apiResource('person', PersonFollowController::class);
     });
 });
