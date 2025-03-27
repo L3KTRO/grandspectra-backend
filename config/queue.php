@@ -66,7 +66,7 @@ return [
         'redis' => [
             'driver' => 'redis',
             'connection' => env('REDIS_QUEUE_CONNECTION', 'default'),
-            'queue' => "{default}",
+            'queue' => "default",
             'retry_after' => (int)env('REDIS_QUEUE_RETRY_AFTER', 90),
             'block_for' => null,
             'after_commit' => false,
@@ -85,7 +85,7 @@ return [
     */
 
     'batching' => [
-        'database' => "redis",
+        'database' => "mysql",
         'table' => 'job_batches',
     ],
 
@@ -103,7 +103,7 @@ return [
     */
 
     'failed' => [
-        'database' => "redis",
+        'database' => "mysql",
         'table' => 'failed_jobs',
         'driver' => env('QUEUE_FAILED_DRIVER', 'database-uuids'),
     ],
