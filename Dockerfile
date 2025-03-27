@@ -50,16 +50,7 @@ WORKDIR /var/www
 
 # Copiar aplicación y dependencias
 COPY --from=builder /app/vendor vendor/
-COPY ./app ./app
-COPY ./bootstrap ./bootstrap
-COPY ./public ./public
-COPY ./storage ./storage
-COPY ./config ./config
-COPY ./routes ./routes
-COPY ./composer.json ./composer.json
-COPY ./composer.lock ./composer.lock
-COPY ./artisan ./artisan
-
+COPY . .
 
 # Ajustar permisos y usuario
 RUN chown -R www-data:www-data /var/www \

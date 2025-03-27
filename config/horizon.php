@@ -187,9 +187,11 @@ return [
                 "memory" => 512,
                 'connection' => 'redis',
                 'queue' => ["tmdb-hp", "tmdb-movie", 'tmdb-tv'],
-                'processes' => 3,  # Workers en paralelo
+                "autoScalingStrategy" => "time",
                 'balance' => 'auto', # auto/simple
-                'maxProcesses' => 6
+                'processes' => 1,  # Workers en paralelo
+                "minProcesses" => 1,
+                'maxProcesses' => 9
             ]
         ],
 
