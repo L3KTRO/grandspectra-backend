@@ -5,7 +5,6 @@ WORKDIR /app
 
 # Copiar solo archivos esenciales para cachear dependencias
 COPY composer.json composer.lock artisan ./
-COPY database/ database/
 
 # Instalación optimizada para producción (sin dev dependencies)
 RUN composer install \
@@ -51,7 +50,16 @@ WORKDIR /var/www
 
 # Copiar aplicación y dependencias
 COPY --from=builder /app/vendor vendor/
-COPY . .
+COPY ./app ./app
+COPY ./bootstrap ./bootstrap
+COPY ./public ./public
+COPY ./storage ./storage
+COPY ./config ./config
+COPY ./routes ./routes
+COPY ./composer.json ./composer.json
+COPY ./composer.lock ./composer.lock
+COPY ./artisan ./artisan
+
 
 # Ajustar permisos y usuario
 RUN chown -R www-data:www-data /var/www \

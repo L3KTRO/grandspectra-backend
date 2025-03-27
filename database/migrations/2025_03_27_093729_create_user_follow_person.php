@@ -10,10 +10,9 @@ return new class extends Migration {
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('people_followers', function (Blueprint $table) {
-            $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedInteger('person_id');
 
@@ -21,7 +20,7 @@ return new class extends Migration {
             $table->foreign('person_id')->references("id")->on("people")->onDelete('cascade');
             $table->timestamps();
 
-            $table->unique(['user_id', 'person_id']);
+            $table->primary(['user_id', 'person_id']);
         });
     }
 
@@ -30,7 +29,7 @@ return new class extends Migration {
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('people_followers');
     }

@@ -6,40 +6,14 @@ use App\Models\Rating;
 use App\Models\User;
 use App\Models\Movie;
 use App\Models\Tv;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class RatingController extends Controller
 {
-    public array $relations = ['movie', "tv"];
-
-    // Obtener todas las calificaciones de un usuario
-    public function userRatings(User $user)
-    {
-        return $user->ratings()
-            ->with(['movie', 'tv'])
-            ->get()
-            ->map(function ($rating) {
-                return $this->formatRating($rating);
-            });
-    }
-
-    // Obtener calificaciones para un contenido específico (movie/tv)
-    public function contentRatings(Request $request, $type, $id)
-    {
-        $model = $type === 'movie' ? Movie::class : Tv::class;
-        $content = $model::findOrFail($id);
-
-        return $content->ratings()
-            ->with('user')
-            ->paginate(10)
-            ->through(function ($rating) {
-                return $this->formatRating($rating);
-            });
-    }
-
     // Crear nueva calificación
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse|array
     {
         $user_id = $request->user()->id;
 
@@ -66,12 +40,11 @@ class RatingController extends Controller
 
         $args = array_merge($validated, ['user_id' => $user_id]);
 
-        $rating = Rating::create($args);
-        return $this->formatRating($rating);
+        return response()->json($this->formatRating(Rating::create($args)), 201);
     }
 
     // Actualizar calificación existente
-    public function update(Request $request, Rating $rating)
+    public function update(Request $request, Rating $rating): JsonResponse
     {
         $user_id = $request->user()->id;
 
@@ -84,11 +57,11 @@ class RatingController extends Controller
         ]);
 
         $rating->update($validated);
-        return $this->formatRating($rating->fresh(['movie', 'tv']));
+        return response()->json($this->formatRating($rating));
     }
 
     // Eliminar calificación
-    public function destroy(Request $request, Rating $rating)
+    public function destroy(Request $request, Rating $rating): JsonResponse
     {
         $user_id = $request->user()->id;
 
@@ -99,7 +72,7 @@ class RatingController extends Controller
         return response()->json(['message' => 'Calificación eliminada'], 204);
     }
 
-    private function formatRating(Rating $rating)
+    private function formatRating(Rating $rating): array
     {
         return [
             'id' => $rating->id,

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ContentListController;
 use App\Http\Controllers\CreditController;
 use App\Http\Controllers\EpisodeController;
 use App\Http\Controllers\FollowController;
@@ -20,11 +21,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // Definición de rutas API
-Route::apiResource('movies', MovieController::class);
-Route::apiResource('genres', GenreController::class);
-Route::apiResource('people', PersonController::class);
-Route::apiResource('tv', TvController::class);
-Route::apiResource('users', UserController::class);
+Route::apiResource('movies', MovieController::class)->only(['index', 'show']);
+Route::apiResource('genres', GenreController::class)->only(['index', 'show']);
+Route::apiResource('people', PersonController::class)->only(['index', 'show']);
+Route::apiResource('tv', TvController::class)->only(['index', 'show']);
+Route::apiResource('users', UserController::class)->only(['index', 'show']);
 
 // Rutas de autenticación
 Route::prefix('auth')->group(function () {
@@ -32,8 +33,12 @@ Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
 });
 
+// Rutas que requieren login en (mínimo) alguno de sus métodos
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::apiResource("lists", ContentListController::class)->except(['vote', 'unvote']);
+    Route::put('lists/{id}/vote', [ContentListController::class, 'vote']);
+    Route::delete('lists/{id}/vote', [ContentListController::class, 'unvote']);
 
     Route::prefix('me')->group(function () {
         Route::get("/", [UserController::class, 'me']);

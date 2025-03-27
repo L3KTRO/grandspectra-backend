@@ -45,14 +45,6 @@ class Collection extends Model
     public $timestamps = false;
 
     /**
-     * @return MorphMany<Comment, $this>
-     */
-    public function comments(): MorphMany
-    {
-        return $this->morphMany(Comment::class, 'commentable');
-    }
-
-    /**
      * @return BelongsToMany<Movie, $this>
      */
     public function movie(): BelongsToMany
