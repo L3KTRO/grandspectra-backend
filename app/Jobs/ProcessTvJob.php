@@ -40,6 +40,10 @@ class ProcessTvJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
+    public function __construct(public int $id)
+    {
+    }
+
     public function handle(): void
     {
         try {
