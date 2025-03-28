@@ -4,7 +4,7 @@ FROM composer:2.6 AS builder
 WORKDIR /app
 
 # Copiar solo archivos esenciales para cachear dependencias
-COPY composer.json composer.lock artisan ./
+COPY composer.json composer.lock ./
 
 # Instalación optimizada para producción (sin dev dependencies)
 RUN composer install \

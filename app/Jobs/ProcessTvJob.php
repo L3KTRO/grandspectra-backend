@@ -40,23 +40,11 @@ class ProcessTvJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    public int $timeout = 60 * 5;
-
-    /**
-     * ProcessTvJob Constructor.
-     */
-    public function __construct(public int $id)
-    {
-        $this->onConnection('redis');
-        $this->onQueue('tmdb-tv');
-    }
-
     public function handle(): void
     {
         try {
             $this->manage();
         } catch (\Exception $e) {
-            var_dump($e->getMessage());
             $this->fail($e);
         }
     }
