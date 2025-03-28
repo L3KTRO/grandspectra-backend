@@ -36,9 +36,15 @@ Route::prefix('auth')->group(function () {
 // Rutas que requieren login en (mínimo) alguno de sus métodos
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::apiResource("lists", ContentListController::class)->except(['vote', 'unvote']);
-    Route::put('lists/{id}/vote', [ContentListController::class, 'vote']);
-    Route::delete('lists/{id}/vote', [ContentListController::class, 'unvote']);
+
+    Route::apiResource("lists", ContentListController::class)->except(['vote', 'unvote', "save", "unsave"]);
+    Route::prefix("lists")->group(function () {
+        Route::put('/{id}/vote', [ContentListController::class, 'vote']);
+        Route::delete('/{id}/vote', [ContentListController::class, 'unvote']);
+        Route::put('/{id}/save', [ContentListController::class, 'save']);
+        Route::delete('/{id}/save', [ContentListController::class, 'unsave']);
+    });
+
 
     Route::prefix('me')->group(function () {
         Route::get("/", [UserController::class, 'me']);

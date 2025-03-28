@@ -10,7 +10,6 @@ class ContentList extends Model
 {
     protected $fillable = ['name', 'description', 'user_id', "public"];
 
-    protected $with = ["user", 'movie', 'tv'];
 
     /**
      * @return BelongsTo<User, $this>

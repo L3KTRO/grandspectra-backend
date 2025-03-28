@@ -8,16 +8,20 @@ use Illuminate\Http\Request;
 
 class ContentListController extends Controller
 {
+
+    protected array $rels = ["user", 'movie', 'tv'];
+
+
     function index(): JsonResponse
     {
-        $contentLists = ContentList::get();
+        $contentLists = ContentList::with($this->rels)->get();
 
         return response()->json($contentLists);
     }
 
-    function show($contentListId): JsonResponse
+    function show(string $contentListId): JsonResponse
     {
-        $contentList = ContentList::where('id', $contentListId)->first();
+        $contentList = ContentList::with($this->rels)->where('id', $contentListId)->first();
 
         if (!$contentList) {
             return response()->json(['error' => 'Content list not found'], 404);
@@ -155,5 +159,53 @@ class ContentListController extends Controller
         $contentList->votes()->detach($user->id);
 
         return response()->json(['message' => 'Vote removed successfully'], 204);
+    }
+
+    function save($contentListId): JsonResponse
+    {
+        $user = request()->user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $contentList = ContentList::find($contentListId);
+
+        if (!$contentList) {
+            return response()->json(['error' => 'Content list not found'], 404);
+        }
+
+        $userContentLists = $user->contentListsSaved();
+        if ($userContentLists->where("content_list_id", $contentListId)->exists()) {
+            return response()->json(['error' => 'Content list already saved'], 409);
+        }
+
+        $userContentLists->sync($contentList);
+
+        return response()->json(['message' => 'Content list saved successfully'], 201);
+    }
+
+    function unsave($contentListId): JsonResponse
+    {
+        $user = request()->user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $contentList = ContentList::find($contentListId);
+
+        if (!$contentList) {
+            return response()->json(['error' => 'Content list not found'], 404);
+        }
+
+        $userContentLists = $user->contentListsSaved();
+        if (!$userContentLists->where("content_list_id", $contentListId)->exists()) {
+            return response()->json(['error' => 'Content list not saved'], 409);
+        }
+
+        $userContentLists->detach($contentList);
+
+        return response()->json(['message' => 'Content list unsaved successfully'], 204);
     }
 }

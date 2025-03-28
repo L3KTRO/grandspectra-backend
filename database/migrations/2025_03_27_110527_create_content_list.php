@@ -58,6 +58,19 @@ return new class extends Migration {
             // Composite primary key
             $table->primary(["content_list_id", "user_id"]);
         });
+
+        Schema::create("content_list_user", function (Blueprint $table) {
+            $table->unsignedInteger("content_list_id");
+            $table->unsignedBigInteger("user_id");
+            $table->timestamps();
+
+            // Foreign keys
+            $table->foreign("content_list_id")->references("id")->on("content_lists")->onDelete("cascade");
+            $table->foreign("user_id")->references("id")->on("users")->onDelete("cascade");
+
+            // Composite primary key
+            $table->primary(["content_list_id", "user_id"]);
+        });
     }
 
     /**
@@ -65,9 +78,10 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('content_list');
+        Schema::dropIfExists('content_lists');
         Schema::dropIfExists('content_list_movie');
         Schema::dropIfExists('content_list_tv');
         Schema::dropIfExists('content_list_votes');
+        Schema::dropIfExists('content_list_user');
     }
 };
