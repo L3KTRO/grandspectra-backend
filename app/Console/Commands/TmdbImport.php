@@ -23,7 +23,7 @@ class TmdbImport extends Command
 
         $mode = $this->choice('Select mode:', ["upsert", "create"], 0);
         $allowedEntities = $this->choice('Select entity:', ["both", "movies", "series"], 0);
-        $prior = $this->choice('Select entity:', ["normal", "popular"], 0);
+        $prior = $this->choice('Select prior:', ["normal", "popular"], 0);
 
         $this->info("Iniciando la importación de datos de TMDB");
 
@@ -130,5 +130,6 @@ class TmdbImport extends Command
             }
         }
         return 0;
+
     }
 }
