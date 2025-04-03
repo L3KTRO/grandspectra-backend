@@ -20,7 +20,20 @@ class TvController extends ReadOnlyController
 
     public function index(Request $request): JsonResponse
     {
-        $query = $this->model->query();
+
+        $query = $this->model->query()->with("genres")
+            ->whereDoesntHave("genres", function ($query) {
+                $query->where("genres.id", 10767);
+            })
+            ->whereDoesntHave("genres", function ($query) {
+                $query->where("genres.id", 10763);
+            }) //10764
+            ->whereDoesntHave("genres", function ($query) {
+                $query->where("genres.id", 10766);
+            })
+            ->whereDoesntHave("genres", function ($query) {
+                $query->where("genres.id", 10764);
+            });
 
         // Aplicar filtrado por nombre (específico de series TV)
         if ($request->has('name')) {
