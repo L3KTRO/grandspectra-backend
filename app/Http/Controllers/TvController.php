@@ -27,7 +27,7 @@ class TvController extends ReadOnlyController
             })
             ->whereDoesntHave("genres", function ($query) {
                 $query->where("genres.id", 10763);
-            }) //10764
+            })
             ->whereDoesntHave("genres", function ($query) {
                 $query->where("genres.id", 10766);
             })
