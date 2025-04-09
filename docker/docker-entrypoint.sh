@@ -5,7 +5,9 @@ php artisan config:cache
 php artisan view:cache
 php artisan route:cache
 
-(crontab -l ; echo "* * * * * cd /var/www && php artisan schedule:run >> /dev/null 2>&1")| crontab -
+(crontab -l ; echo "* * * * * cd /var/www && php artisan schedule:run >> /tmp/output.txt 2> /tmp/output.err")| crontab -
+
+crond
 
 # Asegurar permisos finales
 chown -R www-data:www-data /var/www/storage
