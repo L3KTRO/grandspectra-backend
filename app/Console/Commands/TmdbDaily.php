@@ -55,7 +55,7 @@ class TmdbDaily extends Command
 
             $response = Http::get($url);
 
-            if ($response->successful()) {
+            if ($response->successful()) { //1461796
                 // Descomprimir el contenido .gz
                 $rawContent = $response->body();
                 $content = gzdecode($rawContent);

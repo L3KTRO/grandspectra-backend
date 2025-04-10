@@ -61,6 +61,11 @@ class ProcessMovieJob implements ShouldQueue
 
         $movieScraper = new Client\Movie($this->id);
 
+        if ($movieScraper->data['adult'] === true) {
+            Log::info('Adult content detected, skipping movie ID: ' . $this->id);
+            return;
+        }
+
         $movie = Movie::updateOrCreate(['id' => $this->id], $movieScraper->getMovie());
 
         // Genres
