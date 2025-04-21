@@ -15,7 +15,7 @@ class MovieController extends ReadOnlyController
     {
         $this->model = new Movie();
         $this->allowedFilters = ["id", "title", "release_date", "original_title", "popularity", "vote_average", "vote_count"];
-        $this->columns = ['id', 'title', 'overview', 'release_date', 'poster', 'backdrop', 'runtime', 'budget', 'revenue', 'imdb_id', 'tmdb_id', 'original_language', 'original_title', "title", "title_sort", 'popularity', 'vote_average', 'vote_count', "trailer"];
+        $this->columns = ['id', 'title', 'overview', 'release_date', 'poster', 'backdrop', 'runtime', 'budget', 'revenue', 'imdb_id', 'tmdb_id', 'original_language', 'original_title', "title", "title_sort", 'popularity', 'vote_average', 'vote_count', "trailer", "tagline"];
     }
 
     public function index(Request $request): JsonResponse
