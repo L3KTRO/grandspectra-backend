@@ -51,7 +51,7 @@ class AuthController extends Controller
 
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
-                'message' => 'Credenciales incorrectas'
+                'message' => 'Invalid credentials'
             ], 401);
         }
 
