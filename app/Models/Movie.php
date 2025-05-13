@@ -137,4 +137,12 @@ class Movie extends Model
         return $this->belongsToMany(__CLASS__, Recommendation::class, 'movie_id', 'recommendation_movie_id', 'id', 'id');
     }
 
+    /**
+     * @return HasMany
+     */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class, 'movie_id', 'id');
+    }
+
 }

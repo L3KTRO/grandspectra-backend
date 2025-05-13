@@ -9,6 +9,7 @@ class Review extends MorphContentModel
 {
 
     protected $fillable = ['user_id', 'movie_id', 'tv_id', 'qualification', 'content'];
+    protected $with = ['user'];
 
     public function user(): BelongsTo
     {

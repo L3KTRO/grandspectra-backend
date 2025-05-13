@@ -155,4 +155,13 @@ class Tv extends Model
     {
         return $this->belongsToMany(__CLASS__, Recommendation::class, 'tv_id', 'recommendation_tv_id', 'id', 'id');
     }
+
+
+    /**
+     * @return HasMany
+     */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class, 'tv_id', 'id');
+    }
 }
