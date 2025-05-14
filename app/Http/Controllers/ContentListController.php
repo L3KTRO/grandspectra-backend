@@ -38,7 +38,7 @@ class ContentListController extends Controller
 
         $validated = $request->validate([
             "name" => "required|string|max:255",
-            "description" => "nullable|string|max:1000",
+            "description" => "required|string|max:1000",
             'movie_id' => 'nullable|array|exists:movies,id',
             'tv_id' => 'nullable|array|exists:tv,id',
             "public" => "boolean",
@@ -66,19 +66,21 @@ class ContentListController extends Controller
         }
 
         $validated = $request->validate([
-            "name" => "required|string|max:255",
-            "description" => "nullable|string|max:1000",
-            'movie_id' => 'nullable|array|exists:movies,id',
-            'tv_id' => 'nullable|array|exists:tv,id',
-            "public" => "nullable|boolean",
+            "name" => "sometimes|string|max:255",
+            "description" => "sometimes|string|max:1000",
+            'movie_id' => 'sometimes|array|exists:movies,id',
+            'tv_id' => 'sometimes|array|exists:tv,id',
+            "public" => "sometimes|boolean",
         ]);
-
-        var_dump($validated);
 
         $content = ContentList::find($contentListId);
 
         if (!$content) {
             return response()->json(['error' => 'Content list not found'], 404);
+        }
+
+        if ($content->user_id !== $user->id) {
+            return response()->json(['error' => 'Forbidden'], 403);
         }
 
         $content->update($validated);
