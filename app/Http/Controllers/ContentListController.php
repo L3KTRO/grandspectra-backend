@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class ContentListController extends Controller
 {
 
-    protected array $rels = ["user", 'movie', 'tv'];
+    protected array $rels = ["user", 'movie', 'tv', "votes"];
 
 
     function index(): JsonResponse
