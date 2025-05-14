@@ -26,6 +26,7 @@ Route::apiResource('genres', GenreController::class)->only(['index', 'show']);
 Route::apiResource('people', PersonController::class)->only(['index', 'show']);
 Route::apiResource('tv', TvController::class)->only(['index', 'show']);
 Route::apiResource('users', UserController::class)->only(['index', 'show']);
+Route::apiResource("lists", ContentListController::class)->except(['vote', 'unvote', "save", "unsave"]);
 
 // Rutas de autenticación
 Route::prefix('auth')->group(function () {
@@ -37,7 +38,6 @@ Route::prefix('auth')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    Route::apiResource("lists", ContentListController::class)->except(['vote', 'unvote', "save", "unsave"]);
     Route::prefix("lists")->group(function () {
         Route::put('/{id}/vote', [ContentListController::class, 'vote']);
         Route::delete('/{id}/vote', [ContentListController::class, 'unvote']);

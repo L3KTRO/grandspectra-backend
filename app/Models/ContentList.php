@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ContentList extends Model
 {
     protected $fillable = ['name', 'description', 'user_id', "public"];
-
 
     /**
      * @return BelongsTo<User, $this>
@@ -35,10 +35,17 @@ class ContentList extends Model
         return $this->belongsToMany(Tv::class);
     }
 
-    public function votes(): BelongsToMany
+    public function votes(): HasMany
     {
-        return $this->belongsToMany(
-            User::class, 'content_list_votes', 'content_list_id', 'user_id'
+        $model = new class extends Model {
+            protected $table = 'content_list_votes';
+            protected $fillable = [
+                "vote",
+            ];
+        };
+
+        return $this->hasMany(
+            $model::class,
         );
     }
 }
