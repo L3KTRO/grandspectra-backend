@@ -43,7 +43,7 @@ class ContentListController extends Controller
             "description" => "nullable|string|max:1000",
             'movie_id' => 'nullable|array|exists:movies,id',
             'tv_id' => 'nullable|array|exists:tv,id',
-            "public" => "boolean|default:true",
+            "public" => "boolean",
         ]);
 
         $content = ContentList::create(array_merge($validated, ['user_id' => $user->id]));
