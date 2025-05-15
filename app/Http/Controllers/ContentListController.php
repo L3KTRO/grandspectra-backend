@@ -137,7 +137,7 @@ class ContentListController extends Controller
             return response()->json(['error' => 'Content list not found'], 404);
         }
 
-        $contentList->votes()->sync([$user->id => ['vote' => $validated['vote']]]);
+        $contentList->votes()->create(['vote' => $validated['vote'], "user_id" => $user->id]);
 
         return response()->json(['message' => 'Vote recorded successfully: ' . ($validated['vote'] ? 'upvote' : 'downvote')]);
     }
@@ -156,7 +156,7 @@ class ContentListController extends Controller
             return response()->json(['error' => 'Content list not found'], 404);
         }
 
-        $contentList->votes()->detach($user->id);
+        $contentList->votes()->delete($user->id);
 
         return response()->json(['message' => 'Vote removed successfully'], 204);
     }

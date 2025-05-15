@@ -42,7 +42,7 @@ class ContentList extends Model
         $model = new class extends Model {
             protected $table = 'content_list_votes';
             protected $fillable = [
-                "vote",
+                "vote", "user_id"
             ];
         };
 
