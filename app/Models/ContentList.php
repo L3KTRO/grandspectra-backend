@@ -39,15 +39,6 @@ class ContentList extends Model
 
     public function votes(): HasMany
     {
-        $model = new class extends Model {
-            protected $table = 'content_list_votes';
-            protected $fillable = [
-                "vote", "user_id"
-            ];
-        };
-
-        return $this->hasMany(
-            $model::class,
-        );
+        return $this->hasMany(ContentListVote::class);
     }
 }

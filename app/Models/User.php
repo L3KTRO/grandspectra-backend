@@ -71,6 +71,11 @@ class User extends Authenticatable
         return $this->belongsToMany(ContentList::class, 'content_list_user', 'user_id', 'content_list_id')->withTimestamps();
     }
 
+    public function contentListsVote(): BelongsToMany
+    {
+        return $this->belongsToMany(ContentList::class, 'content_list_votes', 'user_id', 'content_list_id')->withTimestamps();
+    }
+
     public function contentLists(): HasMany
     {
         return $this->hasMany(ContentList::class);

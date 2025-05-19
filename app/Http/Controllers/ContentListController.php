@@ -137,16 +137,12 @@ class ContentListController extends Controller
             return response()->json(['error' => 'Content list not found'], 404);
         }
 
-        $vote = $contentList->votes()->where(['user_id' => $user->id, 'content_list_id' => $contentList->id])->first();
+        $userContentListVote = $user->contentListsVote()->where("content_list_id", $contentListId);
 
-        if ($vote) {
-            $vote->update($validated);
+        if ($userContentListVote->exists()) {
+            $userContentListVote->update($validated);
         } else {
-            $contentList->votes()->create([
-                'user_id' => $user->id,
-                'content_list_id' => $contentList->id,
-                'vote' => $validated['vote'],
-            ]);
+            $contentList->votes()->create(array_merge($validated, ['user_id' => $user->id, 'content_list_id' => $contentListId]));
         }
 
         return response()->json(['message' => 'Vote recorded successfully: ' . ($validated['vote'] ? 'upvote' : 'downvote')]);
