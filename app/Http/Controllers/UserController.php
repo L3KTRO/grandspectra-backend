@@ -15,7 +15,7 @@ class UserController extends Controller
     protected array $columns = ['*'];
 
     public array $relationships = [
-        "followers", "following", "ratings.tv", "ratings.movie", "watched", "watchlist", "reviews", "personFollow",
+        "followers", "following", "ratings", "ratings.tv", "ratings.movie", "watched", "watchlist", "reviews", "personFollow",
         "contentLists", "contentListsSaved"
     ];
 
@@ -31,7 +31,22 @@ class UserController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        $query = $this->model::query()->select($this->columns)->orderBy("created_at", "desc");
+        $sorts = ["followers", "following", "ratings", "watched", "watchlist"];
+
+        $validator = $request->validate([
+            'per_page' => 'integer|min:1',
+            'sort_by' => 'string|in:' . implode(",", $sorts),
+            "relations" => "array",
+            "relations.*" => "string|in:" . implode(",", $this->relationships),
+        ]);
+        $query = $this->model::query()->select($this->columns)->with($validator["relations"] ?? [])->withCount($sorts);
+
+        if ($request->has('sort_by')) {
+            $sortBy = $request->input('sort_by');
+            if (in_array($sortBy, $sorts)) {
+                $query->withCount($sortBy)->orderBy($sortBy . "_count", "desc");
+            }
+        }
 
         foreach ($this->allowedFilters as $filter) {
             if ($request->has($filter)) {
@@ -41,6 +56,7 @@ class UserController extends Controller
 
         $perPage = $request->input('per_page', 5);
         $data = $query->paginate($perPage);
+
 
         return response()->json([
             'data' => $data->items(),
@@ -54,7 +70,6 @@ class UserController extends Controller
 
     public function show(string $username): JsonResponse
     {
-
         $record = $this->model::with($this->relationships)
             ->select($this->columns)
             ->where("username", $username)
