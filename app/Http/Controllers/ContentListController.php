@@ -5,24 +5,34 @@ namespace App\Http\Controllers;
 use App\Models\ContentList;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ContentListController extends Controller
 {
+
     protected array $rels = ["user", 'movie', 'tv', "votes"];
 
     function index(): JsonResponse
     {
-        $contentLists = ContentList::with($this->rels)->get();
-
+        $contentLists = ContentList::with($this->rels)->where('public', true)->get();
         return response()->json($contentLists);
     }
 
-    function show(string $contentListId): JsonResponse
+    function show(string $contentListId, Request $request): JsonResponse
     {
         $contentList = ContentList::with($this->rels)->where('id', $contentListId)->first();
 
         if (!$contentList) {
             return response()->json(['error' => 'Content list not found'], 404);
+        }
+
+        Log::info($contentList->public);
+        Log::info($contentList->user_id);
+        Log::info($request->user());
+
+        if (!$contentList->public && $contentList->user_id !== $request->user()?->id) {
+            return response()->json(['error' => 'Forbidden'], 403);
         }
 
         return response()->json($contentList);
