@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tv;
+use App\Services\Tmdb\TMDBScraper;
 use App\Traits\MediaFilterTrait;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -70,5 +71,16 @@ class TvController extends ReadOnlyController
         $shows = $this->paginateResults($query, $request);
 
         return response()->json($shows);
+    }
+
+
+    public function update(string $contentId): JsonResponse
+    {
+        $tmdbScraper = new TMDBScraper();
+        $tmdbScraper->tvPriority($contentId);
+        return response()->json([
+            'message' => 'The job has been dispatched to high priority queue',
+            'content_id' => $contentId
+        ]);
     }
 }

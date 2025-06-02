@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Movie;
+use App\Services\Tmdb\TMDBScraper;
 use App\Traits\MediaFilterTrait;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Artisan;
 
 class MovieController extends ReadOnlyController
 {
@@ -45,5 +47,15 @@ class MovieController extends ReadOnlyController
         $movies = $this->paginateResults($query, $request);
 
         return response()->json($movies);
+    }
+
+    public function update(string $contentId): JsonResponse
+    {
+        $tmdbScraper = new TMDBScraper();
+        $tmdbScraper->moviePriority($contentId);
+        return response()->json([
+            'message' => 'The job has been dispatched to high priority queue',
+            'content_id' => $contentId
+        ]);
     }
 }

@@ -21,10 +21,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // Definición de rutas API
-Route::apiResource('movies', MovieController::class)->only(['index', 'show']);
+Route::apiResource('movies', MovieController::class)->only(['index', 'show', "update"]);
 Route::apiResource('genres', GenreController::class)->only(['index', 'show']);
 Route::apiResource('people', PersonController::class)->only(['index', 'show']);
-Route::apiResource('tv', TvController::class)->only(['index', 'show']);
+Route::apiResource('tv', TvController::class)->only(['index', 'show', "update"]);
 Route::apiResource('users', UserController::class)->only(['index', 'show']);
 Route::apiResource("lists", ContentListController::class)->only(['index']);
 
