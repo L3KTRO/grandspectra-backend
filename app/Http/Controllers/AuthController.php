@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use AWS\CRT\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
 
@@ -72,5 +74,37 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Has cerrado sesión exitosamente'
         ]);
+    }
+
+    public function update(Request $request): JsonResponse
+    {
+        $user = \auth()->user();
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $validated = $request->validate([
+            'username' => 'sometimes|string|min:5|max:20|unique:users,username,' . $user->id,
+            'email' => 'sometimes|string|email|max:255|unique:users,email,' . $user->id,
+            'password' => 'sometimes|string|min:8|confirmed',
+            "avatar" => "sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:10240", // 10MB max
+        ]);
+
+        if (isset($validated['password'])) {
+            $validated['password'] = Hash::make($validated['password']);
+        }
+
+        if (isset($validated['avatar'])) {
+            if ($user->avatar) Storage::disk("s3")->delete(basename($user->avatar));
+            $randomName = uniqid() . '.' . $validated['avatar']->getClientOriginalExtension();
+
+            Storage::disk("s3")->put($randomName, file_get_contents($validated['avatar']));
+
+            $validated['avatar'] = Storage::disk("s3")->url($randomName);
+        }
+
+        $user->update($validated);
+
+        return response()->json($user);
     }
 }

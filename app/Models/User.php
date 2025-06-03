@@ -16,7 +16,7 @@ class User extends Authenticatable
     public $with = [];
 
     // Campos que se pueden asignar masivamente con create()
-    protected $fillable = ['email', 'username', 'password'];
+    protected $fillable = ['email', 'username', 'password', "avatar"];
 
     protected $hidden = [
         'password',

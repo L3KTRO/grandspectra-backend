@@ -36,6 +36,7 @@ Route::prefix('auth')->group(function () {
 
 // Rutas que requieren login en (mínimo) alguno de sus métodos
 Route::middleware('auth:sanctum')->group(function () {
+    Route::put('auth/edit', [AuthController::class, 'update']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::prefix("lists")->group(function () {
