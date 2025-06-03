@@ -207,6 +207,15 @@ return [
         ],
 
         "dev" => [],
-        "production-non-computing" => []
+        "production-non-computing" => [
+            'supervisor-1' => [
+                'connection' => 'redis',
+                'queue' => ["mailing"],
+                'processes' => 1,  # Workers en paralelo
+                'balance' => 'auto', # auto/simple
+                'maxProcesses' => 1,
+                'minProcesses' => 1,
+            ]
+        ]
     ],
 ];

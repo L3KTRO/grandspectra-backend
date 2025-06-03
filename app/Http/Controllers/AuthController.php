@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\VerifyMail;
 use App\Models\User;
 use AWS\CRT\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
 
@@ -25,6 +30,8 @@ class AuthController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
+        DB::beginTransaction();
+
         $user = User::create([
             'username' => $request->username,
             'email' => $request->email,
@@ -32,6 +39,14 @@ class AuthController extends Controller
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
+
+
+        $link = URL::signedRoute('verify', [
+            'id' => $user->id,
+        ]);
+        Mail::to($user->email)->send(new VerifyMail($link));
+
+        DB::commit();
 
         return response()->json([
             'user' => $user,
@@ -106,5 +121,26 @@ class AuthController extends Controller
         $user->update($validated);
 
         return response()->json($user);
+    }
+
+    public function verifyUser(Request $request, $id)
+    {
+        if (!$request->hasValidSignature()) {
+            return response()->json([
+                'error' => 'Invalid signature or link expired',
+            ], 403);
+        }
+
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json([
+                'error' => 'User not found',
+            ], 404);
+        }
+
+        $user->email_verified_at = now();
+        $user->save();
+
+        return redirect()->away("https://gs.lestro.top/#/profile");
     }
 }

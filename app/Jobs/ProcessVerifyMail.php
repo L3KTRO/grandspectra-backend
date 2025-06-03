@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Jobs;
+
+use App\Mail\VerifyMail;
+use App\Models\User;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
+
+class ProcessVerifyMail implements ShouldQueue
+{
+    use Queueable;
+
+    /**
+     * Create a new job instance.
+     */
+    public function __construct(public int $userId)
+    {
+        $this->onConnection('redis');
+    }
+
+    /**
+     * Execute the job.
+     */
+    public function handle(): void
+    {
+        $user = User::find($this->userId);
+        if ($user) {
+            $link = URL::signedRoute('verify', [
+                'id' => $user->id,
+            ]);
+            Mail::to($user->email)->send(new VerifyMail($link));
+        }
+    }
+}

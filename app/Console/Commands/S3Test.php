@@ -19,15 +19,15 @@ class S3Test extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'S3 Storage Test Command';
 
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
-        $file = Storage::disk('s3')->put('avatars/test.txt', 'This is a test file for S3 storage.');
-        Storage::disk('s3')->delete('avatars/test.txt');
-        $this->info(Storage::disk('s3')->url('avatars/test.txt'));
+        Storage::disk('s3')->put('test.txt', 'This is a test file for S3 storage.');
+        Storage::disk('s3')->delete('test.txt');
+        $this->info(Storage::disk('s3')->url('test.txt'));
     }
 }
