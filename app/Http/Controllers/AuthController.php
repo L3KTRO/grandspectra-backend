@@ -99,6 +99,8 @@ class AuthController extends Controller
             "avatar" => "sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:10240", // 10MB max
         ]);
 
+
+
         if (isset($validated['password'])) {
             $validated['password'] = Hash::make($validated['password']);
         }
@@ -114,7 +116,7 @@ class AuthController extends Controller
 
         // if email changed, mark email as not verified
         if (isset($validated['email']) && $validated['email'] !== $user->email) {
-            $validated['email_verified_at'] = null; // Reset email verification
+            $user->email_verified_at = null; // Reset email verification
             ProcessVerifyMail::dispatch($user->id); // Resend verification email
         }
 
