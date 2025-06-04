@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessVerifyMail;
 use App\Mail\VerifyMail;
 use App\Models\User;
 use AWS\CRT\Log;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -30,8 +32,6 @@ class AuthController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        DB::beginTransaction();
-
         $user = User::create([
             'username' => $request->username,
             'email' => $request->email,
@@ -40,13 +40,7 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-
-        $link = URL::signedRoute('verify', [
-            'id' => $user->id,
-        ]);
-        Mail::to($user->email)->send(new VerifyMail($link));
-
-        DB::commit();
+        ProcessVerifyMail::dispatch($user->id);
 
         return response()->json([
             'user' => $user,

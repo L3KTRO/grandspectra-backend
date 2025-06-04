@@ -19,6 +19,7 @@ class ProcessVerifyMail implements ShouldQueue
     public function __construct(public int $userId)
     {
         $this->onConnection('redis');
+        $this->onQueue('mailing-hp');
     }
 
     /**

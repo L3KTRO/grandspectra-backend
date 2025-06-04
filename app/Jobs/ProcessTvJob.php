@@ -59,8 +59,13 @@ class ProcessTvJob implements ShouldQueue
         // Tv
 
         $tvScraper = new Client\TV($this->id);
+        $tvData = $tvScraper->getTv();
+        if (!$tvData) {
+            Log::warning('TV not found', ['id' => $this->id]);
+            return;
+        }
 
-        $tv = Tv::updateOrCreate(['id' => $this->id], $tvScraper->getTv());
+        $tv = Tv::updateOrCreate(['id' => $this->id], $tvData);
 
         // Genres
 
