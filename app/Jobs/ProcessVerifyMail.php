@@ -29,7 +29,7 @@ class ProcessVerifyMail implements ShouldQueue
     {
         $user = User::find($this->userId);
         if ($user) {
-            $link = URL::signedRoute('verify', [
+            $link = URL::temporarySignedRoute('verify', now()->addMinutes(30), [
                 'id' => $user->id,
             ]);
             Mail::to($user->email)->send(new VerifyMail($link));

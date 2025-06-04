@@ -218,7 +218,7 @@
         </div>
 
         <div class="warning">
-            <strong>⚠️ </strong> This verification link will expire in 60 minutes for security reasons.
+            <strong>⚠️ </strong> This verification link will expire in 30 minutes for security reasons.
         </div>
 
         <div class="alternative-text">
