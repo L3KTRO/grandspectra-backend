@@ -112,6 +112,12 @@ class AuthController extends Controller
             $validated['avatar'] = Storage::disk("s3")->url($randomName);
         }
 
+        // if email changed, mark email as not verified
+        if (isset($validated['email']) && $validated['email'] !== $user->email) {
+            $validated['email_verified_at'] = null; // Reset email verification
+            ProcessVerifyMail::dispatch($user->id); // Resend verification email
+        }
+
         $user->update($validated);
 
         return response()->json($user);
@@ -136,5 +142,21 @@ class AuthController extends Controller
         $user->save();
 
         return redirect()->away("https://gs.lestro.top/#/profile");
+    }
+
+    public function resendVerification(): JsonResponse
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        if ($user->email_verified_at) {
+            return response()->json(['message' => 'User already verified'], 400);
+        }
+
+        ProcessVerifyMail::dispatch($user->id);
+
+        return response()->json(['message' => 'Verification email resent successfully']);
     }
 }
