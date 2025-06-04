@@ -203,7 +203,7 @@
     </div>
 
     <div class="content">
-        <div class="greeting">¡Welcome!</div>
+        <div class="greeting">Welcome!</div>
 
         <div class="message">
             Thank you for registering on our platform. To complete your registration and start enjoying
