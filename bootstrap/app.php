@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withMiddleware(function (Middleware $middleware) {
         //$middleware->append(Cors::class);
+        $middleware->trustProxies("192.168.0.54");
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
