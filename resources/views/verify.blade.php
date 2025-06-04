@@ -229,10 +229,10 @@
 
     <div class="footer">
         <div class="footer-text">
-            If you did not create an account on GrandSpectra, you can safely ignore this email.
+            If you did not create an account on Grand Spectra, you can safely ignore this email.
         </div>
         <div class="footer-text">
-            © GrandSpectra. All rights reserveds.
+            © Grand Spectra. All rights reserveds.
         </div>
         <div class="footer-text" style="margin-top: 10px; font-size: 12px;">
             Organize your content • Share with your friends • Updated daily

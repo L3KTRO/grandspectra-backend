@@ -141,7 +141,7 @@ class AuthController extends Controller
         $user->email_verified_at = now();
         $user->save();
 
-        return redirect()->away("https://gs.lestro.top/#/profile");
+        return view("verified");
     }
 
     public function resendVerification(): JsonResponse
