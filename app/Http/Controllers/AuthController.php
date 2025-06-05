@@ -100,14 +100,13 @@ class AuthController extends Controller
         ]);
 
 
-
         if (isset($validated['password'])) {
             $validated['password'] = Hash::make($validated['password']);
         }
 
         if (isset($validated['avatar'])) {
             if ($user->avatar) Storage::disk("s3")->delete(basename($user->avatar));
-            $randomName = uniqid() . '.' . $validated['avatar']->getClientOriginalExtension();
+            $randomName = uniqid() . '.' . $request->file('avatar')->extension();
 
             Storage::disk("s3")->put($randomName, file_get_contents($validated['avatar']));
 
