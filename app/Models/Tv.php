@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Laravel\Scout\Searchable;
 
 /**
  * App\Models\Tv.
@@ -61,7 +62,7 @@ use Illuminate\Support\Carbon;
 class Tv extends Model
 {
     /** @use HasFactory<TvFactory> */
-    use HasFactory;
+    use HasFactory, Searchable;
 
     protected $guarded = [];
     public $table = 'tv';
@@ -163,5 +164,27 @@ class Tv extends Model
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class, 'tv_id', 'id');
+    }
+
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'tmdb_id' => $this->tmdb_id,
+            'name' => $this->name,
+            'name_sort' => $this->name_sort,
+            'popularity' => (float) $this->popularity,
+            'poster' => $this->poster,
+            'first_air_date' => $this->first_air_date,
+            'episode_run_time' => (int) $this->episode_run_time,
+            'vote_average' => (float) $this->vote_average,
+            'vote_count' => (int) $this->vote_count,
+            'genres' => $this->genres()->pluck('name')->toArray(), // Aquí están los géneros
+        ];
+    }
+
+    public function makeSearchableUsing(Collection $models): Collection
+    {
+        return $models->load('genres'); // Eager loading para optimizar
     }
 }

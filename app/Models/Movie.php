@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Laravel\Scout\Searchable;
 
 /**
  * App\Models\Movie.
@@ -55,7 +56,7 @@ use Illuminate\Support\Carbon;
 class Movie extends Model
 {
     /** @use HasFactory<MovieFactory> */
-    use HasFactory;
+    use HasFactory, Searchable;
 
     protected $guarded = [];
     public $with = [];
@@ -145,4 +146,26 @@ class Movie extends Model
         return $this->hasMany(Review::class, 'movie_id', 'id');
     }
 
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'tmdb_id' => $this->tmdb_id,
+            'title' => $this->title,
+            'title_sort' => $this->title_sort,
+            'original_title' => $this->original_title,
+            'popularity' => (float)$this->popularity,
+            'poster' => $this->poster,
+            'release_date' => $this->release_date,
+            'runtime' => (int)$this->runtime,
+            'vote_average' => (float)$this->vote_average,
+            'vote_count' => (int)$this->vote_count,
+            'genres' => $this->genres()->pluck('name')->toArray(), // Aquí están los géneros
+        ];
+    }
+
+    public function makeSearchableUsing(Collection $models): Collection
+    {
+        return $models->load('genres'); // Eager loading para optimizar
+    }
 }

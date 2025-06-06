@@ -22,6 +22,7 @@ use App\Enums\Occupation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Scout\Searchable;
 
 /**
  * App\Models\Person.
@@ -45,7 +46,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Person extends Model
 {
     /** @use HasFactory<PersonFactory> */
-    use HasFactory;
+    use HasFactory, Searchable;
 
     protected $guarded = [];
     public $with = [];
@@ -287,5 +288,31 @@ class Person extends Model
             ->wherePivot('occupation_id', '=', Occupation::ACTOR)
             ->withPivot('character', 'occupation_id')
             ->as('credit');
+    }
+
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'imdb_id' => $this->imdb_id,
+            'name' => $this->name,
+            'popularity' => (float)$this->popularity,
+            'known_for_department' => $this->known_for_department,
+            'place_of_birth' => $this->place_of_birth,
+            'profile' => (int)$this->profile,
+            'also_known_as' => (float)$this->also_known_as,
+            'biography' => (int)$this->biography,
+            'still' => $this->still, // Aquí están los géneros
+            "birthday" => $this->birthday,
+            "deathday" => $this->deathday,
+            'adult' => $this->adult,
+            "gender" => $this->gender,
+            "homepage" => $this->homepage
+        ];
+    }
+
+    public function makeSearchableUsing(Collection $models): Collection
+    {
+        return $models->load('genres'); // Eager loading para optimizar
     }
 }
