@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Database\Factories\TvFactory;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Enums\Occupation;
 use Illuminate\Database\Eloquent\Model;
@@ -188,7 +189,7 @@ class Tv extends Model
         ];
     }
 
-    public function makeSearchableUsing(Collection $models): Collection
+    public function makeSearchableUsing(EloquentCollection $models): EloquentCollection
     {
         return $models->load('genres'); // Eager loading para optimizar
     }

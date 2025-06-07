@@ -24,26 +24,6 @@ class MovieController extends ReadOnlyController
     {
         $query = $this->model->query();
 
-        // Aplicar filtrado por título (específico de películas)
-        if ($request->has('title')) {
-            $query->where('title', 'LIKE', $request->title . '%');
-        }
-
-        // Aplicar filtrados de fecha específicos de películas
-        if ($request->has('release_date_gt')) {
-            $query->where('release_date', '>', $request->release_date_gt);
-        }
-        if ($request->has('release_date_lt')) {
-            $query->where('release_date', '<', $request->release_date_lt);
-        }
-
-        // Aplicar filtros comunes desde el trait
-        $this->applyNumericFilters($query, $request);
-        $this->applyIdFilters($query, $request);
-        $this->applyGenreFilters($query, $request);
-        $this->applySorting($query, $request);
-
-        // Paginar y retornar resultados
         $movies = $this->paginateResults($query, $request);
 
         return response()->json($movies);
@@ -57,5 +37,25 @@ class MovieController extends ReadOnlyController
             'message' => 'The job has been dispatched to high priority queue',
             'content_id' => $contentId
         ]);
+    }
+
+    public function meili(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'search' => 'nullable|string|max:255',
+            "sort_by" => 'nullable|string|in:popularity,vote_average,vote_count',
+            "sort_dir" => 'nullable|string|in:asc,desc',
+            "genres" => 'nullable|array|exists:genres,name',
+        ]);
+
+        $items = Movie::search($validated["search"] ?? "")
+            ->orderBy($validated["sort_by"] ?? 'popularity', $validated["sort_dir"] ?? 'desc');
+
+        if ($request->has('genres')) {
+            $items->whereIn('genres', $validated["genres"]);
+        }
+
+        return response()->json($items->paginate(10));
+
     }
 }

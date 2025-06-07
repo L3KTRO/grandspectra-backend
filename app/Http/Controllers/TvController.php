@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Movie;
 use App\Models\Tv;
 use App\Services\Tmdb\TMDBScraper;
 use App\Traits\MediaFilterTrait;
@@ -21,53 +22,7 @@ class TvController extends ReadOnlyController
 
     public function index(Request $request): JsonResponse
     {
-
-        $query = $this->model->query()->with("genres")
-            ->whereDoesntHave("genres", function ($query) {
-                $query->where("genres.id", 10767);
-            })
-            ->whereDoesntHave("genres", function ($query) {
-                $query->where("genres.id", 10763);
-            })
-            ->whereDoesntHave("genres", function ($query) {
-                $query->where("genres.id", 10766);
-            })
-            ->whereDoesntHave("genres", function ($query) {
-                $query->where("genres.id", 10764);
-            });
-
-        // Aplicar filtrado por nombre (específico de series TV)
-        if ($request->has('name')) {
-            $query->where('name', 'LIKE', $request->name . '%');
-        }
-
-        // Aplicar filtrados de fecha específicos de series TV
-        if ($request->has('first_air_date_gt')) {
-            $query->where('first_air_date', '>', $request->first_air_date_gt);
-        }
-        if ($request->has('first_air_date_lt')) {
-            $query->where('first_air_date', '<', $request->first_air_date_lt);
-        }
-
-        if ($request->has('last_air_date_gt')) {
-            $query->where('last_air_date', '>', $request->last_air_date_gt);
-        }
-        if ($request->has('last_air_date_lt')) {
-            $query->where('last_air_date', '<', $request->last_air_date_lt);
-        }
-
-        // Filtrado específico de TV para tvdb_id
-        if ($request->has('tvdb_id')) {
-            $query->where('tvdb_id', $request->tvdb_id);
-        }
-
-        // Aplicar filtros comunes desde el trait
-        $this->applyNumericFilters($query, $request);
-        $this->applyIdFilters($query, $request);
-        $this->applyGenreFilters($query, $request);
-        $this->applySorting($query, $request);
-
-        // Paginar y retornar resultados
+        $query = $this->model->query();
         $shows = $this->paginateResults($query, $request);
 
         return response()->json($shows);
@@ -82,5 +37,25 @@ class TvController extends ReadOnlyController
             'message' => 'The job has been dispatched to high priority queue',
             'content_id' => $contentId
         ]);
+    }
+
+    public function meili(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'search' => 'nullable|string|max:255',
+            "sort_by" => 'nullable|string|in:popularity,vote_average,vote_count',
+            "sort_dir" => 'nullable|string|in:asc,desc',
+            "genres" => 'nullable|array|exists:genres,name',
+        ]);
+
+        $items = Tv::search($validated["search"] ?? "")
+            ->orderBy($validated["sort_by"] ?? 'popularity', $validated["sort_dir"] ?? 'desc');
+
+        if ($request->has('genres')) {
+            $items->whereIn('genres', $validated["genres"]);
+        }
+
+        return response()->json($items->paginate(10));
+
     }
 }

@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Movie;
+use App\Models\Person;
+use App\Models\Tv;
 use App\Models\User;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;

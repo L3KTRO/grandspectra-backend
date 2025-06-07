@@ -1,10 +1,6 @@
 #!/bin/sh
 
-# Configuración inicial
-php artisan route:clear
-php artisan config:cache
-php artisan view:cache
-php artisan route:cache
+php artisan app:initialize
 
 (crontab -l ; echo "* * * * * cd /var/www && php artisan schedule:run >> /tmp/output.txt 2> /tmp/output.err")| crontab -
 
@@ -16,6 +12,5 @@ chown -R www-data:www-data /var/www/storage
 # Resetear permisos de logs al iniciar
 chown -R www-data:www-data /var/log/php-fpm
 rm -f /var/log/php-fpm/*
-
 
 exec "$@"

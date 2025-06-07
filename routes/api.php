@@ -31,6 +31,12 @@ Route::group(["prefix" => "api"], function () {
     Route::apiResource('users', UserController::class)->only(['index', 'show']);
     Route::apiResource("lists", ContentListController::class)->only(['index']);
 
+    Route::prefix("meili")->group(function () {
+        Route::get("movies", [MovieController::class, 'meili']);
+        Route::get("tv", [TvController::class, 'meili']);
+        Route::get("people", [PersonController::class, 'meili']);
+    });
+
 // Rutas de autenticación
     Route::prefix('auth')->group(function () {
         Route::post('/register', [AuthController::class, 'register']);

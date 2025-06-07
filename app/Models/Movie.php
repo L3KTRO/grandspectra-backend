@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Laravel\Scout\Searchable;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 /**
  * App\Models\Movie.
@@ -154,7 +155,7 @@ class Movie extends Model
     public function toSearchableArray(): array
     {
         return [
-            'id' =>  $this->getKey(),
+            'id' => $this->getKey(),
             'tmdb_id' => $this->tmdb_id,
             'title' => $this->title,
             'title_sort' => $this->title_sort,
@@ -169,7 +170,7 @@ class Movie extends Model
         ];
     }
 
-    public function makeSearchableUsing(Collection $models): Collection
+    public function makeSearchableUsing(EloquentCollection $models): EloquentCollection
     {
         return $models->load('genres'); // Eager loading para optimizar
     }

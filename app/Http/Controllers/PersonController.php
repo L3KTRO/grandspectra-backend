@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Movie;
 use App\Models\Person;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -31,5 +32,20 @@ class PersonController extends ReadOnlyController
             ->find($id);
 
         return response()->json($record);
+    }
+
+    public function meili(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'search' => 'nullable|string|max:255',
+            "sort_by" => 'nullable|string|in:popularity,vote_average,vote_count',
+            "sort_dir" => 'nullable|string|in:asc,desc',
+        ]);
+
+        $items = Person::search($validated["search"] ?? "")
+            ->orderBy($validated["sort_by"] ?? 'popularity', $validated["sort_dir"] ?? 'desc');
+
+        return response()->json($items->paginate(10));
+
     }
 }

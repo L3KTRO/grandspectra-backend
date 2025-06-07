@@ -41,6 +41,9 @@ services:
       AWS_ENDPOINT: ${AWS_ENDPOINT}
       AWS_USE_PATH_STYLE_ENDPOINT: ${AWS_USE_PATH_STYLE_ENDPOINT}
       AWS_URL: ${AWS_URL}
+      MEILISEARCH_HOST: ${MEILISEARCH_HOST}
+    depends_on:
+      - meilisearch
     networks:
       - gs-network
     pull_policy:
@@ -71,12 +74,10 @@ services:
   meilisearch:
     image: getmeili/meilisearch:latest
     container_name: grandspectra-meilisearch
-    environment:
-      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
-    ports:
-      - "7700:7700"
     networks:
       - gs-network
+    ports:
+      - "7700:7700"
 
 networks:
   gs-network:

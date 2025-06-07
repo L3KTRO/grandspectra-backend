@@ -206,16 +206,16 @@ return [
             ]
         ],
 
-        "dev" => [],
         "production-non-computing" => [
             'supervisor-1' => [
                 'connection' => 'redis',
                 'queue' => ["mailing-hp", "mailing", "scout"],
                 'processes' => 1,  # Workers en paralelo
                 'balance' => 'auto', # auto/simple
-                'maxProcesses' => 1,
+                'maxProcesses' => 6,
                 'minProcesses' => 1,
             ]
-        ]
+        ],
+        "dev" => [],
     ],
 ];

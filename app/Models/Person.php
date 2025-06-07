@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Database\Factories\PersonFactory;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Enums\Occupation;
 use Illuminate\Database\Eloquent\Model;
@@ -314,10 +315,5 @@ class Person extends Model
             "gender" => $this->gender,
             "homepage" => $this->homepage
         ];
-    }
-
-    public function makeSearchableUsing(Collection $models): Collection
-    {
-        return $models->load('genres'); // Eager loading para optimizar
     }
 }

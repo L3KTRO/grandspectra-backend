@@ -121,7 +121,7 @@ return [
     */
 
     'meilisearch' => [
-        'host' => env('MEILISEARCH_HOST', 'http://localhost:7700'),
+        'host' => env('MEILISEARCH_HOST'),
         'key' => env('MEILI_MASTER_KEY'),
         'index-settings' => [
             Movie::class => [
