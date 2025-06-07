@@ -290,10 +290,15 @@ class Person extends Model
             ->as('credit');
     }
 
+    public function searchableAs(): string
+    {
+        return 'people';
+    }
+
     public function toSearchableArray(): array
     {
         return [
-            'id' => $this->id,
+            'id' =>  $this->getKey(),
             'imdb_id' => $this->imdb_id,
             'name' => $this->name,
             'popularity' => (float)$this->popularity,

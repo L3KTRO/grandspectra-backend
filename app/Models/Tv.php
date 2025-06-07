@@ -166,19 +166,24 @@ class Tv extends Model
         return $this->hasMany(Review::class, 'tv_id', 'id');
     }
 
+    public function searchableAs(): string
+    {
+        return 'tv';
+    }
+
     public function toSearchableArray(): array
     {
         return [
-            'id' => $this->id,
+            'id' =>  $this->getKey(),
             'tmdb_id' => $this->tmdb_id,
             'name' => $this->name,
             'name_sort' => $this->name_sort,
-            'popularity' => (float) $this->popularity,
+            'popularity' => (float)$this->popularity,
             'poster' => $this->poster,
             'first_air_date' => $this->first_air_date,
-            'episode_run_time' => (int) $this->episode_run_time,
-            'vote_average' => (float) $this->vote_average,
-            'vote_count' => (int) $this->vote_count,
+            'episode_run_time' => (int)$this->episode_run_time,
+            'vote_average' => (float)$this->vote_average,
+            'vote_count' => (int)$this->vote_count,
             'genres' => $this->genres()->pluck('name')->toArray(), // Aquí están los géneros
         ];
     }

@@ -50,7 +50,7 @@ services:
     image: nginx:alpine
     container_name: grandspectra-nginx
     ports:
-      - "9000:80"
+      - "8000:80"
     depends_on:
       - backend
       - frontend
@@ -62,12 +62,11 @@ services:
   frontend:
     image: l3ktro/grandspectra:latest
     container_name: grandspectra-frontend
-    environment:
-      - API_URL=/api
     depends_on:
       - backend
     networks:
       - gs-network
+    pull_policy: always
 
   meilisearch:
     image: getmeili/meilisearch:latest

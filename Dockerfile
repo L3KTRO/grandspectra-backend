@@ -49,8 +49,9 @@ COPY docker/www.conf /usr/local/etc/php/pool.d/www.conf
 WORKDIR /var/www
 
 # Copiar aplicación y dependencias
-COPY --from=builder /app/vendor vendor/
 COPY . .
+RUN rm -rf vendor
+COPY --from=builder /app/vendor vendor/
 
 # Ajustar permisos y usuario
 RUN chown -R www-data:www-data /var/www \
@@ -70,3 +71,5 @@ EXPOSE 9000
 
 # Añadir esta línea al final del Dockerfile
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+
+# TODO: TESTEAR ESTO PORQUE NO VA EN WINDOWS

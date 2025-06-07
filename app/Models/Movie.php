@@ -146,10 +146,15 @@ class Movie extends Model
         return $this->hasMany(Review::class, 'movie_id', 'id');
     }
 
+    public function searchableAs(): string
+    {
+        return 'movies';
+    }
+
     public function toSearchableArray(): array
     {
         return [
-            'id' => $this->id,
+            'id' =>  $this->getKey(),
             'tmdb_id' => $this->tmdb_id,
             'title' => $this->title,
             'title_sort' => $this->title_sort,
