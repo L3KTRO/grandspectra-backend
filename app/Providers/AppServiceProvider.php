@@ -37,8 +37,5 @@ class AppServiceProvider extends ServiceProvider
             'dns_ttl' => 300
         ]);
 
-        Route::middleware('api')
-            ->group(base_path('routes/api.php'));
-
     }
 }
