@@ -2,8 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\ProcessVerifyMail;
+use App\Mail\VerifyMail;
+use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
 
 class MailTest extends Command
 {
@@ -14,16 +18,12 @@ class MailTest extends Command
     {
         $email = $this->argument('email');
 
-        try {
-            Mail::send('verify', [], function ($message) use ($email) {
-                $message->to($email)
-                    ->subject('Verify your account');
-            });
-
-            $this->info('Email enviado correctamente a: ' . $email);
-        } catch (\Exception $e) {
-            $this->error('Error al enviar email: ' . $e->getMessage());
-
+        $user = User::where("email", $email)->first();
+        if ($user) {
+            $link = URL::signedRoute('verify', [
+                'id' => $user->id,
+            ]);
+            Mail::to($user->email)->send(new VerifyMail($link));
         }
     }
 }

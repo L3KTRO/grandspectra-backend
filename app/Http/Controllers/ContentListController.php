@@ -48,7 +48,7 @@ class ContentListController extends Controller
 
         $validated = $request->validate([
             "name" => "required|string|max:255",
-            "description" => "required|string|max:1000",
+            "description" => "sometimes|string|max:1000",
             'movie_id' => 'nullable|array|exists:movies,id',
             'tv_id' => 'nullable|array|exists:tv,id',
             "public" => "boolean",

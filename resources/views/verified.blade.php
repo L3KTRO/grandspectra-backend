@@ -296,7 +296,7 @@
         </div>
 
         <div class="action-buttons">
-            <a class="primary-button" href="https://gs.lestro.top">
+            <a class="primary-button" href="https://grandspectra.top">
                 Go to Grand Spectra
             </a>
         </div>
