@@ -32,9 +32,9 @@ class NewFollowerNotification extends Notification implements ShouldQueue
         return [
             'type' => 'new_follower',
             'follower_id' => $this->follower->id,
-            'follower_name' => $this->follower->username,
+            'follower_username' => $this->follower->username,
             'follower_avatar' => $this->follower->avatar,
-            'message' => "{$this->follower->name} started following you",
+            'message' => "{$this->follower->username} started following you",
             'created_at' => now()
         ];
     }
