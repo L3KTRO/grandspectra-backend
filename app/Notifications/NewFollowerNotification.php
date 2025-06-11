@@ -12,11 +12,14 @@ class NewFollowerNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
+
     public function __construct(
         public $follower,
         public $followedUser
     )
     {
+        $this->onConnection('redis');
+        $this->onQueue('notifications');
     }
 
     public function via($notifiable): array

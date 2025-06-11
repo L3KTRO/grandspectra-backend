@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserWasFollowed;
+use App\Events\UserWasUnfollowed;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -29,6 +31,8 @@ class FollowController extends Controller
 
         $user->following()->attach($foreign->id);
 
+        event(new UserWasFollowed($user, $foreign));
+
         return response()->json(['message' => "You are now following $foreign->username"], 201);
     }
 
@@ -47,6 +51,8 @@ class FollowController extends Controller
         }
 
         $user->following()->detach($foreign->id);
+
+        event(new UserWasUnfollowed($user, $foreign));
 
         return response()->json(['message' => "You are no longer following $foreign->username"], 204);
     }

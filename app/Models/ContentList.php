@@ -41,4 +41,9 @@ class ContentList extends Model
     {
         return $this->hasMany(ContentListVote::class);
     }
+
+    public function savedByUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'content_list_user', 'content_list_id', 'user_id')->withTimestamps();
+    }
 }

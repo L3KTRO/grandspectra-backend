@@ -3,7 +3,7 @@
 return [
     'paths' => ['*'],
     'allowed_methods' => ['*'],
-    'allowed_origins' => ['*'], // Ajusta según tu frontend
+    'allowed_origins' => ['http://localhost:4200'], // Ajusta según tu frontend
     'allowed_origins_patterns' => [],
     'allowed_headers' => ['*'],
     'exposed_headers' => [],

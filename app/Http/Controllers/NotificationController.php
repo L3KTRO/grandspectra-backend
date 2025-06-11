@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -28,14 +28,14 @@ class NotificationController extends Controller
 
         $notification->markAsRead();
 
-        return response()->json(['message' => 'Notificación marcada como leída']);
+        return response()->json(['message' => 'Notification marked as read']);
     }
 
     public function markAllAsRead(Request $request): JsonResponse
     {
         $request->user()->unreadNotifications->markAsRead();
 
-        return response()->json(['message' => 'Todas las notificaciones marcadas como leídas']);
+        return response()->json(['message' => 'All notifications marked as read']);
     }
 
     public function getUnreadCount(Request $request): JsonResponse

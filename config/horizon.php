@@ -209,10 +209,10 @@ return [
         "production-non-computing" => [
             'supervisor-1' => [
                 'connection' => 'redis',
-                'queue' => ["mailing-hp", "mailing", "scout"],
+                'queue' => ["mailing-hp", "mailing", "scout", "notifications"],
                 'processes' => 1,  # Workers en paralelo
                 'balance' => 'auto', # auto/simple
-                'maxProcesses' => 6,
+                'maxProcesses' => 8,
                 'minProcesses' => 1,
             ]
         ],
