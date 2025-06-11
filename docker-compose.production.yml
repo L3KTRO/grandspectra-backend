@@ -74,6 +74,8 @@ services:
   meilisearch:
     image: getmeili/meilisearch:latest
     container_name: grandspectra-meilisearch
+    volumes:
+      - meili-data:/meili_data
     networks:
       - gs-network
     ports:
@@ -82,3 +84,7 @@ services:
 networks:
   gs-network:
     driver: bridge
+
+volumes:
+  meili-data:
+    driver: local
