@@ -69,7 +69,6 @@ services:
       - backend
     networks:
       - gs-network
-    pull_policy: always
 
   meilisearch:
     image: getmeili/meilisearch:latest

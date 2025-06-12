@@ -30,6 +30,7 @@ Route::apiResource("lists", ContentListController::class)->only(['index']);
 
 Route::prefix("meili")->group(function () {
     Route::get('all', [SearchAllController::class, 'search']);
+    Route::get('media', [SearchAllController::class, 'onlyMedia']);
     Route::get("movies", [MovieController::class, 'meili']);
     Route::get("tv", [TvController::class, 'meili']);
     Route::get("people", [PersonController::class, 'meili']);

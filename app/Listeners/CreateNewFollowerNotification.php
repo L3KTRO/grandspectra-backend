@@ -13,7 +13,6 @@ class CreateNewFollowerNotification
      */
     public function handle(UserWasFollowed $event): void
     {
-        Log::info("Nuevo seguidor: {$event->follower->username} ha seguido a {$event->followed->username}");
         $event->followed->notify(new NewFollowerNotification($event->follower, $event->followed));
     }
 }
