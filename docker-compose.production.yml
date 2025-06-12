@@ -71,7 +71,7 @@ services:
       - gs-network
 
   meilisearch:
-    image: getmeili/meilisearch:latest
+    image: getmeili/meilisearch:1.15.1
     container_name: grandspectra-meilisearch
     volumes:
       - meili-data:/meili_data
