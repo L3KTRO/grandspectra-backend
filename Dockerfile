@@ -18,6 +18,8 @@ RUN composer install \
 # Etapa 2: Construcción de la imagen final
 FROM php:8.3-fpm-alpine
 
+COPY ./php-overrides.ini /usr/local/etc/php/conf.d
+
 # Dependencias del sistema y extensiones PHP
 RUN apk add --no-cache \
     libpng-dev \
