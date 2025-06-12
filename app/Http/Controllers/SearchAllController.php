@@ -61,6 +61,7 @@ class SearchAllController extends Controller
 
         foreach ($indexes as $index) {
             $indexName = $index->getUid();
+            Log::info($indexName);
             if ($indexName === 'people') {
                 continue; // Omite el índice de personas
             }
@@ -75,8 +76,6 @@ class SearchAllController extends Controller
             }
         }
 
-        $allResults = array_slice($allResults, 0, 10);
-
         usort($allResults, function ($a, $b) {
             // Normaliza popularity suponiendo que el máximo es 10000, ajusta según tu caso real
             $maxPopularity = 10000;
@@ -87,6 +86,8 @@ class SearchAllController extends Controller
             $bScore = 0.75 * ((float)($b['_rankingScore'] ?? 0)) + 0.25 * $bPopularityNorm;
             return $bScore <=> $aScore;
         });
+
+        $allResults = array_slice($allResults, 0, 20);
 
         return response()->json($allResults);
     }
