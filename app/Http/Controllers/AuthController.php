@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\JsonResponse;
 
 class AuthController extends Controller
@@ -155,6 +156,17 @@ class AuthController extends Controller
         if ($user->email_verified_at !== null) {
             return response()->json(['message' => 'User already verified'], 400);
         }
+
+        $cacheKey = 'resend_verification_' . $user->id;
+        if (Cache::has($cacheKey)) {
+            $seconds = Cache::get($cacheKey) - time();
+            $minutes = ceil($seconds / 60);
+            return response()->json([
+                'message' => 'You must wait ' . $minutes . ' minutes before requesting the verification email again.'
+            ], 429);
+        }
+
+        Cache::put($cacheKey, time() + 1740, 1800);
 
         ProcessVerifyMail::dispatch($user->id);
 

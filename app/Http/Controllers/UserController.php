@@ -79,6 +79,11 @@ class UserController extends Controller
             return response()->json(["error" => "User not found"], 404);
         }
 
+        // Filtrar contentLists y contentListsSaved para eliminar los que tienen public = false
+        if ($record->relationLoaded('contentLists')) {
+            $record->setRelation('contentLists', $record->contentLists->where('public', true)->values());
+        }
+
         return response()->json($record);
     }
 }
