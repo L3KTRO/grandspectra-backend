@@ -49,7 +49,13 @@ class ProcessMovieJob implements ShouldQueue
 
         $movieScraper = new Client\Movie($this->id);
 
-        if ($movieScraper->data['adult'] === true) {
+        // Verificar que data no esté vacío y contenga información válida
+        if (empty($movieScraper->data) || !isset($movieScraper->data['id'])) {
+            Log::warning('No se pudo obtener información de la película con ID: ' . $this->id);
+            return;
+        }
+
+        if (($movieScraper->data['adult'] ?? false) === true) {
             Log::info('Adult content detected, skipping movie ID: ' . $this->id);
             return;
         }
