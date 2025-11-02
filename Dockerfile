@@ -1,5 +1,5 @@
 # Etapa 1: Instalación optimizada de dependencias con Composer
-FROM composer:2.6 AS builder
+FROM composer:2.8.12 AS builder
 
 WORKDIR /app
 

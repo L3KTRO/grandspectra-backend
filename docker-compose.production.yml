@@ -56,17 +56,8 @@ services:
       - "8000:80"
     depends_on:
       - backend
-      - frontend
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
-    networks:
-      - gs-network
-
-  frontend:
-    image: l3ktro/grandspectra:latest
-    container_name: grandspectra-frontend
-    depends_on:
-      - backend
     networks:
       - gs-network
 
