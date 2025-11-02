@@ -48,6 +48,8 @@ services:
       - gs-network
     pull_policy:
       build
+    ports:
+      - "9000:9000"
 
   nginx:
     image: nginx:alpine
