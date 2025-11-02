@@ -30,7 +30,7 @@ return [
     |
     */
 
-    'path' => env('PULSE_PATH', 'admin/pulse'),
+    'path' => env('PULSE_PATH', 'api/pulse'),
 
     /*
     |--------------------------------------------------------------------------
