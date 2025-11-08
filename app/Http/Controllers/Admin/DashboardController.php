@@ -23,10 +23,10 @@ class DashboardController extends Controller
             'recent_reviews' => Review::with('user:id,name')
                 ->latest()
                 ->take(5)
-                ->get(['id', 'user_id', 'content', 'rating', 'created_at']),
+                ->get(['id', 'user_id', 'content', 'qualification', 'created_at']),
         ];
 
-        return Inertia::render('Admin/Dashboard', [
+        return Inertia::render('dashboard', [
             'stats' => $stats
         ]);
     }

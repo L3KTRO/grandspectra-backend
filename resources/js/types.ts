@@ -1,6 +1,5 @@
 import type { ComponentType } from 'react';
 import type { LucideIcon } from 'lucide-react';
-import type { Config } from 'ziggy-js';
 
 // Información del usuario autenticado
 export interface User {
@@ -24,7 +23,6 @@ export interface SharedData {
     name?: string;
     quote?: { message: string; author: string } | null;
     auth: Auth;
-    ziggy: Config & { location: string };
     sidebarOpen: boolean;
     errors?: Record<string, string>;
 
