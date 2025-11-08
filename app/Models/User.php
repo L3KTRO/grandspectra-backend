@@ -16,7 +16,7 @@ class User extends Authenticatable
     public $with = [];
 
     // Campos que se pueden asignar masivamente con create()
-    protected $fillable = ['email', 'username', 'password', "avatar"];
+    protected $fillable = ['name', 'email', 'username', 'password', 'avatar', 'is_admin'];
 
     protected $hidden = [
         'password',
@@ -27,6 +27,7 @@ class User extends Authenticatable
     {
         return [
             'password' => 'hashed',
+            'is_admin' => 'boolean',
         ];
     }
 

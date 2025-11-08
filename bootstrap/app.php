@@ -13,9 +13,23 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->web(append: [
+            \App\Http\Middleware\HandleInertiaRequests::class,
+            \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
+        ]);
+
         $middleware->statefulApi();
     })
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->web(append: [
+            \App\Http\Middleware\HandleInertiaRequests::class,
+            \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
+        ]);
+
+        $middleware->alias([
+            'admin' => \App\Http\Middleware\AdminMiddleware::class,
+        ]);
+
         //$middleware->append(Cors::class);
         $middleware->trustProxies("192.168.0.54");
     })

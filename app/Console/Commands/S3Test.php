@@ -26,8 +26,8 @@ class S3Test extends Command
      */
     public function handle(): void
     {
-        Storage::disk('s3')->put('test.txt', 'This is a test file for S3 storage.');
-        Storage::disk('s3')->delete('test.txt');
-        $this->info(Storage::disk('s3')->url('test.txt'));
+        Storage::disk(config('filesystems.storage_disk'))->put('test.txt', 'This is a test file for S3 storage.');
+        Storage::disk(config('filesystems.storage_disk'))->delete('test.txt');
+        $this->info(Storage::disk(config('filesystems.storage_disk'))->url('test.txt'));
     }
 }

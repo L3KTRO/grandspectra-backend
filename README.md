@@ -11,7 +11,29 @@
 
 Colección de Postman en el repositorio con el nombre api.postman_collection.json
 
-## 🚀 ¿Qué es Grand Spectra?
+## � Panel de Administración
+
+¡Ahora Grand Spectra incluye un **panel de administración completo** construido con **Laravel Breeze + React + TypeScript**!
+
+📖 **[Ver documentación completa del panel admin](ADMIN_README.md)**
+
+### Acceso Rápido
+- **URL**: `/admin/dashboard`
+- **Credenciales por defecto**:
+  - Email: `admin@grandspectra.com`
+  - Password: `password`
+
+### Características del Panel Admin
+- ✅ Dashboard con estadísticas en tiempo real
+- ✅ Gestión completa de usuarios (CRUD)
+- ✅ Sistema de permisos de administrador
+- ✅ Búsqueda y paginación
+- ✅ Interfaz moderna con React + TypeScript
+- ✅ SSR (Server-Side Rendering) con Inertia.js
+
+---
+
+## �🚀 ¿Qué es Grand Spectra?
 
 **Grand Spectra** es una plataforma web construida con **Vue.js**, diseñada especialmente para los apasionados del cine
 y las series. Aquí podrás descubrir nuevo contenido, gestionar tus listas de reproducción, seguir a otros cinéfilos y

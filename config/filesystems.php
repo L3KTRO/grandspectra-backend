@@ -17,6 +17,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Storage Disk
+    |--------------------------------------------------------------------------
+    |
+    | This disk is used for file storage operations throughout the application.
+    | You can set this to any disk configured below (local, public, s3, etc.)
+    |
+    */
+
+    'storage_disk' => env('STORAGE_DISK', 'local'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Filesystem Disks
     |--------------------------------------------------------------------------
     |

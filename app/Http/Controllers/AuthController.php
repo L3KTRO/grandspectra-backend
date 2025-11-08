@@ -88,7 +88,7 @@ class AuthController extends Controller
 
     public function update(Request $request): JsonResponse
     {
-        $user = \auth()->user();
+        $user = $request->user();
         if (!$user) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
@@ -106,12 +106,12 @@ class AuthController extends Controller
         }
 
         if (isset($validated['avatar'])) {
-            if ($user->avatar) Storage::disk("s3")->delete(basename($user->avatar));
+            if ($user->avatar) Storage::disk(config('filesystems.storage_disk'))->delete(basename($user->avatar));
             $randomName = uniqid() . '.' . $request->file('avatar')->extension();
 
-            Storage::disk("s3")->put($randomName, file_get_contents($validated['avatar']));
+            Storage::disk(config('filesystems.storage_disk'))->put($randomName, file_get_contents($validated['avatar']));
 
-            $validated['avatar'] = Storage::disk("s3")->url($randomName);
+            $validated['avatar'] = Storage::disk(config('filesystems.storage_disk'))->url($randomName);
         }
 
         // if email changed, mark email as not verified
@@ -146,9 +146,9 @@ class AuthController extends Controller
         return view("verified");
     }
 
-    public function resendVerification(): JsonResponse
+    public function resendVerification(Request $request): JsonResponse
     {
-        $user = auth()->user();
+        $user = $request->user();
         if (!$user) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
