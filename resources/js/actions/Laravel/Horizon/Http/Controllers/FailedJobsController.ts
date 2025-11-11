@@ -2,7 +2,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefa
 /**
 * @see \Laravel\Horizon\Http\Controllers\FailedJobsController::index
 * @see vendor/laravel/horizon/src/Http/Controllers/FailedJobsController.php:46
-* @route '/api/horizon/api/jobs/failed'
+* @route '/dashboard/horizon/api/jobs/failed'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
@@ -11,13 +11,13 @@ export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 index.definition = {
     methods: ["get","head"],
-    url: '/api/horizon/api/jobs/failed',
+    url: '/dashboard/horizon/api/jobs/failed',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \Laravel\Horizon\Http\Controllers\FailedJobsController::index
 * @see vendor/laravel/horizon/src/Http/Controllers/FailedJobsController.php:46
-* @route '/api/horizon/api/jobs/failed'
+* @route '/dashboard/horizon/api/jobs/failed'
 */
 index.url = (options?: RouteQueryOptions) => {
     return index.definition.url + queryParams(options)
@@ -26,7 +26,7 @@ index.url = (options?: RouteQueryOptions) => {
 /**
 * @see \Laravel\Horizon\Http\Controllers\FailedJobsController::index
 * @see vendor/laravel/horizon/src/Http/Controllers/FailedJobsController.php:46
-* @route '/api/horizon/api/jobs/failed'
+* @route '/dashboard/horizon/api/jobs/failed'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
@@ -36,7 +36,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 /**
 * @see \Laravel\Horizon\Http\Controllers\FailedJobsController::index
 * @see vendor/laravel/horizon/src/Http/Controllers/FailedJobsController.php:46
-* @route '/api/horizon/api/jobs/failed'
+* @route '/dashboard/horizon/api/jobs/failed'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
@@ -46,7 +46,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 /**
 * @see \Laravel\Horizon\Http\Controllers\FailedJobsController::show
 * @see vendor/laravel/horizon/src/Http/Controllers/FailedJobsController.php:101
-* @route '/api/horizon/api/jobs/failed/{id}'
+* @route '/dashboard/horizon/api/jobs/failed/{id}'
 */
 export const show = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
@@ -55,13 +55,13 @@ export const show = (args: { id: string | number } | [id: string | number ] | st
 
 show.definition = {
     methods: ["get","head"],
-    url: '/api/horizon/api/jobs/failed/{id}',
+    url: '/dashboard/horizon/api/jobs/failed/{id}',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \Laravel\Horizon\Http\Controllers\FailedJobsController::show
 * @see vendor/laravel/horizon/src/Http/Controllers/FailedJobsController.php:101
-* @route '/api/horizon/api/jobs/failed/{id}'
+* @route '/dashboard/horizon/api/jobs/failed/{id}'
 */
 show.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
@@ -88,7 +88,7 @@ show.url = (args: { id: string | number } | [id: string | number ] | string | nu
 /**
 * @see \Laravel\Horizon\Http\Controllers\FailedJobsController::show
 * @see vendor/laravel/horizon/src/Http/Controllers/FailedJobsController.php:101
-* @route '/api/horizon/api/jobs/failed/{id}'
+* @route '/dashboard/horizon/api/jobs/failed/{id}'
 */
 show.get = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
@@ -98,7 +98,7 @@ show.get = (args: { id: string | number } | [id: string | number ] | string | nu
 /**
 * @see \Laravel\Horizon\Http\Controllers\FailedJobsController::show
 * @see vendor/laravel/horizon/src/Http/Controllers/FailedJobsController.php:101
-* @route '/api/horizon/api/jobs/failed/{id}'
+* @route '/dashboard/horizon/api/jobs/failed/{id}'
 */
 show.head = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),

@@ -73,5 +73,3 @@ EXPOSE 9000
 
 # Añadir esta línea al final del Dockerfile
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
-
-# TODO: TESTEAR ESTO PORQUE NO VA EN WINDOWS

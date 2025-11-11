@@ -2,7 +2,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefa
 /**
 * @see \Laravel\Horizon\Http\Controllers\MonitoringController::paginate
 * @see vendor/laravel/horizon/src/Http/Controllers/MonitoringController.php:64
-* @route '/api/horizon/api/monitoring/{tag}'
+* @route '/dashboard/horizon/api/monitoring/{tag}'
 */
 export const paginate = (args: { tag: string | number } | [tag: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: paginate.url(args, options),
@@ -11,13 +11,13 @@ export const paginate = (args: { tag: string | number } | [tag: string | number 
 
 paginate.definition = {
     methods: ["get","head"],
-    url: '/api/horizon/api/monitoring/{tag}',
+    url: '/dashboard/horizon/api/monitoring/{tag}',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \Laravel\Horizon\Http\Controllers\MonitoringController::paginate
 * @see vendor/laravel/horizon/src/Http/Controllers/MonitoringController.php:64
-* @route '/api/horizon/api/monitoring/{tag}'
+* @route '/dashboard/horizon/api/monitoring/{tag}'
 */
 paginate.url = (args: { tag: string | number } | [tag: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
@@ -44,7 +44,7 @@ paginate.url = (args: { tag: string | number } | [tag: string | number ] | strin
 /**
 * @see \Laravel\Horizon\Http\Controllers\MonitoringController::paginate
 * @see vendor/laravel/horizon/src/Http/Controllers/MonitoringController.php:64
-* @route '/api/horizon/api/monitoring/{tag}'
+* @route '/dashboard/horizon/api/monitoring/{tag}'
 */
 paginate.get = (args: { tag: string | number } | [tag: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: paginate.url(args, options),
@@ -54,7 +54,7 @@ paginate.get = (args: { tag: string | number } | [tag: string | number ] | strin
 /**
 * @see \Laravel\Horizon\Http\Controllers\MonitoringController::paginate
 * @see vendor/laravel/horizon/src/Http/Controllers/MonitoringController.php:64
-* @route '/api/horizon/api/monitoring/{tag}'
+* @route '/dashboard/horizon/api/monitoring/{tag}'
 */
 paginate.head = (args: { tag: string | number } | [tag: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: paginate.url(args, options),
@@ -64,7 +64,7 @@ paginate.head = (args: { tag: string | number } | [tag: string | number ] | stri
 /**
 * @see \Laravel\Horizon\Http\Controllers\MonitoringController::destroy
 * @see vendor/laravel/horizon/src/Http/Controllers/MonitoringController.php:115
-* @route '/api/horizon/api/monitoring/{tag}'
+* @route '/dashboard/horizon/api/monitoring/{tag}'
 */
 export const destroy = (args: { tag: string | number } | [tag: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
@@ -73,13 +73,13 @@ export const destroy = (args: { tag: string | number } | [tag: string | number ]
 
 destroy.definition = {
     methods: ["delete"],
-    url: '/api/horizon/api/monitoring/{tag}',
+    url: '/dashboard/horizon/api/monitoring/{tag}',
 } satisfies RouteDefinition<["delete"]>
 
 /**
 * @see \Laravel\Horizon\Http\Controllers\MonitoringController::destroy
 * @see vendor/laravel/horizon/src/Http/Controllers/MonitoringController.php:115
-* @route '/api/horizon/api/monitoring/{tag}'
+* @route '/dashboard/horizon/api/monitoring/{tag}'
 */
 destroy.url = (args: { tag: string | number } | [tag: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
@@ -106,7 +106,7 @@ destroy.url = (args: { tag: string | number } | [tag: string | number ] | string
 /**
 * @see \Laravel\Horizon\Http\Controllers\MonitoringController::destroy
 * @see vendor/laravel/horizon/src/Http/Controllers/MonitoringController.php:115
-* @route '/api/horizon/api/monitoring/{tag}'
+* @route '/dashboard/horizon/api/monitoring/{tag}'
 */
 destroy.delete = (args: { tag: string | number } | [tag: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),

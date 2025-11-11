@@ -7,9 +7,21 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class PasswordController extends Controller
 {
+    /**
+     * Display the password change form.
+     */
+    public function edit(Request $request): Response
+    {
+        return Inertia::render('settings/password', [
+            'status' => session('status'),
+        ]);
+    }
+
     /**
      * Update the user's password.
      */

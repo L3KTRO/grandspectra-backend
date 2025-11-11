@@ -28,7 +28,7 @@ return [
     |
     */
 
-    'path' => env('HORIZON_PATH', 'api/horizon'),
+    'path' => env('HORIZON_PATH', 'dashboard/horizon'),
 
     /*
     |--------------------------------------------------------------------------
@@ -70,7 +70,7 @@ return [
     |
     */
 
-    'middleware' => ['web'],
+    'middleware' => ['web', 'auth', 'admin'],
 
     /*
     |--------------------------------------------------------------------------

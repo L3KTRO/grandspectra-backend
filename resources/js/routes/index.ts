@@ -1,7 +1,7 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults, validateParameters } from './../wayfinder'
 /**
-* @see [serialized-closure]:2
-* @route '/api/pulse'
+* @see vendor/laravel/pulse/src/PulseServiceProvider.php:106
+* @route '/dashboard/pulse'
 */
 export const pulse = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: pulse.url(options),
@@ -10,20 +10,20 @@ export const pulse = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 pulse.definition = {
     methods: ["get","head"],
-    url: '/api/pulse',
+    url: '/dashboard/pulse',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see [serialized-closure]:2
-* @route '/api/pulse'
+* @see vendor/laravel/pulse/src/PulseServiceProvider.php:106
+* @route '/dashboard/pulse'
 */
 pulse.url = (options?: RouteQueryOptions) => {
     return pulse.definition.url + queryParams(options)
 }
 
 /**
-* @see [serialized-closure]:2
-* @route '/api/pulse'
+* @see vendor/laravel/pulse/src/PulseServiceProvider.php:106
+* @route '/dashboard/pulse'
 */
 pulse.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: pulse.url(options),
@@ -31,11 +31,77 @@ pulse.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see [serialized-closure]:2
-* @route '/api/pulse'
+* @see vendor/laravel/pulse/src/PulseServiceProvider.php:106
+* @route '/dashboard/pulse'
 */
 pulse.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: pulse.url(options),
+    method: 'head',
+})
+
+/**
+* @see \Laravel\Telescope\Http\Controllers\HomeController::telescope
+* @see vendor/laravel/telescope/src/Http/Controllers/HomeController.php:15
+* @route '/dashboard/telescope/{view?}'
+*/
+export const telescope = (args?: { view?: string | number } | [view: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: telescope.url(args, options),
+    method: 'get',
+})
+
+telescope.definition = {
+    methods: ["get","head"],
+    url: '/dashboard/telescope/{view?}',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \Laravel\Telescope\Http\Controllers\HomeController::telescope
+* @see vendor/laravel/telescope/src/Http/Controllers/HomeController.php:15
+* @route '/dashboard/telescope/{view?}'
+*/
+telescope.url = (args?: { view?: string | number } | [view: string | number ] | string | number, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { view: args }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            view: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    validateParameters(args, [
+        "view",
+    ])
+
+    const parsedArgs = {
+        view: args?.view,
+    }
+
+    return telescope.definition.url
+            .replace('{view?}', parsedArgs.view?.toString() ?? '')
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \Laravel\Telescope\Http\Controllers\HomeController::telescope
+* @see vendor/laravel/telescope/src/Http/Controllers/HomeController.php:15
+* @route '/dashboard/telescope/{view?}'
+*/
+telescope.get = (args?: { view?: string | number } | [view: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: telescope.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \Laravel\Telescope\Http\Controllers\HomeController::telescope
+* @see vendor/laravel/telescope/src/Http/Controllers/HomeController.php:15
+* @route '/dashboard/telescope/{view?}'
+*/
+telescope.head = (args?: { view?: string | number } | [view: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: telescope.url(args, options),
     method: 'head',
 })
 
@@ -250,8 +316,48 @@ destroy.delete = (args: { id: string | number } | [id: string | number ] | strin
 })
 
 /**
+* @see routes/web.php:26
+* @route '/settings/appearance'
+*/
+export const appearance = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: appearance.url(options),
+    method: 'get',
+})
+
+appearance.definition = {
+    methods: ["get","head"],
+    url: '/settings/appearance',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see routes/web.php:26
+* @route '/settings/appearance'
+*/
+appearance.url = (options?: RouteQueryOptions) => {
+    return appearance.definition.url + queryParams(options)
+}
+
+/**
+* @see routes/web.php:26
+* @route '/settings/appearance'
+*/
+appearance.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: appearance.url(options),
+    method: 'get',
+})
+
+/**
+* @see routes/web.php:26
+* @route '/settings/appearance'
+*/
+appearance.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: appearance.url(options),
+    method: 'head',
+})
+
+/**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:15
+* @see app/Http/Controllers/Admin/DashboardController.php:19
 * @route '/dashboard'
 */
 export const dashboard = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -266,7 +372,7 @@ dashboard.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:15
+* @see app/Http/Controllers/Admin/DashboardController.php:19
 * @route '/dashboard'
 */
 dashboard.url = (options?: RouteQueryOptions) => {
@@ -275,7 +381,7 @@ dashboard.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:15
+* @see app/Http/Controllers/Admin/DashboardController.php:19
 * @route '/dashboard'
 */
 dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -285,7 +391,7 @@ dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:15
+* @see app/Http/Controllers/Admin/DashboardController.php:19
 * @route '/dashboard'
 */
 dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({

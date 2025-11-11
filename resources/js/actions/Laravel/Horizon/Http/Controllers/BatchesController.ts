@@ -2,7 +2,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefa
 /**
 * @see \Laravel\Horizon\Http\Controllers\BatchesController::index
 * @see vendor/laravel/horizon/src/Http/Controllers/BatchesController.php:39
-* @route '/api/horizon/api/batches'
+* @route '/dashboard/horizon/api/batches'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
@@ -11,13 +11,13 @@ export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 index.definition = {
     methods: ["get","head"],
-    url: '/api/horizon/api/batches',
+    url: '/dashboard/horizon/api/batches',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \Laravel\Horizon\Http\Controllers\BatchesController::index
 * @see vendor/laravel/horizon/src/Http/Controllers/BatchesController.php:39
-* @route '/api/horizon/api/batches'
+* @route '/dashboard/horizon/api/batches'
 */
 index.url = (options?: RouteQueryOptions) => {
     return index.definition.url + queryParams(options)
@@ -26,7 +26,7 @@ index.url = (options?: RouteQueryOptions) => {
 /**
 * @see \Laravel\Horizon\Http\Controllers\BatchesController::index
 * @see vendor/laravel/horizon/src/Http/Controllers/BatchesController.php:39
-* @route '/api/horizon/api/batches'
+* @route '/dashboard/horizon/api/batches'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
@@ -36,7 +36,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 /**
 * @see \Laravel\Horizon\Http\Controllers\BatchesController::index
 * @see vendor/laravel/horizon/src/Http/Controllers/BatchesController.php:39
-* @route '/api/horizon/api/batches'
+* @route '/dashboard/horizon/api/batches'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
@@ -46,7 +46,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 /**
 * @see \Laravel\Horizon\Http\Controllers\BatchesController::show
 * @see vendor/laravel/horizon/src/Http/Controllers/BatchesController.php:58
-* @route '/api/horizon/api/batches/{id}'
+* @route '/dashboard/horizon/api/batches/{id}'
 */
 export const show = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
@@ -55,13 +55,13 @@ export const show = (args: { id: string | number } | [id: string | number ] | st
 
 show.definition = {
     methods: ["get","head"],
-    url: '/api/horizon/api/batches/{id}',
+    url: '/dashboard/horizon/api/batches/{id}',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \Laravel\Horizon\Http\Controllers\BatchesController::show
 * @see vendor/laravel/horizon/src/Http/Controllers/BatchesController.php:58
-* @route '/api/horizon/api/batches/{id}'
+* @route '/dashboard/horizon/api/batches/{id}'
 */
 show.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
@@ -88,7 +88,7 @@ show.url = (args: { id: string | number } | [id: string | number ] | string | nu
 /**
 * @see \Laravel\Horizon\Http\Controllers\BatchesController::show
 * @see vendor/laravel/horizon/src/Http/Controllers/BatchesController.php:58
-* @route '/api/horizon/api/batches/{id}'
+* @route '/dashboard/horizon/api/batches/{id}'
 */
 show.get = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
@@ -98,7 +98,7 @@ show.get = (args: { id: string | number } | [id: string | number ] | string | nu
 /**
 * @see \Laravel\Horizon\Http\Controllers\BatchesController::show
 * @see vendor/laravel/horizon/src/Http/Controllers/BatchesController.php:58
-* @route '/api/horizon/api/batches/{id}'
+* @route '/dashboard/horizon/api/batches/{id}'
 */
 show.head = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
@@ -108,7 +108,7 @@ show.head = (args: { id: string | number } | [id: string | number ] | string | n
 /**
 * @see \Laravel\Horizon\Http\Controllers\BatchesController::retry
 * @see vendor/laravel/horizon/src/Http/Controllers/BatchesController.php:79
-* @route '/api/horizon/api/batches/retry/{id}'
+* @route '/dashboard/horizon/api/batches/retry/{id}'
 */
 export const retry = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: retry.url(args, options),
@@ -117,13 +117,13 @@ export const retry = (args: { id: string | number } | [id: string | number ] | s
 
 retry.definition = {
     methods: ["post"],
-    url: '/api/horizon/api/batches/retry/{id}',
+    url: '/dashboard/horizon/api/batches/retry/{id}',
 } satisfies RouteDefinition<["post"]>
 
 /**
 * @see \Laravel\Horizon\Http\Controllers\BatchesController::retry
 * @see vendor/laravel/horizon/src/Http/Controllers/BatchesController.php:79
-* @route '/api/horizon/api/batches/retry/{id}'
+* @route '/dashboard/horizon/api/batches/retry/{id}'
 */
 retry.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
@@ -150,7 +150,7 @@ retry.url = (args: { id: string | number } | [id: string | number ] | string | n
 /**
 * @see \Laravel\Horizon\Http\Controllers\BatchesController::retry
 * @see vendor/laravel/horizon/src/Http/Controllers/BatchesController.php:79
-* @route '/api/horizon/api/batches/retry/{id}'
+* @route '/dashboard/horizon/api/batches/retry/{id}'
 */
 retry.post = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: retry.url(args, options),

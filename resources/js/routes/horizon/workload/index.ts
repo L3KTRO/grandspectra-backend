@@ -2,7 +2,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../
 /**
 * @see \Laravel\Horizon\Http\Controllers\WorkloadController::index
 * @see vendor/laravel/horizon/src/Http/Controllers/WorkloadController.php:15
-* @route '/api/horizon/api/workload'
+* @route '/dashboard/horizon/api/workload'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
@@ -11,13 +11,13 @@ export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 index.definition = {
     methods: ["get","head"],
-    url: '/api/horizon/api/workload',
+    url: '/dashboard/horizon/api/workload',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \Laravel\Horizon\Http\Controllers\WorkloadController::index
 * @see vendor/laravel/horizon/src/Http/Controllers/WorkloadController.php:15
-* @route '/api/horizon/api/workload'
+* @route '/dashboard/horizon/api/workload'
 */
 index.url = (options?: RouteQueryOptions) => {
     return index.definition.url + queryParams(options)
@@ -26,7 +26,7 @@ index.url = (options?: RouteQueryOptions) => {
 /**
 * @see \Laravel\Horizon\Http\Controllers\WorkloadController::index
 * @see vendor/laravel/horizon/src/Http/Controllers/WorkloadController.php:15
-* @route '/api/horizon/api/workload'
+* @route '/dashboard/horizon/api/workload'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
@@ -36,7 +36,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 /**
 * @see \Laravel\Horizon\Http\Controllers\WorkloadController::index
 * @see vendor/laravel/horizon/src/Http/Controllers/WorkloadController.php:15
-* @route '/api/horizon/api/workload'
+* @route '/dashboard/horizon/api/workload'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),

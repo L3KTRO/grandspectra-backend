@@ -2,7 +2,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../
 /**
 * @see \Laravel\Horizon\Http\Controllers\DashboardStatsController::index
 * @see vendor/laravel/horizon/src/Http/Controllers/DashboardStatsController.php:18
-* @route '/api/horizon/api/stats'
+* @route '/dashboard/horizon/api/stats'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
@@ -11,13 +11,13 @@ export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 index.definition = {
     methods: ["get","head"],
-    url: '/api/horizon/api/stats',
+    url: '/dashboard/horizon/api/stats',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \Laravel\Horizon\Http\Controllers\DashboardStatsController::index
 * @see vendor/laravel/horizon/src/Http/Controllers/DashboardStatsController.php:18
-* @route '/api/horizon/api/stats'
+* @route '/dashboard/horizon/api/stats'
 */
 index.url = (options?: RouteQueryOptions) => {
     return index.definition.url + queryParams(options)
@@ -26,7 +26,7 @@ index.url = (options?: RouteQueryOptions) => {
 /**
 * @see \Laravel\Horizon\Http\Controllers\DashboardStatsController::index
 * @see vendor/laravel/horizon/src/Http/Controllers/DashboardStatsController.php:18
-* @route '/api/horizon/api/stats'
+* @route '/dashboard/horizon/api/stats'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
@@ -36,7 +36,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 /**
 * @see \Laravel\Horizon\Http\Controllers\DashboardStatsController::index
 * @see vendor/laravel/horizon/src/Http/Controllers/DashboardStatsController.php:18
-* @route '/api/horizon/api/stats'
+* @route '/dashboard/horizon/api/stats'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),

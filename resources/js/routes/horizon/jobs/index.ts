@@ -2,7 +2,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefa
 /**
 * @see \Laravel\Horizon\Http\Controllers\JobsController::show
 * @see vendor/laravel/horizon/src/Http/Controllers/JobsController.php:35
-* @route '/api/horizon/api/jobs/{id}'
+* @route '/dashboard/horizon/api/jobs/{id}'
 */
 export const show = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
@@ -11,13 +11,13 @@ export const show = (args: { id: string | number } | [id: string | number ] | st
 
 show.definition = {
     methods: ["get","head"],
-    url: '/api/horizon/api/jobs/{id}',
+    url: '/dashboard/horizon/api/jobs/{id}',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \Laravel\Horizon\Http\Controllers\JobsController::show
 * @see vendor/laravel/horizon/src/Http/Controllers/JobsController.php:35
-* @route '/api/horizon/api/jobs/{id}'
+* @route '/dashboard/horizon/api/jobs/{id}'
 */
 show.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
@@ -44,7 +44,7 @@ show.url = (args: { id: string | number } | [id: string | number ] | string | nu
 /**
 * @see \Laravel\Horizon\Http\Controllers\JobsController::show
 * @see vendor/laravel/horizon/src/Http/Controllers/JobsController.php:35
-* @route '/api/horizon/api/jobs/{id}'
+* @route '/dashboard/horizon/api/jobs/{id}'
 */
 show.get = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
@@ -54,7 +54,7 @@ show.get = (args: { id: string | number } | [id: string | number ] | string | nu
 /**
 * @see \Laravel\Horizon\Http\Controllers\JobsController::show
 * @see vendor/laravel/horizon/src/Http/Controllers/JobsController.php:35
-* @route '/api/horizon/api/jobs/{id}'
+* @route '/dashboard/horizon/api/jobs/{id}'
 */
 show.head = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),

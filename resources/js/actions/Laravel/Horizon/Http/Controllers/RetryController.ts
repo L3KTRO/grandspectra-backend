@@ -2,7 +2,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefa
 /**
 * @see \Laravel\Horizon\Http\Controllers\RetryController::store
 * @see vendor/laravel/horizon/src/Http/Controllers/RetryController.php:15
-* @route '/api/horizon/api/jobs/retry/{id}'
+* @route '/dashboard/horizon/api/jobs/retry/{id}'
 */
 export const store = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(args, options),
@@ -11,13 +11,13 @@ export const store = (args: { id: string | number } | [id: string | number ] | s
 
 store.definition = {
     methods: ["post"],
-    url: '/api/horizon/api/jobs/retry/{id}',
+    url: '/dashboard/horizon/api/jobs/retry/{id}',
 } satisfies RouteDefinition<["post"]>
 
 /**
 * @see \Laravel\Horizon\Http\Controllers\RetryController::store
 * @see vendor/laravel/horizon/src/Http/Controllers/RetryController.php:15
-* @route '/api/horizon/api/jobs/retry/{id}'
+* @route '/dashboard/horizon/api/jobs/retry/{id}'
 */
 store.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
@@ -44,7 +44,7 @@ store.url = (args: { id: string | number } | [id: string | number ] | string | n
 /**
 * @see \Laravel\Horizon\Http\Controllers\RetryController::store
 * @see vendor/laravel/horizon/src/Http/Controllers/RetryController.php:15
-* @route '/api/horizon/api/jobs/retry/{id}'
+* @route '/dashboard/horizon/api/jobs/retry/{id}'
 */
 store.post = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(args, options),

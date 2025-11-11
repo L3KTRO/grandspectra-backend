@@ -2,7 +2,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../
 /**
 * @see \App\Http\Controllers\ProfileController::edit
 * @see app/Http/Controllers/ProfileController.php:19
-* @route '/profile'
+* @route '/settings/profile'
 */
 export const edit = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(options),
@@ -11,13 +11,13 @@ export const edit = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 edit.definition = {
     methods: ["get","head"],
-    url: '/profile',
+    url: '/settings/profile',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\ProfileController::edit
 * @see app/Http/Controllers/ProfileController.php:19
-* @route '/profile'
+* @route '/settings/profile'
 */
 edit.url = (options?: RouteQueryOptions) => {
     return edit.definition.url + queryParams(options)
@@ -26,7 +26,7 @@ edit.url = (options?: RouteQueryOptions) => {
 /**
 * @see \App\Http\Controllers\ProfileController::edit
 * @see app/Http/Controllers/ProfileController.php:19
-* @route '/profile'
+* @route '/settings/profile'
 */
 edit.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(options),
@@ -36,7 +36,7 @@ edit.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 /**
 * @see \App\Http\Controllers\ProfileController::edit
 * @see app/Http/Controllers/ProfileController.php:19
-* @route '/profile'
+* @route '/settings/profile'
 */
 edit.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(options),
@@ -46,7 +46,7 @@ edit.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 /**
 * @see \App\Http\Controllers\ProfileController::update
 * @see app/Http/Controllers/ProfileController.php:30
-* @route '/profile'
+* @route '/settings/profile'
 */
 export const update = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(options),
@@ -55,13 +55,13 @@ export const update = (options?: RouteQueryOptions): RouteDefinition<'patch'> =>
 
 update.definition = {
     methods: ["patch"],
-    url: '/profile',
+    url: '/settings/profile',
 } satisfies RouteDefinition<["patch"]>
 
 /**
 * @see \App\Http\Controllers\ProfileController::update
 * @see app/Http/Controllers/ProfileController.php:30
-* @route '/profile'
+* @route '/settings/profile'
 */
 update.url = (options?: RouteQueryOptions) => {
     return update.definition.url + queryParams(options)
@@ -70,7 +70,7 @@ update.url = (options?: RouteQueryOptions) => {
 /**
 * @see \App\Http\Controllers\ProfileController::update
 * @see app/Http/Controllers/ProfileController.php:30
-* @route '/profile'
+* @route '/settings/profile'
 */
 update.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(options),
@@ -80,7 +80,7 @@ update.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
 /**
 * @see \App\Http\Controllers\ProfileController::destroy
 * @see app/Http/Controllers/ProfileController.php:46
-* @route '/profile'
+* @route '/settings/profile'
 */
 export const destroy = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(options),
@@ -89,13 +89,13 @@ export const destroy = (options?: RouteQueryOptions): RouteDefinition<'delete'> 
 
 destroy.definition = {
     methods: ["delete"],
-    url: '/profile',
+    url: '/settings/profile',
 } satisfies RouteDefinition<["delete"]>
 
 /**
 * @see \App\Http\Controllers\ProfileController::destroy
 * @see app/Http/Controllers/ProfileController.php:46
-* @route '/profile'
+* @route '/settings/profile'
 */
 destroy.url = (options?: RouteQueryOptions) => {
     return destroy.definition.url + queryParams(options)
@@ -104,7 +104,7 @@ destroy.url = (options?: RouteQueryOptions) => {
 /**
 * @see \App\Http\Controllers\ProfileController::destroy
 * @see app/Http/Controllers/ProfileController.php:46
-* @route '/profile'
+* @route '/settings/profile'
 */
 destroy.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(options),

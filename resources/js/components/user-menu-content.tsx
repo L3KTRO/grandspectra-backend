@@ -3,10 +3,9 @@ import { UserInfo } from '@/components/user-info';
 import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 import { type User } from '@/types';
 import { Link, router } from '@inertiajs/react';
-import { showInfoToast, showSuccessToast, showWarningToast } from '@/hooks/use-sonner-toast';
 import { LogOut, Settings } from 'lucide-react';
-import axios from 'axios';
 import { logout } from '@/routes';
+import profile from '@/routes/profile';
 
 interface UserMenuContentProps {
     user: User;
@@ -35,7 +34,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
                 <DropdownMenuItem asChild>
-                    <Link className="block w-full" href={route('profile.edit')} as="button" prefetch onClick={cleanup}>
+                    <Link className="block w-full" href={profile.edit()} as="button" prefetch onClick={cleanup}>
                         <Settings className="mr-2" />
                         Ajustes
                     </Link>

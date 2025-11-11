@@ -27,13 +27,28 @@ class UserController extends Controller
             });
         }
 
-        $users = $query->latest()
+        // Manejo de ordenamiento
+        $allowedSorts = ['name', 'username', 'email', 'created_at'];
+        $sort = $request->input('sort', 'created_at');
+        $direction = $request->input('direction', 'desc');
+
+        // Validar columna de ordenamiento
+        if (!in_array($sort, $allowedSorts)) {
+            $sort = 'created_at';
+        }
+
+        // Validar dirección
+        if (!in_array($direction, ['asc', 'desc'])) {
+            $direction = 'desc';
+        }
+
+        $users = $query->orderBy($sort, $direction)
             ->paginate(15)
             ->withQueryString();
 
         return Inertia::render('users/index', [
             'users' => $users,
-            'filters' => $request->only('search'),
+            'filters' => $request->only(['search', 'sort', 'direction']),
         ]);
     }
 
@@ -73,7 +88,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $user->load(['reviews', 'watchlists', 'ratings']);
+        $user->load(['reviews', 'watchlist', 'ratings', 'watched']);
 
         return Inertia::render('users/show', [
             'user' => $user,
@@ -129,5 +144,76 @@ class UserController extends Controller
 
         return redirect()->route('dashboard.users.index')
             ->with('success', 'Usuario eliminado exitosamente.');
+    }
+
+    /**
+     * Display a listing of trashed users.
+     */
+    public function trashed(Request $request)
+    {
+        $query = User::onlyTrashed();
+
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('username', 'like', "%{$search}%");
+            });
+        }
+
+        // Manejo de ordenamiento
+        $allowedSorts = ['name', 'username', 'email', 'created_at', 'deleted_at'];
+        $sort = $request->input('sort', 'deleted_at');
+        $direction = $request->input('direction', 'desc');
+
+        // Validar columna de ordenamiento
+        if (!in_array($sort, $allowedSorts)) {
+            $sort = 'deleted_at';
+        }
+
+        // Validar dirección
+        if (!in_array($direction, ['asc', 'desc'])) {
+            $direction = 'desc';
+        }
+
+        $users = $query->orderBy($sort, $direction)
+            ->paginate(15)
+            ->withQueryString();
+
+        return Inertia::render('users/trashed', [
+            'users' => $users,
+            'filters' => $request->only(['search', 'sort', 'direction']),
+        ]);
+    }
+
+    /**
+     * Restore a soft deleted user.
+     */
+    public function restore($id)
+    {
+        $user = User::onlyTrashed()->findOrFail($id);
+
+        $user->restore();
+
+        return redirect()->route('dashboard.users.trashed')
+            ->with('success', 'Usuario restaurado exitosamente.');
+    }
+
+    /**
+     * Permanently delete a user.
+     */
+    public function forceDestroy($id)
+    {
+        $user = User::onlyTrashed()->findOrFail($id);
+
+        if ($user->id === Auth::id()) {
+            return back()->with('error', 'No puedes eliminar tu propia cuenta.');
+        }
+
+        $user->forceDelete();
+
+        return redirect()->route('dashboard.users.trashed')
+            ->with('success', 'Usuario eliminado permanentemente.');
     }
 }

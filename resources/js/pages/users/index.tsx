@@ -17,7 +17,9 @@ import AppSidebarLayout from '@/layouts/app/app-sidebar-layout';
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import { Eye, Edit, Trash2, Plus, Search, Shield } from 'lucide-react';
 import { FormEvent, useState } from 'react';
-import * as routes from '@/routes';
+import * as dashboardUsersRoutes from '@/routes/dashboard/users';
+import { dashboard } from '@/routes';
+import { SortableHeader, SortDirection } from '@/components/sortable-header';
 
 interface User {
     id: number;
@@ -27,10 +29,6 @@ interface User {
     created_at: string;
     avatar?: string | null;
     is_admin: boolean;
-    reviews_count?: number;
-    ratings_count?: number;
-    watchlist_count?: number;
-    followers_count?: number;
 }
 
 interface UsersIndexProps {
@@ -49,6 +47,8 @@ interface UsersIndexProps {
     };
     filters: {
         search?: string | null;
+        sort?: string | null;
+        direction?: SortDirection | null;
     };
 }
 
@@ -57,99 +57,32 @@ export default function UsersIndex({ users, filters }: UsersIndexProps) {
         search: filters.search || '',
     });
 
-    const getSubscriptionBadgeClasses = useCallback((level?: string | null) => {
-        switch (level) {
-            case 'premium':
-                return 'bg-yellow-100 text-yellow-800';
-            case 'extra':
-                return 'bg-blue-100 text-blue-800';
-            case 'basic':
-                return 'bg-gray-100 text-gray-800';
-            case 'free':
-                return 'bg-slate-100 text-slate-700';
-            case 'scouter':
-                return 'bg-purple-100 text-purple-800';
-            default:
-                return 'bg-gray-100 text-gray-800';
-        }
-    }, []);
-
-    // Valor combinado para el select unificado.
-    // Reglas:
-    //  - Si age_filter activo => player_<segmento>
-    //  - Si sólo role (distinto de __all) => role:<role>
-    //  - En otro caso => __all
-    const combinedSelectValue = useMemo(() => {
-        if (data.age_filter && data.age_filter !== '__all') {
-            return `player_${data.age_filter}`; // player_over18 | player_under18 | player_influencers
-        }
-        if (data.role && data.role !== '__all') {
-            return `role:${data.role}`;
-        }
-        return '__all';
-    }, [data.role, data.age_filter]);
-
-    const handleCombinedChange = (value: string) => {
-        if (value === '__all') {
-            setData('role', '__all');
-            setData('age_filter', '__all');
-            router.get(
-                route('dashboard.users.index'),
-                { search: data.search || null, role: null, age_filter: null, sort, direction },
-                { preserveState: true, replace: true, preserveScroll: true }
-            );
-            return;
-        }
-        if (value.startsWith('player_')) {
-            // Segmentos especiales: forzamos role=player y age_filter derivado
-            const seg = value.replace('player_', ''); // over18 | under18 | influencers
-            setData('role', 'player');
-            setData('age_filter', seg);
-            router.get(
-                route('dashboard.users.index'),
-                { search: data.search || null, role: 'player', age_filter: seg, sort, direction },
-                { preserveState: true, replace: true, preserveScroll: true }
-            );
-            return;
-        }
-        if (value.startsWith('role:')) {
-            const role = value.split(':')[1];
-            setData('role', role);
-            setData('age_filter', '__all');
-            router.get(
-                route('dashboard.users.index'),
-                { search: data.search || null, role, age_filter: null, sort, direction },
-                { preserveState: true, replace: true, preserveScroll: true }
-            );
-            return;
-        }
-    };
-
-    // Estado para el modal de confirmación
     const [confirmationDialog, setConfirmationDialog] = useState({
         open: false,
         userId: null as number | null,
         userName: '',
     });
 
-    // Los mensajes flash se muestran desde el layout global (FlashMessages).
-    // Evitamos manejarlos localmente para que no aparezcan duplicados.
-    useEffect(() => {
-        // noop: kept intentionally to preserve potential dependency usage and future local effects
-    }, []);
+    const handleSort = (column: string) => {
+        let newDirection: SortDirection = 'asc';
 
-    // Usuario autenticado (compartido desde Inertia) sin usar any
+        if (filters.sort === column) {
+            newDirection = filters.direction === 'asc' ? 'desc' : 'asc';
+        }
+
+        router.get(
+            dashboardUsersRoutes.index().url,
+            {
+                search: data.search || null,
+                sort: column,
+                direction: newDirection,
+            },
+            { preserveState: true, replace: true, preserveScroll: true }
+        );
+    };
+
     const page = usePage<{ auth?: { user?: { id: number } } }>();
-    const authUser = page.props.auth?.user as { id: number } | undefined;
-
-    // Crear un mapa de roles para búsqueda rápida
-    const roleMap = useMemo(() => {
-        const map: Record<string, string> = {};
-        roles.forEach((r) => {
-            map[r.value] = r.label;
-        });
-        return map;
-    }, [roles]);
+    const authUser = page.props.auth?.user;
 
     const deleteUser = (id: number, name: string) => {
         setConfirmationDialog({
@@ -161,7 +94,7 @@ export default function UsersIndex({ users, filters }: UsersIndexProps) {
 
     const handleConfirmDelete = () => {
         if (confirmationDialog.userId) {
-            router.delete(route('dashboard.users.destroy', confirmationDialog.userId), {
+            router.delete(dashboardUsersRoutes.destroy({ user: confirmationDialog.userId }).url, {
                 onSuccess: () => {
                     setConfirmationDialog({
                         open: false,
@@ -169,342 +102,193 @@ export default function UsersIndex({ users, filters }: UsersIndexProps) {
                         userName: '',
                     });
                 },
-                onError: () => {
-                    console.error('Error al eliminar usuario');
-                }
             });
         }
     };
 
-    const handleSort = useCallback((key: 'name' | 'alias' | 'email' | 'role' | 'created_at') => {
-        const nextDirection = sort === key ? (direction === 'asc' ? 'desc' : 'asc') : 'asc';
-        router.get(
-            route('dashboard.users.index'),
-            {
-                search: data.search || null,
-                role: data.role && data.role !== '__all' ? data.role : null,
-                start_date: data.start_date || null,
-                end_date: data.end_date || null,
-                has_active_subscription: data.has_active_subscription ? 1 : null,
-                age_filter: data.age_filter && data.age_filter !== '__all' ? data.age_filter : null,
-                sort: key,
-                direction: nextDirection,
-            },
-            { preserveState: true, replace: true, preserveScroll: true },
-        );
-    }, [sort, direction, data.search, data.role, data.start_date, data.end_date]);
-
-    const handleExplicitSort = useCallback((key: 'name' | 'alias' | 'email' | 'role' | 'created_at', dir: 'asc' | 'desc') => {
-        router.get(
-            route('dashboard.users.index'),
-            {
-                search: data.search || null,
-                role: data.role && data.role !== '__all' ? data.role : null,
-                start_date: data.start_date || null,
-                end_date: data.end_date || null,
-                has_active_subscription: data.has_active_subscription ? 1 : null,
-                age_filter: data.age_filter && data.age_filter !== '__all' ? data.age_filter : null,
-                sort: key,
-                direction: dir,
-            },
-            { preserveState: true, replace: true, preserveScroll: true },
-        );
-    }, [data.search, data.role, data.start_date, data.end_date]);
-
-    // Buscar por nombre o email
-    const handleSearchSubmit = useCallback((e: FormEvent) => {
+    const handleSearchSubmit = (e: FormEvent) => {
         e.preventDefault();
         router.get(
-            route('dashboard.users.index'),
+            dashboardUsersRoutes.index().url,
             {
                 search: data.search || null,
-                role: data.role && data.role !== '__all' ? data.role : null,
-                start_date: data.start_date || null,
-                end_date: data.end_date || null,
-                has_active_subscription: data.has_active_subscription ? 1 : null,
-                age_filter: data.age_filter && data.age_filter !== '__all' ? data.age_filter : null,
-                sort,
-                direction,
+                sort: filters.sort || null,
+                direction: filters.direction || null,
             },
             { preserveState: true, replace: true, preserveScroll: true },
         );
-    }, [data.search, data.role, data.start_date, data.end_date, sort, direction]);
-
-    const applyActiveSubFilter = useCallback((checked: boolean | 'indeterminate') => {
-        const enabled = checked === true;
-        setData('has_active_subscription', enabled ? 1 : 0);
-        router.get(
-            route('dashboard.users.index'),
-            {
-                search: data.search || null,
-                role: data.role && data.role !== '__all' ? data.role : null,
-                start_date: data.start_date || null,
-                end_date: data.end_date || null,
-                has_active_subscription: enabled ? 1 : null,
-                age_filter: data.age_filter && data.age_filter !== '__all' ? data.age_filter : null,
-                sort,
-                direction,
-            },
-            { preserveState: true, replace: true, preserveScroll: true },
-        );
-    }, [data.search, data.role, data.start_date, data.end_date, sort, direction, setData]);
+    };
 
     return (
         <AppSidebarLayout
             breadcrumbs={[
-                { title: 'Dashboard', href: route('dashboard') },
+                { title: 'Dashboard', href: dashboard().url },
                 { title: 'Usuarios', active: true },
             ]}
         >
             <Head title="Gestión de Usuarios" />
 
-            <div className="flex items-center justify-between gap-4 flex-wrap md:flex-col xl:flex-row">
-                <div className="flex-1 min-w-0">
-                    <h1 className="text-3xl font-bold">Gestión de usuarios</h1>
-                    <p className="text-muted-foreground">Gestiona todos los usuarios del sistema</p>
+            <div className="space-y-6">
+                <div className="flex items-center justify-between gap-4 flex-wrap">
+                    <div className="flex-1 min-w-0">
+                        <h1 className="text-3xl font-bold">Gestión de usuarios</h1>
+                        <p className="text-muted-foreground">Gestiona todos los usuarios del sistema</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Button variant="outline" asChild>
+                            <Link href={dashboardUsersRoutes.trashed().url}>
+                                <Trash2 className="mr-2 h-4 w-4" /> Usuarios eliminados
+                            </Link>
+                        </Button>
+                        <Button asChild>
+                            <Link href={dashboardUsersRoutes.create().url}>
+                                <Plus className="mr-2 h-4 w-4" /> Nuevo Usuario
+                            </Link>
+                        </Button>
+                    </div>
                 </div>
-                <div className="w-full max-w-md flex-wrap">
-                    <form onSubmit={handleSearchSubmit} className="flex items-center gap-4 flex-col">
-                        <div className="relative w-full">
-                            <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                            <Input
-                                placeholder="Buscar por nombre o correo..."
-                                className="pl-8"
-                                value={data.search}
-                                onChange={(e) => setData('search', e.target.value)}
-                                aria-label="Buscar por nombre o correo"
-                            />
-                        </div>
-                        <div className="flex items-center justify-between gap-4">
-                            <label className="flex items-center gap-2 text-sm whitespace-nowrap">
-                                <Checkbox
-                                    checked={Boolean(data.has_active_subscription)}
-                                    onCheckedChange={applyActiveSubFilter}
-                                />
-                                Suscripción activa
-                            </label>
 
-                            {/* Select combinado rol / segmento */}
-                            <div className="w-48">
-                                <label htmlFor="role_segment" className="sr-only">Rol / Segmento</label>
-                                <Select value={combinedSelectValue} onValueChange={handleCombinedChange}>
-                                    <SelectTrigger id="role_segment" className="w-full">
-                                        <SelectValue placeholder="Rol / Segmento" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="__all">Todos</SelectItem>
-                                        {/* Roles existentes (excepto player duplicado) */}
-                                        {roles.filter(r => r.value !== 'player').map(r => (
-                                            <SelectItem key={r.value} value={`role:${r.value}`}>{r.label}</SelectItem>
-                                        ))}
-                                        <SelectItem value="role:player">Jugador (todos)</SelectItem>
-                                        <SelectItem value="player_over18">Jugador +18</SelectItem>
-                                        <SelectItem value="player_under18">Jugador -18</SelectItem>
-                                        <SelectItem value="player_influencers">Influencers</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            {/* El botón Buscar se ha eliminado porque el select dispara la búsqueda automáticamente */}
+                <form onSubmit={handleSearchSubmit} className="flex items-center gap-4">
+                    <div className="relative flex-1 max-w-md">
+                        <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                            placeholder="Buscar por nombre o correo..."
+                            className="pl-8"
+                            value={data.search}
+                            onChange={(e) => setData('search', e.target.value)}
+                            aria-label="Buscar por nombre o correo"
+                        />
+                    </div>
+                    <Button type="submit">Buscar</Button>
+                </form>
 
+                {users.data.length > 0 ? (
+                    <>
+                        <div className="overflow-hidden rounded-lg border">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead className="w-14">Avatar</TableHead>
+                                        <TableHead>
+                                            <SortableHeader
+                                                label="Nombre"
+                                                column="name"
+                                                activeSort={filters.sort || undefined}
+                                                direction={filters.direction || undefined}
+                                                onSort={handleSort}
+                                            />
+                                        </TableHead>
+                                        <TableHead>
+                                            <SortableHeader
+                                                label="Username"
+                                                column="username"
+                                                activeSort={filters.sort || undefined}
+                                                direction={filters.direction || undefined}
+                                                onSort={handleSort}
+                                            />
+                                        </TableHead>
+                                        <TableHead>
+                                            <SortableHeader
+                                                label="Email"
+                                                column="email"
+                                                activeSort={filters.sort || undefined}
+                                                direction={filters.direction || undefined}
+                                                onSort={handleSort}
+                                            />
+                                        </TableHead>
+                                        <TableHead>Rol</TableHead>
+                                        <TableHead>
+                                            <SortableHeader
+                                                label="Fecha de creación"
+                                                column="created_at"
+                                                activeSort={filters.sort || undefined}
+                                                direction={filters.direction || undefined}
+                                                onSort={handleSort}
+                                            />
+                                        </TableHead>
+                                        <TableHead className="text-center w-32">Acciones</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {users.data.map((user) => (
+                                        <TableRow key={user.id}>
+                                            <TableCell>
+                                                <div className="h-10 w-10 rounded-full overflow-hidden bg-neutral-200 flex items-center justify-center text-xs font-medium">
+                                                    {user.avatar ? (
+                                                        <img
+                                                            src={user.avatar}
+                                                            alt={user.name}
+                                                            className="h-full w-full object-cover"
+                                                            loading="lazy"
+                                                        />
+                                                    ) : (
+                                                        <span>{(user.name || '?').charAt(0).toUpperCase()}</span>
+                                                    )}
+                                                </div>
+                                            </TableCell>
+                                            <TableCell className="font-medium">{user.name}</TableCell>
+                                            <TableCell>{user.username || '-'}</TableCell>
+                                            <TableCell>{user.email}</TableCell>
+                                            <TableCell>
+                                                {user.is_admin ? (
+                                                    <Badge variant="destructive" className="gap-1">
+                                                        <Shield className="h-3 w-3" />
+                                                        Admin
+                                                    </Badge>
+                                                ) : (
+                                                    <Badge variant="secondary">Usuario</Badge>
+                                                )}
+                                            </TableCell>
+                                            <TableCell>{new Date(user.created_at).toLocaleDateString()}</TableCell>
+                                            <TableCell className="text-center">
+                                                <div className="flex items-center justify-center gap-2">
+                                                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0" asChild>
+                                                        <Link href={dashboardUsersRoutes.show({ user: user.id }).url}>
+                                                            <Eye className="h-4 w-4" />
+                                                            <span className="sr-only">Ver usuario</span>
+                                                        </Link>
+                                                    </Button>
+                                                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0" asChild>
+                                                        <Link href={dashboardUsersRoutes.edit({ user: user.id }).url}>
+                                                            <Edit className="h-4 w-4" />
+                                                            <span className="sr-only">Editar usuario</span>
+                                                        </Link>
+                                                    </Button>
+                                                    {authUser?.id !== user.id && (
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            className="h-8 w-8 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                                                            onClick={() => deleteUser(user.id, user.name)}
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                            <span className="sr-only">Eliminar usuario</span>
+                                                        </Button>
+                                                    )}
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
                         </div>
-                    </form>
-                </div>
-                <div className="flex items-center gap-2">
-                    <Button asChild variant="secondary">
-                        <Link href={route('dashboard.users.trashed')}>
-                            Restaurar usuarios
-                        </Link>
-                    </Button>
-                    <Button asChild>
-                        <Link href={route('dashboard.users.create')}>
-                            <Plus className="mr-2 h-4 w-4" /> Nuevo Usuario
-                        </Link>
-                    </Button>
-                </div>
+
+                        <Pagination
+                            data={users}
+                            appendQuery={{
+                                search: data.search || undefined,
+                                sort: filters.sort || undefined,
+                                direction: filters.direction || undefined,
+                            }}
+                        />
+                    </>
+                ) : (
+                    <div className="py-10 text-center">
+                        <p className="text-muted-foreground">No hay usuarios registrados.</p>
+                    </div>
+                )}
             </div>
 
-            {users.data.length > 0 ? (
-                <div className="m-6 overflow-hidden rounded-lg border">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="w-14">Avatar</TableHead>
-                                <TableHead>
-                                    <SortableHeader
-                                        label="Nombre"
-                                        column="name"
-                                        activeSort={sort}
-                                        direction={direction}
-                                        onSort={handleSort}
-                                        onExplicitSort={handleExplicitSort}
-                                    />
-                                </TableHead>
-                                <TableHead>
-                                    <SortableHeader
-                                        label="Alias"
-                                        column="alias"
-                                        activeSort={sort}
-                                        direction={direction}
-                                        onSort={handleSort}
-                                        onExplicitSort={handleExplicitSort}
-                                    />
-                                </TableHead>
-                                <TableHead>
-                                    <SortableHeader
-                                        label="Email"
-                                        column="email"
-                                        activeSort={sort}
-                                        direction={direction}
-                                        onSort={handleSort}
-                                        onExplicitSort={handleExplicitSort}
-                                    />
-                                </TableHead>
-                                <TableHead>
-                                    <SortableHeader
-                                        label="Rol"
-                                        column="role"
-                                        activeSort={sort}
-                                        direction={direction}
-                                        onSort={handleSort}
-                                        onExplicitSort={handleExplicitSort}
-                                    />
-                                </TableHead>
-                                <TableHead className="w-fit">Categoría/Plan</TableHead>
-                                <TableHead>
-                                    <SortableHeader
-                                        label="Fecha de creación"
-                                        column="created_at"
-                                        activeSort={sort}
-                                        direction={direction}
-                                        onSort={handleSort}
-                                        onExplicitSort={handleExplicitSort}
-                                    />
-                                </TableHead>
-                                <TableHead className="text-center w-32">Acciones</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {users.data.map((user) => (
-                                <TableRow key={user.id}>
-                                    <TableCell>
-                                        <div className="h-10 w-10 rounded-full overflow-hidden bg-neutral-200 flex items-center justify-center text-xs font-medium">
-                                            {user.avatar ? (
-                                                <img
-                                                    src={user.avatar}
-                                                    alt={user.name}
-                                                    className="h-full w-full object-cover"
-                                                    loading="lazy"
-                                                />
-                                            ) : (
-                                                <span>{(user.name || '?').charAt(0).toUpperCase()}</span>
-                                            )}
-                                        </div>
-                                    </TableCell>
-                                    <TableCell className="font-medium">{user.name}</TableCell>
-                                    <TableCell>{user.alias}</TableCell>
-                                    <TableCell>{user.email}</TableCell>
-                                    <TableCell>{roleMap[user.role] || user.role}</TableCell>
-                                    <TableCell>
-                                        {user.role === 'player' && user.age_status_label ? (
-                                            <div className="flex flex-col gap-1">
-                                                <span
-                                                    className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold w-fit ${user.is_minor_for_reference
-                                                        ? 'bg-destructive text-white'
-                                                        : 'bg-emerald-100 text-emerald-700'
-                                                        }`}
-                                                >
-                                                    {user.age_status_label}
-                                                </span>
-                                                {user.current_plan_label && (
-                                                    <span
-                                                        className={`inline-flex items-center rounded-md w-fit px-2 py-1 text-xs font-medium ${getSubscriptionBadgeClasses(user.current_plan_value)}`}
-                                                    >
-                                                        {(user.current_plan_value ?? user.current_plan_label ?? '').toUpperCase()}
-                                                    </span>
-                                                )}
-                                                {user.current_plan_paid_at && (
-                                                    <span className="text-[11px] text-muted-foreground">
-                                                        Pagado {new Date(user.current_plan_paid_at).toLocaleDateString()}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        ) : user.current_plan_label ? (
-                                            <div className="flex flex-col justify-center items-start">
-                                                <span
-                                                    className={`inline-flex items-center rounded-md w-fit px-2 py-1 text-xs font-medium ${getSubscriptionBadgeClasses(user.current_plan_value)}`}
-                                                >
-                                                    {(user.current_plan_value ?? user.current_plan_label ?? '').toUpperCase()}
-                                                </span>
-                                                {user.current_plan_paid_at && (
-                                                    <span className="mt-1 text-[11px] text-muted-foreground">
-                                                        Pagado {new Date(user.current_plan_paid_at).toLocaleDateString()}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        ) : (
-                                            <span className="text-sm text-muted-foreground">
-                                                Sin plan activo
-                                            </span>
-                                        )}
-                                    </TableCell>
-                                    <TableCell>{new Date(user.created_at).toLocaleDateString()}</TableCell>
-                                    <TableCell className="text-center">
-                                        <div className="flex items-center justify-center gap-2">
-                                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" asChild>
-                                                <Link href={route('dashboard.users.show', user.id)}>
-                                                    <Eye className="h-4 w-4" />
-                                                    <span className="sr-only">Ver usuario</span>
-                                                </Link>
-                                            </Button>
-                                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" asChild>
-                                                <Link href={route('dashboard.users.edit', user.id)}>
-                                                    <Edit className="h-4 w-4" />
-                                                    <span className="sr-only">Editar usuario</span>
-                                                </Link>
-                                            </Button>
-                                            {authUser?.id !== user.id && (
-                                                <Button
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    className="h-8 w-8 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
-                                                    onClick={() => deleteUser(user.id, user.name)}
-                                                >
-                                                    <Trash2 className="h-4 w-4" />
-                                                    <span className="sr-only">Eliminar usuario</span>
-                                                </Button>
-                                            )}
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </div>
-            ) : (
-                <div className="py-10 text-center">
-                    <p className="text-muted-foreground">No hay usuarios registrados.</p>
-                </div>
-            )}
-
-            {/* Paginación */}
-            <div className="m-6">
-                <Pagination
-                    data={users}
-                    appendQuery={{
-                        search: data.search || undefined,
-                        // No enviar el sentinel '__all' para evitar where role='__all' en backend
-                        role: (data.role && data.role !== '__all') ? data.role : undefined,
-                        start_date: data.start_date || undefined,
-                        end_date: data.end_date || undefined,
-                        has_active_subscription: data.has_active_subscription ? 1 : undefined,
-                        age_filter: data.age_filter && data.age_filter !== '__all' ? data.age_filter : undefined,
-                        sort,
-                        direction,
-                    }}
-                />
-            </div>
-
-            {/* Modal de confirmación para eliminar usuario */}
             <AlertDialog
                 open={confirmationDialog.open}
                 onOpenChange={(open: boolean) => setConfirmationDialog(prev => ({ ...prev, open }))}
@@ -513,7 +297,7 @@ export default function UsersIndex({ users, filters }: UsersIndexProps) {
                     <AlertDialogHeader>
                         <AlertDialogTitle>Confirmar eliminación</AlertDialogTitle>
                         <AlertDialogDescription>
-                            ¿Estás seguro de que quieres eliminar al usuario "{confirmationDialog.userName}"? Esta acción no se puede deshacer.
+                            ¿Estás seguro de que quieres eliminar al usuario "{confirmationDialog.userName}"? El usuario será movido a la papelera y podrá ser restaurado posteriormente.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

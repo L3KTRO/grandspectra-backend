@@ -18,7 +18,8 @@
         "laravel/pail": "^1.1",
         "laravel/pulse": "^1.4",
         "laravel/sanctum": "^4.0",
-        "laravel/scout": "^10.15",
+        "laravel/scout": "^10.21",
+        "laravel/telescope": "^5.15",
         "laravel/tinker": "^2.9",
         "laravel/wayfinder": "^0.1.12",
         "league/flysystem-aws-s3-v3": "^3.0",
@@ -28,6 +29,7 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "laravel/boost": "^1.8",
         "laravel/breeze": "^2.3.8",
         "laravel/pint": "^1.13",
         "mockery/mockery": "^1.6",

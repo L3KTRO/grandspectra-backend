@@ -16,7 +16,7 @@ import jobs from './jobs'
 /**
 * @see \Laravel\Horizon\Http\Controllers\HomeController::index
 * @see vendor/laravel/horizon/src/Http/Controllers/HomeController.php:14
-* @route '/api/horizon/{view?}'
+* @route '/dashboard/horizon/{view?}'
 */
 export const index = (args?: { view?: string | number } | [view: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
@@ -25,13 +25,13 @@ export const index = (args?: { view?: string | number } | [view: string | number
 
 index.definition = {
     methods: ["get","head"],
-    url: '/api/horizon/{view?}',
+    url: '/dashboard/horizon/{view?}',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \Laravel\Horizon\Http\Controllers\HomeController::index
 * @see vendor/laravel/horizon/src/Http/Controllers/HomeController.php:14
-* @route '/api/horizon/{view?}'
+* @route '/dashboard/horizon/{view?}'
 */
 index.url = (args?: { view?: string | number } | [view: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
@@ -62,7 +62,7 @@ index.url = (args?: { view?: string | number } | [view: string | number ] | stri
 /**
 * @see \Laravel\Horizon\Http\Controllers\HomeController::index
 * @see vendor/laravel/horizon/src/Http/Controllers/HomeController.php:14
-* @route '/api/horizon/{view?}'
+* @route '/dashboard/horizon/{view?}'
 */
 index.get = (args?: { view?: string | number } | [view: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
@@ -72,7 +72,7 @@ index.get = (args?: { view?: string | number } | [view: string | number ] | stri
 /**
 * @see \Laravel\Horizon\Http\Controllers\HomeController::index
 * @see vendor/laravel/horizon/src/Http/Controllers/HomeController.php:14
-* @route '/api/horizon/{view?}'
+* @route '/dashboard/horizon/{view?}'
 */
 index.head = (args?: { view?: string | number } | [view: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(args, options),

@@ -1,234 +1,369 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ParticipationsChart } from '@/components/participations-chart';
 import AppSidebarLayout from '@/layouts/app/app-sidebar-layout';
 import { Head } from '@inertiajs/react';
-import { BarChart3, Calendar, Flag, Star, Trophy, Users } from 'lucide-react';
+import { Film, Tv, Users, Star, Eye, Bookmark, ListChecks, MessageSquare } from 'lucide-react';
 
 interface DashboardStats {
-    total_users: number;
-    total_challenges: number;
-    active_seasons: number;
-    pending_reports: number;
-    total_invitation_codes: number;
-    total_notifications: number;
-}
-
-interface ParticipationChartData {
-    period: string;
-    tiro: number;
-    pase: number;
-    otro: number;
-    total_points: number;
+    users: number;
+    movies: number;
+    tv_shows: number;
+    reviews: number;
+    ratings: number;
+    watchlists: number;
+    watched: number;
+    content_lists: number;
+    recent_users: Array<{
+        id: number;
+        name: string;
+        email: string;
+        username: string;
+        created_at: string;
+    }>;
+    recent_reviews: Array<{
+        id: number;
+        user_id: number;
+        content: string;
+        qualification: number;
+        created_at: string;
+        user: {
+            id: number;
+            name: string;
+            username: string;
+        };
+    }>;
 }
 
 interface DashboardProps {
     stats: DashboardStats;
-    participationsChart: ParticipationChartData[];
 }
 
-export default function Dashboard({ stats, participationsChart }: DashboardProps) {
+export default function Dashboard({ stats }: DashboardProps) {
     return (
         <AppSidebarLayout>
-            <Head title="Dashboard" />
+            <Head title="Dashboard - Grand Spectra" />
 
             <div className="space-y-6">
-                <div>
-                    <h1 className="text-3xl font-bold">Dashboard</h1>
-                    <p className="text-muted-foreground">Bienvenido al panel de administración</p>
+                {/* Hero Section */}
+                <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg p-6 text-white">
+                    <h1 className="text-4xl font-bold mb-2">🎬 Grand Spectra 🍿</h1>
+                    <p className="text-xl font-medium mb-4">"La red social definitiva para amantes del cine y las series"</p>
+                    <p className="text-sm opacity-90">Panel de Administración</p>
                 </div>
 
-                {/* Estadísticas principales */}
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2">
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Total Usuarios</CardTitle>
-                            <Users className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">{stats?.total_users || 0}</div>
-                            <p className="text-xs text-muted-foreground">Usuarios registrados</p>
-                        </CardContent>
-                    </Card>
+                {/* Descripción del Proyecto */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="text-2xl">¿Qué es Grand Spectra?</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                        <p className="text-muted-foreground">
+                            <strong>Grand Spectra</strong> es una plataforma web moderna construida con <strong>Laravel 12 + React + TypeScript</strong>,
+                            diseñada especialmente para los apasionados del cine y las series. Una red social donde los cinéfilos pueden descubrir
+                            nuevo contenido, gestionar sus listas personales, seguir a otros usuarios y compartir sus opiniones con la comunidad.
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
+                            <div className="flex items-start gap-2">
+                                <div className="text-purple-600 mt-1">✓</div>
+                                <div>
+                                    <strong>Spectra Hub:</strong> Búsqueda en más de 1 millón de películas y series
+                                </div>
+                            </div>
+                            <div className="flex items-start gap-2">
+                                <div className="text-purple-600 mt-1">✓</div>
+                                <div>
+                                    <strong>Base de datos TMDB local:</strong> Velocidad y rendimiento optimizados
+                                </div>
+                            </div>
+                            <div className="flex items-start gap-2">
+                                <div className="text-purple-600 mt-1">✓</div>
+                                <div>
+                                    <strong>Sistema social:</strong> Seguir usuarios y compartir gustos
+                                </div>
+                            </div>
+                            <div className="flex items-start gap-2">
+                                <div className="text-purple-600 mt-1">✓</div>
+                                <div>
+                                    <strong>Gestión personal:</strong> Watchlists, vistas, calificaciones y reseñas
+                                </div>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
 
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Challenges</CardTitle>
-                            <Trophy className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">{stats?.total_challenges || 0}</div>
-                            <p className="text-xs text-muted-foreground">Challenges creados</p>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Reportes Pendientes</CardTitle>
-                            <Flag className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold text-red-600">{stats?.pending_reports || 0}</div>
-                            <p className="text-xs text-muted-foreground">Requieren atención</p>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Códigos de Invitación</CardTitle>
-                            <Star className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold text-yellow-600">{stats?.total_invitation_codes || 0}</div>
-                            <p className="text-xs text-muted-foreground">Códigos creados</p>
-                        </CardContent>
-                    </Card>
-                </div>
-
-                {/* Guía funcional (no técnica) */}
+                {/* Estadísticas del Catálogo */}
                 <div>
-                    <h2 className="text-2xl font-semibold">Cómo se organiza la plataforma</h2>
-                    <p className="text-sm text-muted-foreground mb-4">Resumen sencillo de las secciones que gestionas desde este panel.</p>
-
-                    {/* Card explicativo sobre los items del footer del sidebar */}
-                    <Card className="col-span-1 md:col-span-2 lg:col-span-3 mb-4">
-                        <CardHeader>
-                            <CardTitle>Rutas públicas</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-sm text-muted-foreground mb-2">En el pie del menú lateral encontrarás accesos rápidos que redirigen a cada página visible para todos los usuarios. A continuación se explica brevemente cada uno:</p>
-                            <ul className="list-disc list-inside text-sm space-y-1">
-                                <li><strong>Checkout:</strong> Si accedes desde administrador, verás lo que ve el jugador y el scouter de manera conjunta. (Si accedes con un rol diferente, verás solo lo que te corresponde). Además, como administrador puedes comprar varias veces el mismo item (con fines de test).</li>
-                                <li><strong>Registro de usuario:</strong> Acceso a la página de registro de nuevos usuarios.</li>
-                                <li><strong>Handshake:</strong> Esta página es la que aparecería si un usuario accede a la página de pagos sin estar autenticado.</li>
-                            </ul>
-                        </CardContent>
-                    </Card>
-
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    <h2 className="text-2xl font-semibold mb-4">📊 Estadísticas del Catálogo</h2>
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
                         <Card>
-                            <CardHeader>
-                                <CardTitle>Personas (Usuarios)</CardTitle>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Películas</CardTitle>
+                                <Film className="h-4 w-4 text-muted-foreground" />
                             </CardHeader>
                             <CardContent>
-                                <p className="text-sm text-muted-foreground mb-2">Aquí ves a todos los perfiles registrados: jugadores, scouters, y administradores. Desde su ficha puedes revisar actividad, actualizar datos, o eliminarlo.</p>
-                                <p className="text-xs text-muted-foreground">Los usuarios borrados permanecerán en la sección de eliminados hasta que decidas eliminarlos definitivamente (esto conlleva el borrado de toda la información relacionada con el usuario como participaciones, etc.).</p>
+                                <div className="text-2xl font-bold text-purple-600">{stats?.movies?.toLocaleString() || 0}</div>
+                                <p className="text-xs text-muted-foreground">En la base de datos</p>
                             </CardContent>
                         </Card>
 
                         <Card>
-                            <CardHeader>
-                                <CardTitle>Challenges</CardTitle>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Series de TV</CardTitle>
+                                <Tv className="h-4 w-4 text-muted-foreground" />
                             </CardHeader>
-                            <CardContent className='flex flex-col gap-2'>
-                                <p className="text-sm text-muted-foreground">Los retos que los jugadores completan subiendo sus intentos. Cada desafío pertenece a una temporada y aporta puntos al ranking.</p>
-                                <p className="text-sm text-muted-foreground">No puede haber más de un challenge activo al mismo tiempo, habrán restricciones al poner las fechas de los desafíos.</p>
-                                <p className="text-xs text-muted-foreground">Los challenges eliminados conllevan el borrado de toda la información relacionada con el challenges como participaciones.</p>
+                            <CardContent>
+                                <div className="text-2xl font-bold text-pink-600">{stats?.tv_shows?.toLocaleString() || 0}</div>
+                                <p className="text-xs text-muted-foreground">En la base de datos</p>
                             </CardContent>
                         </Card>
 
                         <Card>
-                            <CardHeader>
-                                <CardTitle>Participaciones</CardTitle>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Usuarios Registrados</CardTitle>
+                                <Users className="h-4 w-4 text-muted-foreground" />
                             </CardHeader>
-                            <CardContent className='flex flex-col gap-2'>
-                                <p className="text-sm text-muted-foreground">Cada vez que un jugador completa un reto se genera una participación. Si desde el panel un administrador modifica una participación, se guarda un registro (log) con los cambios realizados.</p>
-                                <p className="text-xs text-muted-foreground">Editar varias veces la misma participación no multiplica las penalizaciones: se considera como 1 edición. De todas las participaciones de un jugador, la última es la que cuenta y puntúa; las anteriores quedan en estado "standby".</p>
-                            </CardContent>
-                        </Card>
-
-                        {/* Card explicativo Pagos */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Pagos</CardTitle>
-                            </CardHeader>
-                            <CardContent className='flex flex-col gap-2'>
-                                <p className="text-sm text-muted-foreground">Esta pantalla es read-only para visualizar los pagos de cada usuario.</p>
-                                <p className="text-sm text-muted-foreground">Los pagos son gestionados por Redsys, y la plataforma no almacena datos sensibles de tarjetas de crédito.</p>
-                                <p className="text-sm text-muted-foreground">Se ha agregado un bloqueo de borrado ante el borrado definitivo de un usuario. La información del pago persistirá aunque sin la relación del usuario.</p>
-                                <p className="text-xs text-muted-foreground">El pago se guarda con un snapshot con información básica del usuario para que sea fácilmente localizable</p>
-                                <p className="text-xs text-muted-foreground">El estado "pending" significa que el usuario ha entrado a la pasarela y no ha efectuado el pago.</p>
+                            <CardContent>
+                                <div className="text-2xl font-bold text-blue-600">{stats?.users?.toLocaleString() || 0}</div>
+                                <p className="text-xs text-muted-foreground">Cinéfilos en la plataforma</p>
                             </CardContent>
                         </Card>
 
                         <Card>
-                            <CardHeader>
-                                <CardTitle>Intentos de participación</CardTitle>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Reseñas</CardTitle>
+                                <MessageSquare className="h-4 w-4 text-muted-foreground" />
                             </CardHeader>
-                            <CardContent className='flex flex-col gap-2'>
-                                <p className="text-sm text-muted-foreground">Los intentos son las acciones de grabar y enviar un vídeo para un reto. Para evitar fraudes, al pulsar grabar se reserva un intento con una clave única y se invalidan otras reservas previas.</p>
-                                <p className="text-xs text-muted-foreground">Si un usuario intenta evadir una grabación activa (por ejemplo intentando volver a grabar varias veces) ese intento quedará invalidado por mala fe.</p>
-                                <p className="text-xs text-muted-foreground">Fases de un intento: reservado → vídeo subido → autoevaluación enviada. Si el vídeo se subió pero no se envió la autoevaluación (ej. el usuario salió), al volver al reto se le redirige de nuevo a completar la autoevaluación.</p>
-                                <p className="text-xs text-muted-foreground">Como administrador, puedes liberar intentos reservados de cada usuario accediendo a su vista individual.</p>
-
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Temporadas</CardTitle>
-                            </CardHeader>
-                            <CardContent className='flex flex-col gap-2'>
-                                <p className="text-sm text-muted-foreground">Etapas que agrupan desafíos y definen el periodo válido para acumular puntos y suscripciones.</p>
-                                <p className="text-sm text-muted-foreground">No puede haber más de una temporada activa al mismo tiempo, habrán restricciones al poner las fechas de estas.</p>
-                                <p className="text-xs text-muted-foreground">Cuando termina una temporada, se programa una limpieza de datos multimedia a los 2 días siguientes.</p>
-                                <p className="text-xs text-muted-foreground">Puedes ejecutar esta limpieza manualmente si lo deseas, solo borrará los datos multimedia asociados a las temporadas expiradas en el momento en el que la ejecutes.</p>
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Códigos de Invitación</CardTitle>
-                            </CardHeader>
-                            <CardContent className='flex flex-col gap-2'>
-                                <p className="text-sm text-muted-foreground">Se generan automáticamente al marcar un usuario como influencer, código único de 8 caracteres por defecto y editable hasta 12 caracteres</p>
-                                <p className="text-xs text-muted-foreground">Podrás ver los usuarios que usaron cada código</p>
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Reportes</CardTitle>
-                            </CardHeader>
-                            <CardContent className='flex flex-col gap-2'>
-                                <p className="text-sm text-muted-foreground">Avisos enviados por jugadores/scouters cuando sospechan de trampas o contenido inapropiado en un intento.</p>
-                            </CardContent>
-                        </Card>
-
-                        {/* Card explicativo Penalizaciones (automáticas) */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Penalizaciones</CardTitle>
-                            </CardHeader>
-                            <CardContent className='flex flex-col gap-2'>
-                                <p className="text-sm text-muted-foreground">Las penalizaciones se aplican de forma automática:</p>
-                                <p className="text-xs text-muted-foreground">- 1 corrección no implica la corrección de esa participación</p>
-                                <p className="text-xs text-muted-foreground">- 2 correcciones implica la anulación de puntuacion para ese challenge, los editados anteriormente y los editados siguientes</p>
-
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Notificaciones automáticas</CardTitle>
-                            </CardHeader>
-                            <CardContent className='flex flex-col gap-2'>
-                                <p className="text-sm text-muted-foreground">Mensajes que la plataforma envía a los jugadores.</p>
-                                <p className="text-xs text-muted-foreground">- Al recibir la penalización después de 2 ediciones</p>
-                                <p className="text-xs text-muted-foreground">- Al haber un nuevo challenge disponible</p>
-                                <p className="text-xs text-muted-foreground">- Al estar próximo a finalizar un challenge</p>
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Normas de uso</CardTitle>
-                            </CardHeader>
-                            <CardContent className='flex flex-col gap-2'>
-                                <p className="text-sm text-muted-foreground">Antes de que un jugador pueda grabar un intento con su cámara, se le muestran las normas de uso que debe aceptar. Estas normas explican qué está permitido, qué no, y las consecuencias de incumplirlas.</p>
+                            <CardContent>
+                                <div className="text-2xl font-bold text-green-600">{stats?.reviews?.toLocaleString() || 0}</div>
+                                <p className="text-xs text-muted-foreground">Opiniones compartidas</p>
                             </CardContent>
                         </Card>
                     </div>
                 </div>
+
+                {/* Actividad de Usuarios */}
+                <div>
+                    <h2 className="text-2xl font-semibold mb-4">👥 Actividad de Usuarios</h2>
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Calificaciones</CardTitle>
+                                <Star className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold text-yellow-600">{stats?.ratings?.toLocaleString() || 0}</div>
+                                <p className="text-xs text-muted-foreground">Contenidos valorados</p>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Marcados Como Vistos</CardTitle>
+                                <Eye className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold text-teal-600">{stats?.watched?.toLocaleString() || 0}</div>
+                                <p className="text-xs text-muted-foreground">Contenidos completados</p>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">En Watchlist</CardTitle>
+                                <Bookmark className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold text-orange-600">{stats?.watchlists?.toLocaleString() || 0}</div>
+                                <p className="text-xs text-muted-foreground">Para ver después</p>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Listas Personalizadas</CardTitle>
+                                <ListChecks className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold text-indigo-600">{stats?.content_lists?.toLocaleString() || 0}</div>
+                                <p className="text-xs text-muted-foreground">Colecciones creadas</p>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </div>
+
+                {/* Funcionalidades Principales */}
+                <div>
+                    <h2 className="text-2xl font-semibold mb-4">🌟 Funcionalidades de la Plataforma</h2>
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                    <Users className="h-5 w-5 text-purple-600" />
+                                    Gestión de Usuarios
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-2">
+                                <p className="text-sm text-muted-foreground">
+                                    Desde este panel puedes administrar todos los usuarios registrados en la plataforma. Visualiza perfiles,
+                                    actividad, y gestiona permisos de administrador.
+                                </p>
+                                <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
+                                    <li>Crear, editar y eliminar usuarios</li>
+                                    <li>Asignar roles de administrador</li>
+                                    <li>Ver actividad reciente de cada usuario</li>
+                                </ul>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                    <Film className="h-5 w-5 text-pink-600" />
+                                    Spectra Hub
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-2">
+                                <p className="text-sm text-muted-foreground">
+                                    Motor de búsqueda potente con acceso a más de 1 millón de películas y series. Los usuarios pueden:
+                                </p>
+                                <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
+                                    <li>Buscar contenido por título, género o actor</li>
+                                    <li>Ver información detallada: sinopsis, reparto, crew</li>
+                                    <li>Añadir a watchlist o marcar como visto</li>
+                                    <li>Calificar y escribir reseñas</li>
+                                </ul>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                    <Star className="h-5 w-5 text-yellow-600" />
+                                    Calificaciones y Reseñas
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-2">
+                                <p className="text-sm text-muted-foreground">
+                                    Los usuarios pueden compartir sus opiniones sobre películas y series que han visto.
+                                </p>
+                                <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
+                                    <li>Sistema de calificación con estrellas</li>
+                                    <li>Reseñas detalladas con texto libre</li>
+                                    <li>Moderación de contenido desde el panel</li>
+                                </ul>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                    <Bookmark className="h-5 w-5 text-orange-600" />
+                                    Watchlists Personales
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-2">
+                                <p className="text-sm text-muted-foreground">
+                                    Cada usuario puede mantener su propia lista de contenido pendiente por ver.
+                                </p>
+                                <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
+                                    <li>Añadir películas y series rápidamente</li>
+                                    <li>Gestionar y organizar su watchlist</li>
+                                    <li>Marcar como visto cuando completen el contenido</li>
+                                </ul>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                    <ListChecks className="h-5 w-5 text-indigo-600" />
+                                    Listas Personalizadas
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-2">
+                                <p className="text-sm text-muted-foreground">
+                                    Los usuarios pueden crear colecciones temáticas de películas y series.
+                                </p>
+                                <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
+                                    <li>Crear listas con nombres personalizados</li>
+                                    <li>Añadir múltiples contenidos a cada lista</li>
+                                    <li>Compartir listas con otros usuarios</li>
+                                    <li>Votar listas de otros usuarios</li>
+                                </ul>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                    <Users className="h-5 w-5 text-blue-600" />
+                                    Red Social
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-2">
+                                <p className="text-sm text-muted-foreground">
+                                    Funcionalidades sociales para conectar cinéfilos con gustos similares.
+                                </p>
+                                <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
+                                    <li>Seguir a otros usuarios</li>
+                                    <li>Ver actividad de usuarios seguidos</li>
+                                    <li>Descubrir nuevos perfiles</li>
+                                    <li>Sistema de notificaciones</li>
+                                </ul>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </div>
+
+                {/* Tecnologías */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle>🛠️ Stack Tecnológico</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div className="text-center p-3 bg-secondary rounded-lg">
+                                <div className="font-bold text-lg">Laravel 12</div>
+                                <div className="text-xs text-muted-foreground">Backend Framework</div>
+                            </div>
+                            <div className="text-center p-3 bg-secondary rounded-lg">
+                                <div className="font-bold text-lg">React + TypeScript</div>
+                                <div className="text-xs text-muted-foreground">Frontend</div>
+                            </div>
+                            <div className="text-center p-3 bg-secondary rounded-lg">
+                                <div className="font-bold text-lg">Inertia.js</div>
+                                <div className="text-xs text-muted-foreground">SSR & Routing</div>
+                            </div>
+                            <div className="text-center p-3 bg-secondary rounded-lg">
+                                <div className="font-bold text-lg">MySQL + Redis</div>
+                                <div className="text-xs text-muted-foreground">Database & Cache</div>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Actividad Reciente */}
+                {stats?.recent_users && stats.recent_users.length > 0 && (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>👥 Usuarios Registrados Recientemente</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-3">
+                                {stats.recent_users.map((user) => (
+                                    <div key={user.id} className="flex items-center justify-between p-3 bg-secondary rounded-lg">
+                                        <div>
+                                            <div className="font-medium">{user.name}</div>
+                                            <div className="text-sm text-muted-foreground">@{user.username}</div>
+                                        </div>
+                                        <div className="text-xs text-muted-foreground">
+                                            {new Date(user.created_at).toLocaleDateString('es-ES')}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
             </div>
         </AppSidebarLayout>
     );

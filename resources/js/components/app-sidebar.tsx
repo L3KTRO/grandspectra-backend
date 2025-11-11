@@ -4,7 +4,31 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BanIcon, Calendar, CreditCard, Flag, FlagOff, FlagOffIcon, FlagTriangleLeft, FlagTriangleRightIcon, Flashlight, HammerIcon, Handshake, LayoutGrid, LucideHammer, ScrollText, ShoppingCart, Star, StopCircleIcon, Ticket, Trophy, User2, UsersIcon } from 'lucide-react';
+import {
+    ActivityIcon,
+    BanIcon,
+    Calendar,
+    CreditCard,
+    EyeIcon,
+    Flag,
+    FlagOff,
+    FlagOffIcon,
+    FlagTriangleLeft,
+    FlagTriangleRightIcon,
+    Flashlight,
+    HammerIcon,
+    Handshake, HeartPulseIcon,
+    LayoutGrid,
+    LucideHammer,
+    ScrollText,
+    ShoppingCart,
+    Star,
+    StopCircleIcon, TelescopeIcon,
+    Ticket,
+    Trophy,
+    User2,
+    UsersIcon, WavesIcon, WavesLadderIcon
+} from 'lucide-react';
 import AppLogo from './app-logo';
 import users from '@/routes/dashboard/users';
 
@@ -23,20 +47,20 @@ const mainNavItems: NavItem[] = [
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Checkout',
-        href: '/subscriptions/signed',
-        icon: ShoppingCart,
+        title: 'Horizon',
+        href: '/dashboard/horizon',
+        icon: ActivityIcon,
     },
     {
-        title: 'Registro de Usuario',
-        href: '/register',
-        icon: User2,
+        title: 'Pulse',
+        href: '/dashboard/pulse',
+        icon: HeartPulseIcon,
     },
     {
-        title: 'Handshake',
-        href: '/handshake',
-        icon: Handshake,
-    },
+        title: 'Telescope',
+        href: '/dashboard/telescope',
+        icon: TelescopeIcon,
+    }
 ];
 
 export function AppSidebar() {
