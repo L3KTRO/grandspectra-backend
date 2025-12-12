@@ -2,6 +2,7 @@ import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import AppLogo from '@/components/app-logo';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import {
@@ -10,6 +11,7 @@ import {
     Calendar,
     CreditCard,
     EyeIcon,
+    Film,
     Flag,
     FlagOff,
     FlagOffIcon,
@@ -17,20 +19,26 @@ import {
     FlagTriangleRightIcon,
     Flashlight,
     HammerIcon,
-    Handshake, HeartPulseIcon,
+    Handshake,
+    HeartPulseIcon,
     LayoutGrid,
     LucideHammer,
     ScrollText,
     ShoppingCart,
     Star,
-    StopCircleIcon, TelescopeIcon,
+    StopCircleIcon,
+    TelescopeIcon,
     Ticket,
     Trophy,
+    TvIcon,
     User2,
-    UsersIcon, WavesIcon, WavesLadderIcon
+    UsersIcon,
+    WavesIcon,
+    WavesLadderIcon,
 } from 'lucide-react';
-import AppLogo from './app-logo';
 import users from '@/routes/dashboard/users';
+import movies from '@/routes/dashboard/movies';
+import tv from '@/routes/dashboard/tv';
 
 const mainNavItems: NavItem[] = [
     {
@@ -42,7 +50,17 @@ const mainNavItems: NavItem[] = [
         title: 'Usuarios',
         href: users.index().url,
         icon: UsersIcon,
-    }
+    },
+    {
+        title: 'Películas',
+        href: movies.index().url,
+        icon: Film,
+    },
+    {
+        title: 'Series',
+        href: tv.index().url,
+        icon: TvIcon,
+    },
 ];
 
 const footerNavItems: NavItem[] = [
@@ -60,7 +78,7 @@ const footerNavItems: NavItem[] = [
         title: 'Telescope',
         href: '/dashboard/telescope',
         icon: TelescopeIcon,
-    }
+    },
 ];
 
 export function AppSidebar() {
@@ -69,7 +87,7 @@ export function AppSidebar() {
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" asChild className={'bg-white dark:hover:bg-white'}>
+                        <SidebarMenuButton size="lg" asChild className="bg-white dark:hover:bg-white">
                             <Link href="/dashboard" prefetch>
                                 <AppLogo />
                             </Link>

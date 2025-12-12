@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\MovieController::index
-* @see app/Http/Controllers/MovieController.php:23
+* @see app/Http/Controllers/MovieController.php:22
 * @route '/api/movies'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\MovieController::index
-* @see app/Http/Controllers/MovieController.php:23
+* @see app/Http/Controllers/MovieController.php:22
 * @route '/api/movies'
 */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\MovieController::index
-* @see app/Http/Controllers/MovieController.php:23
+* @see app/Http/Controllers/MovieController.php:22
 * @route '/api/movies'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\MovieController::index
-* @see app/Http/Controllers/MovieController.php:23
+* @see app/Http/Controllers/MovieController.php:22
 * @route '/api/movies'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -107,7 +107,7 @@ show.head = (args: { movie: string | number } | [movie: string | number ] | stri
 
 /**
 * @see \App\Http\Controllers\MovieController::update
-* @see app/Http/Controllers/MovieController.php:32
+* @see app/Http/Controllers/MovieController.php:94
 * @route '/api/movies/{movie}'
 */
 export const update = (args: { movie: string | number } | [movie: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -122,7 +122,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\MovieController::update
-* @see app/Http/Controllers/MovieController.php:32
+* @see app/Http/Controllers/MovieController.php:94
 * @route '/api/movies/{movie}'
 */
 update.url = (args: { movie: string | number } | [movie: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -149,7 +149,7 @@ update.url = (args: { movie: string | number } | [movie: string | number ] | str
 
 /**
 * @see \App\Http\Controllers\MovieController::update
-* @see app/Http/Controllers/MovieController.php:32
+* @see app/Http/Controllers/MovieController.php:94
 * @route '/api/movies/{movie}'
 */
 update.put = (args: { movie: string | number } | [movie: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -159,7 +159,7 @@ update.put = (args: { movie: string | number } | [movie: string | number ] | str
 
 /**
 * @see \App\Http\Controllers\MovieController::update
-* @see app/Http/Controllers/MovieController.php:32
+* @see app/Http/Controllers/MovieController.php:94
 * @route '/api/movies/{movie}'
 */
 update.patch = (args: { movie: string | number } | [movie: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -167,50 +167,6 @@ update.patch = (args: { movie: string | number } | [movie: string | number ] | s
     method: 'patch',
 })
 
-/**
-* @see \App\Http\Controllers\MovieController::meili
-* @see app/Http/Controllers/MovieController.php:42
-* @route '/api/meili/movies'
-*/
-export const meili = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: meili.url(options),
-    method: 'get',
-})
-
-meili.definition = {
-    methods: ["get","head"],
-    url: '/api/meili/movies',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\MovieController::meili
-* @see app/Http/Controllers/MovieController.php:42
-* @route '/api/meili/movies'
-*/
-meili.url = (options?: RouteQueryOptions) => {
-    return meili.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\MovieController::meili
-* @see app/Http/Controllers/MovieController.php:42
-* @route '/api/meili/movies'
-*/
-meili.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: meili.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\MovieController::meili
-* @see app/Http/Controllers/MovieController.php:42
-* @route '/api/meili/movies'
-*/
-meili.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: meili.url(options),
-    method: 'head',
-})
-
-const MovieController = { index, show, update, meili }
+const MovieController = { index, show, update }
 
 export default MovieController

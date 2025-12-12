@@ -6,7 +6,7 @@ interface PaginationProps {
     // Acepta tanto un objeto data completo como un array de links directamente
     data?: {
         data: unknown[];
-        links?: { url: string; label: string; active: boolean }[];
+        links?: { url: string | null; label: string; active: boolean }[];
         current_page: number;
         next_page_url: string | null;
         prev_page_url: string | null;

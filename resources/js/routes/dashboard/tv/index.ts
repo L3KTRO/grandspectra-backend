@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Admin\TvController::index
-* @see app/Http/Controllers/Admin/TvController.php:13
+* @see app/Http/Controllers/Admin/TvController.php:19
 * @route '/dashboard/tv'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\TvController::index
-* @see app/Http/Controllers/Admin/TvController.php:13
+* @see app/Http/Controllers/Admin/TvController.php:19
 * @route '/dashboard/tv'
 */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\TvController::index
-* @see app/Http/Controllers/Admin/TvController.php:13
+* @see app/Http/Controllers/Admin/TvController.php:19
 * @route '/dashboard/tv'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\TvController::index
-* @see app/Http/Controllers/Admin/TvController.php:13
+* @see app/Http/Controllers/Admin/TvController.php:19
 * @route '/dashboard/tv'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\TvController::create
-* @see app/Http/Controllers/Admin/TvController.php:21
+* @see app/Http/Controllers/Admin/TvController.php:54
 * @route '/dashboard/tv/create'
 */
 export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -60,7 +60,7 @@ create.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\TvController::create
-* @see app/Http/Controllers/Admin/TvController.php:21
+* @see app/Http/Controllers/Admin/TvController.php:54
 * @route '/dashboard/tv/create'
 */
 create.url = (options?: RouteQueryOptions) => {
@@ -69,7 +69,7 @@ create.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\TvController::create
-* @see app/Http/Controllers/Admin/TvController.php:21
+* @see app/Http/Controllers/Admin/TvController.php:54
 * @route '/dashboard/tv/create'
 */
 create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -79,7 +79,7 @@ create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\TvController::create
-* @see app/Http/Controllers/Admin/TvController.php:21
+* @see app/Http/Controllers/Admin/TvController.php:54
 * @route '/dashboard/tv/create'
 */
 create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -89,7 +89,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\TvController::store
-* @see app/Http/Controllers/Admin/TvController.php:29
+* @see app/Http/Controllers/Admin/TvController.php:62
 * @route '/dashboard/tv'
 */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -104,7 +104,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\TvController::store
-* @see app/Http/Controllers/Admin/TvController.php:29
+* @see app/Http/Controllers/Admin/TvController.php:62
 * @route '/dashboard/tv'
 */
 store.url = (options?: RouteQueryOptions) => {
@@ -113,7 +113,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\TvController::store
-* @see app/Http/Controllers/Admin/TvController.php:29
+* @see app/Http/Controllers/Admin/TvController.php:62
 * @route '/dashboard/tv'
 */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -123,10 +123,10 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\TvController::show
-* @see app/Http/Controllers/Admin/TvController.php:37
+* @see app/Http/Controllers/Admin/TvController.php:78
 * @route '/dashboard/tv/{tv}'
 */
-export const show = (args: { tv: string | number } | [tv: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { tv: number | { id: number } } | [tv: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -138,12 +138,16 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\TvController::show
-* @see app/Http/Controllers/Admin/TvController.php:37
+* @see app/Http/Controllers/Admin/TvController.php:78
 * @route '/dashboard/tv/{tv}'
 */
-show.url = (args: { tv: string | number } | [tv: string | number ] | string | number, options?: RouteQueryOptions) => {
+show.url = (args: { tv: number | { id: number } } | [tv: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { tv: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+        args = { tv: args.id }
     }
 
     if (Array.isArray(args)) {
@@ -155,7 +159,9 @@ show.url = (args: { tv: string | number } | [tv: string | number ] | string | nu
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        tv: args.tv,
+        tv: typeof args.tv === 'object'
+        ? args.tv.id
+        : args.tv,
     }
 
     return show.definition.url
@@ -165,30 +171,30 @@ show.url = (args: { tv: string | number } | [tv: string | number ] | string | nu
 
 /**
 * @see \App\Http\Controllers\Admin\TvController::show
-* @see app/Http/Controllers/Admin/TvController.php:37
+* @see app/Http/Controllers/Admin/TvController.php:78
 * @route '/dashboard/tv/{tv}'
 */
-show.get = (args: { tv: string | number } | [tv: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { tv: number | { id: number } } | [tv: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\TvController::show
-* @see app/Http/Controllers/Admin/TvController.php:37
+* @see app/Http/Controllers/Admin/TvController.php:78
 * @route '/dashboard/tv/{tv}'
 */
-show.head = (args: { tv: string | number } | [tv: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { tv: number | { id: number } } | [tv: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\TvController::edit
-* @see app/Http/Controllers/Admin/TvController.php:45
+* @see app/Http/Controllers/Admin/TvController.php:90
 * @route '/dashboard/tv/{tv}/edit'
 */
-export const edit = (args: { tv: string | number } | [tv: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { tv: number | { id: number } } | [tv: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -200,12 +206,16 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\TvController::edit
-* @see app/Http/Controllers/Admin/TvController.php:45
+* @see app/Http/Controllers/Admin/TvController.php:90
 * @route '/dashboard/tv/{tv}/edit'
 */
-edit.url = (args: { tv: string | number } | [tv: string | number ] | string | number, options?: RouteQueryOptions) => {
+edit.url = (args: { tv: number | { id: number } } | [tv: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { tv: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+        args = { tv: args.id }
     }
 
     if (Array.isArray(args)) {
@@ -217,7 +227,9 @@ edit.url = (args: { tv: string | number } | [tv: string | number ] | string | nu
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        tv: args.tv,
+        tv: typeof args.tv === 'object'
+        ? args.tv.id
+        : args.tv,
     }
 
     return edit.definition.url
@@ -227,30 +239,30 @@ edit.url = (args: { tv: string | number } | [tv: string | number ] | string | nu
 
 /**
 * @see \App\Http\Controllers\Admin\TvController::edit
-* @see app/Http/Controllers/Admin/TvController.php:45
+* @see app/Http/Controllers/Admin/TvController.php:90
 * @route '/dashboard/tv/{tv}/edit'
 */
-edit.get = (args: { tv: string | number } | [tv: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { tv: number | { id: number } } | [tv: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\TvController::edit
-* @see app/Http/Controllers/Admin/TvController.php:45
+* @see app/Http/Controllers/Admin/TvController.php:90
 * @route '/dashboard/tv/{tv}/edit'
 */
-edit.head = (args: { tv: string | number } | [tv: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { tv: number | { id: number } } | [tv: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\TvController::update
-* @see app/Http/Controllers/Admin/TvController.php:53
+* @see app/Http/Controllers/Admin/TvController.php:102
 * @route '/dashboard/tv/{tv}'
 */
-export const update = (args: { tv: string | number } | [tv: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { tv: number | { id: number } } | [tv: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -262,12 +274,16 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\TvController::update
-* @see app/Http/Controllers/Admin/TvController.php:53
+* @see app/Http/Controllers/Admin/TvController.php:102
 * @route '/dashboard/tv/{tv}'
 */
-update.url = (args: { tv: string | number } | [tv: string | number ] | string | number, options?: RouteQueryOptions) => {
+update.url = (args: { tv: number | { id: number } } | [tv: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { tv: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+        args = { tv: args.id }
     }
 
     if (Array.isArray(args)) {
@@ -279,7 +295,9 @@ update.url = (args: { tv: string | number } | [tv: string | number ] | string | 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        tv: args.tv,
+        tv: typeof args.tv === 'object'
+        ? args.tv.id
+        : args.tv,
     }
 
     return update.definition.url
@@ -289,30 +307,30 @@ update.url = (args: { tv: string | number } | [tv: string | number ] | string | 
 
 /**
 * @see \App\Http\Controllers\Admin\TvController::update
-* @see app/Http/Controllers/Admin/TvController.php:53
+* @see app/Http/Controllers/Admin/TvController.php:102
 * @route '/dashboard/tv/{tv}'
 */
-update.put = (args: { tv: string | number } | [tv: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { tv: number | { id: number } } | [tv: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\TvController::update
-* @see app/Http/Controllers/Admin/TvController.php:53
+* @see app/Http/Controllers/Admin/TvController.php:102
 * @route '/dashboard/tv/{tv}'
 */
-update.patch = (args: { tv: string | number } | [tv: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+update.patch = (args: { tv: number | { id: number } } | [tv: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\TvController::destroy
-* @see app/Http/Controllers/Admin/TvController.php:61
+* @see app/Http/Controllers/Admin/TvController.php:121
 * @route '/dashboard/tv/{tv}'
 */
-export const destroy = (args: { tv: string | number } | [tv: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { tv: number | { id: number } } | [tv: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -324,12 +342,16 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\TvController::destroy
-* @see app/Http/Controllers/Admin/TvController.php:61
+* @see app/Http/Controllers/Admin/TvController.php:121
 * @route '/dashboard/tv/{tv}'
 */
-destroy.url = (args: { tv: string | number } | [tv: string | number ] | string | number, options?: RouteQueryOptions) => {
+destroy.url = (args: { tv: number | { id: number } } | [tv: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { tv: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+        args = { tv: args.id }
     }
 
     if (Array.isArray(args)) {
@@ -341,7 +363,9 @@ destroy.url = (args: { tv: string | number } | [tv: string | number ] | string |
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        tv: args.tv,
+        tv: typeof args.tv === 'object'
+        ? args.tv.id
+        : args.tv,
     }
 
     return destroy.definition.url
@@ -351,10 +375,10 @@ destroy.url = (args: { tv: string | number } | [tv: string | number ] | string |
 
 /**
 * @see \App\Http\Controllers\Admin\TvController::destroy
-* @see app/Http/Controllers/Admin/TvController.php:61
+* @see app/Http/Controllers/Admin/TvController.php:121
 * @route '/dashboard/tv/{tv}'
 */
-destroy.delete = (args: { tv: string | number } | [tv: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { tv: number | { id: number } } | [tv: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })

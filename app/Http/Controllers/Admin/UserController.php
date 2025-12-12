@@ -4,14 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Traits\AppliesSorting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Inertia\Inertia;
 
 class UserController extends Controller
 {
+    use AppliesSorting;
+
     /**
      * Display a listing of the resource.
      */
@@ -21,34 +24,27 @@ class UserController extends Controller
 
         if ($request->has('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
-        // Manejo de ordenamiento
-        $allowedSorts = ['name', 'username', 'email', 'created_at'];
-        $sort = $request->input('sort', 'created_at');
-        $direction = $request->input('direction', 'desc');
-
-        // Validar columna de ordenamiento
-        if (!in_array($sort, $allowedSorts)) {
-            $sort = 'created_at';
-        }
-
-        // Validar dirección
-        if (!in_array($direction, ['asc', 'desc'])) {
-            $direction = 'desc';
-        }
-
-        $users = $query->orderBy($sort, $direction)
-            ->paginate(15)
-            ->withQueryString();
+        [$users, $sort, $direction] = $this->applySorting(
+            $request,
+            $query,
+            ['name', 'username', 'email', 'created_at'],
+            'created_at',
+            'desc'
+        );
 
         return Inertia::render('users/index', [
             'users' => $users,
-            'filters' => $request->only(['search', 'sort', 'direction']),
+            'filters' => [
+                'search' => $request->input('search'),
+                'sort' => $sort,
+                'direction' => $direction,
+            ],
         ]);
     }
 
@@ -112,7 +108,7 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'required|string|lowercase|email|max:255|unique:users,email,'.$user->id,
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
             'is_admin' => 'boolean',
         ]);
@@ -155,35 +151,28 @@ class UserController extends Controller
 
         if ($request->has('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('username', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('username', 'like', "%{$search}%");
             });
         }
 
-        // Manejo de ordenamiento
-        $allowedSorts = ['name', 'username', 'email', 'created_at', 'deleted_at'];
-        $sort = $request->input('sort', 'deleted_at');
-        $direction = $request->input('direction', 'desc');
-
-        // Validar columna de ordenamiento
-        if (!in_array($sort, $allowedSorts)) {
-            $sort = 'deleted_at';
-        }
-
-        // Validar dirección
-        if (!in_array($direction, ['asc', 'desc'])) {
-            $direction = 'desc';
-        }
-
-        $users = $query->orderBy($sort, $direction)
-            ->paginate(15)
-            ->withQueryString();
+        [$users, $sort, $direction] = $this->applySorting(
+            $request,
+            $query,
+            ['name', 'username', 'email', 'created_at', 'deleted_at'],
+            'deleted_at',
+            'desc'
+        );
 
         return Inertia::render('users/trashed', [
             'users' => $users,
-            'filters' => $request->only(['search', 'sort', 'direction']),
+            'filters' => [
+                'search' => $request->input('search'),
+                'sort' => $sort,
+                'direction' => $direction,
+            ],
         ]);
     }
 

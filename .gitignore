@@ -27,3 +27,6 @@ yarn-error.log
 **/caddy
 frankenphp
 frankenphp-worker.php
+/resources/js/actions
+resources/js/routes/dashboard/movies/index.ts
+/resources/js/routes

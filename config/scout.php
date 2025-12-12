@@ -48,7 +48,7 @@ return [
 
     'queue' => [
         'connection' => 'redis',
-        'queue' => 'scout'
+        'queue' => 'scout',
     ],
     /*
     |--------------------------------------------------------------------------
@@ -125,20 +125,20 @@ return [
         'key' => env('MEILI_MASTER_KEY'),
         'index-settings' => [
             Movie::class => [
-                'filterableAttributes' => ['title', 'genres'],
-                'searchableAttributes' => ['title', 'original_title', 'genres', "release_date"],
-                'sortableAttributes' => ['vote_count', 'popularity', 'vote_average'],
+                'filterableAttributes' => ['title', 'genres', 'popularity', 'vote_average', 'vote_count', 'release_date'],
+                'searchableAttributes' => ['title', 'original_title', 'genres'],
+                'sortableAttributes' => ['vote_count', 'popularity', 'vote_average', 'release_date'],
             ],
             Tv::class => [
                 'filterableAttributes' => ['name', 'name_sort', 'genres'],
-                'searchableAttributes' => ['name', 'name_sort', 'genres', "first_air_date"],
+                'searchableAttributes' => ['name', 'name_sort', 'genres', 'first_air_date'],
                 'sortableAttributes' => ['popularity', 'vote_average', 'vote_count'],
             ],
             Person::class => [
                 'filterableAttributes' => ['name', 'known_for_department'],
                 'searchableAttributes' => ['name', 'known_for_department'],
                 'sortableAttributes' => ['popularity'],
-            ]
+            ],
         ],
     ],
 
