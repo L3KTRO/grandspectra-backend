@@ -15,11 +15,13 @@ import {
 } from '@/components/ui/alert-dialog';
 import AppSidebarLayout from '@/layouts/app/app-sidebar-layout';
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { Eye, Edit, Trash2, Plus, Search, Film } from 'lucide-react';
+import { Eye, Edit, Trash2, Plus, Search, Film, RefreshCw } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import * as dashboardMoviesRoutes from '@/routes/dashboard/movies';
 import { dashboard } from '@/routes';
 import { SortableHeader, SortDirection } from '@/components/sortable-header';
+import { update as tmdbUpdate } from '@/actions/App/Http/Controllers/Admin/TmdbUpdateController';
+import { useToast } from '@/hooks/use-toast';
 
 interface Genre {
     id: number;
@@ -67,6 +69,9 @@ export default function MoviesIndex({ movies, filters }: MoviesIndexProps) {
     const { data, setData } = useForm({
         search: filters.search || '',
     });
+
+    const { toast } = useToast();
+    const [isUpdating, setIsUpdating] = useState(false);
 
     const [confirmationDialog, setConfirmationDialog] = useState({
         open: false,
@@ -132,6 +137,28 @@ export default function MoviesIndex({ movies, filters }: MoviesIndexProps) {
         return new Date(date).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' });
     };
 
+    const handleUpdateContent = () => {
+        setIsUpdating(true);
+        router.post(tmdbUpdate().url, {}, {
+            onSuccess: () => {
+                toast({
+                    title: 'Actualización iniciada',
+                    description: 'La actualización de contenidos se está ejecutando en segundo plano.',
+                });
+            },
+            onError: () => {
+                toast({
+                    title: 'Error',
+                    description: 'No se pudo iniciar la actualización de contenidos.',
+                    variant: 'destructive',
+                });
+            },
+            onFinish: () => {
+                setIsUpdating(false);
+            },
+        });
+    };
+
     return (
         <AppSidebarLayout
             breadcrumbs={[
@@ -147,11 +174,17 @@ export default function MoviesIndex({ movies, filters }: MoviesIndexProps) {
                         <h1 className="text-3xl font-bold">Gestión de películas</h1>
                         <p className="text-muted-foreground">Gestiona todas las películas del sistema</p>
                     </div>
-                    <Button asChild>
-                        <Link href={dashboardMoviesRoutes.create().url}>
-                            <Plus className="mr-2 h-4 w-4" /> Nueva Película
-                        </Link>
-                    </Button>
+                    <div className="flex gap-2">
+                        <Button onClick={handleUpdateContent} disabled={isUpdating} variant="outline">
+                            <RefreshCw className={`mr-2 h-4 w-4 ${isUpdating ? 'animate-spin' : ''}`} />
+                            {isUpdating ? 'Actualizando...' : 'Actualizar TMDB'}
+                        </Button>
+                        <Button asChild>
+                            <Link href={dashboardMoviesRoutes.create().url}>
+                                <Plus className="mr-2 h-4 w-4" /> Nueva Película
+                            </Link>
+                        </Button>
+                    </div>
                 </div>
 
                 <form onSubmit={handleSearchSubmit} className="flex items-center gap-4">

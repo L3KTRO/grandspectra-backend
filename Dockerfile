@@ -16,7 +16,7 @@ RUN composer install \
     --ansi
 
 # Etapa 2: Construcción de la imagen final
-FROM php:8.3-fpm-alpine
+FROM php:8.4-fpm-alpine
 
 COPY ./php-overrides.ini /usr/local/etc/php/conf.d
 
@@ -26,9 +26,13 @@ RUN apk add --no-cache \
     libxml2-dev \
     oniguruma-dev \
     postgresql-dev \
+    mysql-client \
     supervisor \
+    nginx \
     shadow \
     tzdata \
+    nodejs \
+    npm \
     && docker-php-ext-install \
         pdo \
         pdo_mysql \
@@ -55,6 +59,12 @@ COPY . .
 RUN rm -rf vendor
 COPY --from=builder /app/vendor vendor/
 
+# Instalar dependencias de npm (compilación se hará en runtime con supervisor)
+RUN npm install
+
+# Configurar Nginx dentro del contenedor (Alpine usa /etc/nginx/http.d)
+COPY nginx.conf /etc/nginx/http.d/default.conf
+
 # Ajustar permisos y usuario
 RUN chown -R www-data:www-data /var/www \
     && usermod -u 1000 www-data \
@@ -70,6 +80,8 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 EXPOSE 9000
+
+EXPOSE 80
 
 # Añadir esta línea al final del Dockerfile
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]

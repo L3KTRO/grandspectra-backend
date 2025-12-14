@@ -13,9 +13,9 @@ import WatchlistController from './WatchlistController'
 import FollowController from './FollowController'
 import PersonFollowController from './PersonFollowController'
 import NotificationController from './NotificationController'
+import Admin from './Admin'
 import ProfileController from './ProfileController'
 import Auth from './Auth'
-import Admin from './Admin'
 
 const Controllers = {
     MovieController: Object.assign(MovieController, MovieController),
@@ -33,9 +33,9 @@ const Controllers = {
     FollowController: Object.assign(FollowController, FollowController),
     PersonFollowController: Object.assign(PersonFollowController, PersonFollowController),
     NotificationController: Object.assign(NotificationController, NotificationController),
+    Admin: Object.assign(Admin, Admin),
     ProfileController: Object.assign(ProfileController, ProfileController),
     Auth: Object.assign(Auth, Auth),
-    Admin: Object.assign(Admin, Admin),
 }
 
 export default Controllers

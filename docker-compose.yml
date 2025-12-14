@@ -10,7 +10,7 @@ services:
       APP_DEBUG: 'true'
       APP_KEY: ${APP_KEY}
       APP_URL: ${APP_URL}
-      DB_CONNECTION: ${DB_CONNECTION}
+      DB_CONNECTION: mysql
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
       DB_DATABASE: ${DB_DATABASE}
@@ -43,21 +43,14 @@ services:
       AWS_URL: ${AWS_URL}
       MEILISEARCH_HOST: ${MEILISEARCH_HOST}
     depends_on:
-      - meilisearch
+      meilisearch:
+        condition: service_started
     networks:
       - gs-network
     pull_policy:
       build
     ports:
-      - "80:80"
-
-  frontend:
-    image: l3ktro/grandspectra:latest
-    container_name: grandspectra-frontend
-    depends_on:
-      - backend
-    networks:
-      - gs-network
+      - "8000:80"
 
   meilisearch:
     image: getmeili/meilisearch:v1.15.1
@@ -68,8 +61,6 @@ services:
       - gs-network
     ports:
       - "7700:7700"
-
-  
 
 networks:
   gs-network:

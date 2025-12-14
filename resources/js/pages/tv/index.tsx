@@ -16,10 +16,12 @@ import {
 import AppSidebarLayout from '@/layouts/app/app-sidebar-layout';
 import { SortableHeader, type SortDirection } from '@/components/sortable-header';
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { Edit, Eye, Film, Plus, Search, Trash2, TvIcon } from 'lucide-react';
+import { Edit, Eye, Film, Plus, Search, Trash2, TvIcon, RefreshCw } from 'lucide-react';
 import { type FormEvent, useState } from 'react';
 import * as dashboardTvRoutes from '@/routes/dashboard/tv';
 import { dashboard } from '@/routes';
+import { update as tmdbUpdate } from '@/actions/App/Http/Controllers/Admin/TmdbUpdateController';
+import { useToast } from '@/hooks/use-toast';
 
 interface Genre {
     id: number;
@@ -67,6 +69,9 @@ export default function ShowsIndex({ shows, filters }: ShowsIndexProps) {
     const { data, setData } = useForm({
         search: filters.search || '',
     });
+
+    const { toast } = useToast();
+    const [isUpdating, setIsUpdating] = useState(false);
 
     const [confirmationDialog, setConfirmationDialog] = useState({
         open: false,
@@ -128,6 +133,28 @@ export default function ShowsIndex({ shows, filters }: ShowsIndexProps) {
         return new Date(date).toLocaleDateString('es-ES', { year: 'numeric', month: 'short' });
     };
 
+    const handleUpdateContent = () => {
+        setIsUpdating(true);
+        router.post(tmdbUpdate().url, {}, {
+            onSuccess: () => {
+                toast({
+                    title: 'Actualización iniciada',
+                    description: 'La actualización de contenidos se está ejecutando en segundo plano.',
+                });
+            },
+            onError: () => {
+                toast({
+                    title: 'Error',
+                    description: 'No se pudo iniciar la actualización de contenidos.',
+                    variant: 'destructive',
+                });
+            },
+            onFinish: () => {
+                setIsUpdating(false);
+            },
+        });
+    };
+
     const formatNumber = (value?: number | string | null) => {
         if (!value && value !== 0) return '-';
         const numeric = typeof value === 'string' ? parseFloat(value) : value;
@@ -159,11 +186,17 @@ export default function ShowsIndex({ shows, filters }: ShowsIndexProps) {
                             <p className="text-muted-foreground">Administra todas las series disponibles.</p>
                         </div>
                     </div>
-                    <Button asChild>
-                        <Link href={dashboardTvRoutes.create().url}>
-                            <Plus className="mr-2 h-4 w-4" /> Nueva serie
-                        </Link>
-                    </Button>
+                    <div className="flex gap-2">
+                        <Button onClick={handleUpdateContent} disabled={isUpdating} variant="outline">
+                            <RefreshCw className={`mr-2 h-4 w-4 ${isUpdating ? 'animate-spin' : ''}`} />
+                            {isUpdating ? 'Actualizando...' : 'Actualizar TMDB'}
+                        </Button>
+                        <Button asChild>
+                            <Link href={dashboardTvRoutes.create().url}>
+                                <Plus className="mr-2 h-4 w-4" /> Nueva serie
+                            </Link>
+                        </Button>
+                    </div>
                 </div>
 
                 <form onSubmit={handleSearchSubmit} className="flex items-center gap-4">

@@ -5,7 +5,6 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 import { initializeTheme } from './hooks/use-appearance';
 import axios from 'axios';
-import { setupFirebaseMessaging } from './lib/firebase';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 

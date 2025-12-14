@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\TmdbUpdateController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ContentListController;
 use App\Http\Controllers\FollowController;
@@ -68,4 +69,9 @@ Route::middleware('auth:sanctum')->group(function () {
         });
     });
 
+});
+
+// Admin routes
+Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::post('/admin/tmdb/update', [TmdbUpdateController::class, 'update'])->name('api.admin.tmdb.update');
 });

@@ -71,7 +71,11 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": []
+            "dont-discover": [
+                "laravel/boost",
+                "laravel/mcp",
+                "laravel/roster"
+            ]
         }
     },
     "config": {

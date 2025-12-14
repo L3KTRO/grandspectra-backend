@@ -2,7 +2,8 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "tsc && vite build && vite build --ssr && vite build && vite build --ssr --ssr",
+        "build": "vite build",
+        "build:check": "tsc && vite build",
         "dev": "vite"
     },
     "devDependencies": {
